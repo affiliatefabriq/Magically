@@ -1,10 +1,10 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
-import { ResetPassword } from "@/components/pages/auth/ResetPassword";
-
+import { useTheme } from "next-themes";
 import Starfield from "react-starfield";
+
+import { ResetPassword } from "@/components/pages/auth/ResetPassword";
 
 const Page = () => {
   const { theme } = useTheme();

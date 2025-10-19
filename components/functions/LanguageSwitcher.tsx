@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { GlobeIcon } from "lucide-react";
@@ -27,7 +27,12 @@ export const LanguageSwitcher = () => {
   }, [currentLocale, startTransition, setCurrentLocale]);
 
   return (
-    <Button onClick={toggleLocale} disabled={isPending} variant="ghost" className="flex items-center justify-start cursor-pointer rounded-full py-2 w-full secondary-hover magic-transition">
+    <Button
+      onClick={toggleLocale}
+      disabled={isPending}
+      variant="ghost"
+      className="flex items-center justify-start cursor-pointer rounded-full py-2 w-full secondary-hover magic-transition"
+    >
       <GlobeIcon className="size-4" />
       {currentLocale === "en" ? "English" : "Русский"}
     </Button>

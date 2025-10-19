@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { Edit } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -11,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateAvatar, useUpdateProfile } from "@/hooks/useProfile";
 import { UserAttributes } from "@/types";
+import { UserAvatar } from "./UserAvatar";
 
 export const EditProfileDialog = ({ user, setOpen }: { user: UserAttributes; setOpen: (open: boolean) => void }) => {
   const { register, handleSubmit } = useForm({
@@ -51,19 +51,9 @@ export const EditProfileDialog = ({ user, setOpen }: { user: UserAttributes; set
       </DialogHeader>
       <div className="flex flex-col items-center gap-4">
         <label htmlFor="avatar-upload" className="cursor-pointer relative">
-          <Image
-            src={
-              user.avatar !== null
-                ? process.env.NEXT_PUBLIC_BACKEND_API! + user.avatar
-                : "/assets/avatar-placeholder.svg"
-            }
-            width={36}
-            height={36}
-            alt="avatar"
-            className={`rounded-full ${user.avatar === null ? "dark:invert" : ""}`}
-          />
+          <UserAvatar {...user} />
           <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 hover:opacity-100">
-            <Edit className="text-white" />
+            <Pencil strokeWidth={1} className="text-white" />
           </div>
         </label>
         <Input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
@@ -77,7 +67,7 @@ export const EditProfileDialog = ({ user, setOpen }: { user: UserAttributes; set
           <label>Bio</label>
           <Textarea {...register("bio")} />
         </div>
-        <Button type="submit" disabled={updateProfileMutation.isPending}>
+        <Button type="submit" disabled={updateProfileMutation.isPending} className="w-full mt-2 btn-solid">
           {updateProfileMutation.isPending ? "Saving..." : "Save Changes"}
         </Button>
       </form>

@@ -1,18 +1,17 @@
-"use client"
-
-import Link from "next/link";
+"use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForgotPassword } from "@/hooks/useAuth";
 import { ForgotPasswordFormValues, forgotPasswordSchema } from "@/lib/validation";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 export const ForgotPassword = () => {
   const t = useTranslations("Auth.ForgotPassword");

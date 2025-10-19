@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "../ui/button";
-import { MoonIcon, SunIcon } from "lucide-react";
 
 // theme switcher component
 export const ThemeSwitcher = () => {
@@ -29,7 +29,11 @@ export const ThemeSwitcher = () => {
   };
 
   return (
-    <Button variant="ghost" onClick={handleThemeChange} className="cursor-pointer rounded-full py-2 w-full secondary-hover magic-transition">
+    <Button
+      variant="ghost"
+      onClick={handleThemeChange}
+      className="cursor-pointer rounded-full py-2 w-full secondary-hover magic-transition"
+    >
       {currentTheme === "dark" ? (
         <div className="flex items-center justify-start gap-2 w-full">
           <MoonIcon />

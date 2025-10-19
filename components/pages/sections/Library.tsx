@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useUser } from "@/hooks/useAuth";
 import { ExploreError, NotAuthorized } from "@/components/states/error/Error";
+import { useUser } from "@/hooks/useAuth";
 
 export const Library = () => {
   const { data: user, isError } = useUser();

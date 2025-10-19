@@ -61,43 +61,49 @@ export const useProfile = (username: string) => {
     queryKey: queryKeys.users.profile(username),
     queryFn: () => getProfile(username),
     enabled: !!username,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
 export const useMyProfile = () => {
   return useQuery({
-    queryKey: queryKeys.auth.me(),
+    queryKey: queryKeys.users.profile("me"),
     queryFn: getMyProfile,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
 export const useMyFollowing = () => {
   return useQuery({
-    queryKey: queryKeys.auth.me(),
+    queryKey: queryKeys.users.following("me"),
     queryFn: getMyFollowing,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
 export const useMyFollowers = () => {
   return useQuery({
-    queryKey: queryKeys.auth.me(),
+    queryKey: queryKeys.users.followers("me"),
     queryFn: getMyFollowers,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
 export const useUserFollowing = (username: string) => {
   return useQuery({
-    queryKey: queryKeys.users.profile(username),
-    queryFn: () => getProfile(username),
+    queryKey: queryKeys.users.following(username),
+    queryFn: () => getUserFollowing(username),
     enabled: !!username,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
 export const useUserFollowers = (username: string) => {
   return useQuery({
-    queryKey: queryKeys.users.profile(username),
-    queryFn: () => getProfile(username),
+    queryKey: queryKeys.users.followers(username),
+    queryFn: () => getUserFollowers(username),
     enabled: !!username,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -108,6 +114,7 @@ export const useSubscribe = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.search.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
     },
   });
 };
@@ -119,6 +126,7 @@ export const useUnsubscribe = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.search.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
     },
   });
 };
@@ -128,7 +136,7 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.me() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.profile("me") });
       toast.success("Profile updated!");
     },
   });
@@ -139,7 +147,7 @@ export const useUpdateAvatar = () => {
   return useMutation({
     mutationFn: updateAvatar,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.me() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.profile("me") });
       toast.success("Avatar updated!");
     },
   });

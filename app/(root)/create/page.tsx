@@ -1,7 +1,7 @@
-import { Create } from '@/components/pages/sections/Create';
+import { Create } from "@/components/pages/sections/Create";
 
 const Page = () => {
-    return <Create />;
+  return <Create />;
 };
 
 export default Page;

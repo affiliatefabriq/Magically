@@ -1,7 +1,7 @@
-import { RootLayoutProps } from "@/types";
+import { AppSidebar } from "@/components/shared/AppSidebar";
 import { Bottombar } from "@/components/shared/Bottombar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/shared/AppSidebar";
+import { RootLayoutProps } from "@/types";
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (

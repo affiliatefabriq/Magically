@@ -1,7 +1,7 @@
 import { Profile } from "@/components/pages/sections/Profile";
 
 const Page = () => {
-    return <Profile />;
+  return <Profile />;
 };
 
 export default Page;

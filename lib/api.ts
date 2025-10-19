@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const API_URL = "http://localhost:5000";
+export const BASE_URL = "http://localhost:3000";
 
 const api = axios.create({
   baseURL: "http://localhost:5000/api/v1",
@@ -22,6 +23,5 @@ if (typeof window !== "undefined") {
     }
   );
 }
-
 
 export default api;

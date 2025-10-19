@@ -150,7 +150,7 @@
   }
 
   .section-padding {
-    @apply px-2 py-4;
+    @apply p-2;
   }
 }
 
@@ -172,7 +172,15 @@
   }
 
   .link-text {
-    @apply text-purple-600 dark:text-purple-500 underline underline-offset-2;
+    @apply text-purple-600 dark:text-purple-500;
+  }
+
+  .title-text {
+    @apply text-2xl md:text-3xl font-bold;
+  }
+
+  .subtitle-text {
+    @apply text-base md:text-lg font-bold text-neutral-300 dark:text-neutral-700;
   }
 
   .magic-transition {
@@ -194,15 +202,27 @@
 
 @layer components {
   .btn-magic {
-    @apply bg-purple-200 border-purple-200/50 text-purple-500 dark:bg-purple-800/20 dark:text-purple-600 dark:border-purple-800/50 border shadow-purple-800/10 shadow-xl;
+    @apply bg-purple-200 border-purple-200/50 text-purple-500 dark:bg-purple-800/20 dark:text-purple-600 dark:border-purple-800/50 border shadow-purple-800/10 shadow-xl cursor-pointer
   }
 
   .btn-login {
-    @apply !bg-purple-200 !border-purple-200/50 !text-purple-500 dark:!bg-purple-800/20 dark:!text-purple-600 dark:!border-purple-800/50 !border shadow-purple-800/10 !shadow-xl;
+    @apply !bg-purple-200 !border-purple-200/50 !text-purple-500 dark:!bg-purple-800/20 dark:!text-purple-600 dark:!border-purple-800/50 !border shadow-purple-800/10 !shadow-xl cursor-pointer;
+  }
+
+  .btn-outline {
+    @apply !bg-purple-200/20 !border-purple-300/70 !text-purple-500 dark:!bg-purple-800/20 dark:!text-purple-600 dark:!border-purple-800/50 !border cursor-pointer;
+  }
+
+  .btn-solid {
+    @apply !bg-purple-400 !border-purple-400 !text-white dark:!bg-purple-800 dark:!border-purple-800 !border shadow-purple-800/10 !shadow-xl cursor-pointer;
+  }
+
+  .btn-glass {
+    @apply !bg-white/20 dark:!bg-black/20 !backdrop-blur-lg !border-none hover:!bg-none !text-white cursor-pointer;
   }
 
   .btn-magic-secondary {
-    @apply bg-neutral-200 border-neutral-200/50 dark:bg-neutral-800/20 dark:border-neutral-800/50 border;
+    @apply bg-neutral-200 border-neutral-200/50 dark:bg-neutral-800/20 dark:border-neutral-800/50 border cursor-pointer;
   }
 }
 

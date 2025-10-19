@@ -1,12 +1,13 @@
 import { Metadata } from "next";
-import { getLocale } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 import { RootLayoutProps } from "@/types";
 import { ThemeProviders } from "./providers/ThemeProviders";
 
 import "./globals.css";
+
 import { QueryProvider } from "./providers/QueryProvider";
 
 const geistSans = Geist({
@@ -31,12 +32,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <QueryProvider>
           <NextIntlClientProvider>
-            <ThemeProviders>
-              {children}
-            </ThemeProviders>
+            <ThemeProviders>{children}</ThemeProviders>
           </NextIntlClientProvider>
         </QueryProvider>
       </body>
     </html>
   );
-};
+}

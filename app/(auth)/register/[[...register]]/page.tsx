@@ -1,9 +1,9 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Register } from "@/components/pages/auth/Register";
-
 import Starfield from "react-starfield";
+
+import { Register } from "@/components/pages/auth/Register";
 
 const Page = () => {
   const { theme } = useTheme();

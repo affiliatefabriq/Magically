@@ -1,6 +1,5 @@
 declare type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
 
-
 export interface Author {
   id: string;
   username: string;
@@ -43,7 +42,7 @@ export type ReplicateStatus = "starting" | "processing" | "succeeded" | "failed"
 
 export interface UserAttributes {
   id: string;
-  fullname?: string;
+  fullname: string;
   username: string;
   email: string;
   bio?: string;
