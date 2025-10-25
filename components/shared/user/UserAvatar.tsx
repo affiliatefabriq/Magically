@@ -6,7 +6,7 @@ export const UserAvatar = (user: { username: string; avatar?: string; fullname: 
   return (
     <Avatar className="flex items-center flex-wrap justify-center theme-2 size-10 rounded-full">
       <AvatarImage
-        src={user.avatar !== null ? API_URL + user.avatar : ""}
+        src={user.avatar !== null ? API_URL! + user.avatar : ""}
         alt={user.username}
         className="rounded-full h-full w-full"
       />
