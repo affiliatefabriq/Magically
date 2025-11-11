@@ -1,8 +1,23 @@
 import Link from "next/link";
+import Image from "next/image";
+
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { BookOpen, GalleryHorizontalEnd, Newspaper, SearchX, UserRoundX } from "lucide-react";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import {
+  BookOpen,
+  GalleryHorizontalEnd,
+  Newspaper,
+  SearchX,
+  UserRoundX
+} from "lucide-react";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "@/components/ui/empty";
 
 export const EmptyComponent = ({
   title,
@@ -108,3 +123,30 @@ export const LibraryEmpty = () => {
     />
   );
 };
+
+export const ModelsEmpty = () => {
+  const t = useTranslations("States.Empty.Models");
+
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="default">
+          <Image
+            src="/model.jpg"
+            alt="model"
+            width={1024}
+            height={1024}
+            className="rounded-xl"
+          />
+        </EmptyMedia>
+        <EmptyTitle>{t("title")}</EmptyTitle>
+        <EmptyDescription>{t("description")}</EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Link href="/create/models">
+          <Button className="btn-login">{t("button")}</Button>
+        </Link>
+      </EmptyContent>
+    </Empty>
+  )
+}

@@ -26,15 +26,7 @@ export const Followers = () => {
 
   return (
     <section className="section-padding container mx-auto max-w-6xl">
-      <div className="flex items-center justify-start gap-2 mt-2">
-        <Link href="/profile" className="secondary-hover magic-transition rounded-md">
-          <ChevronLeft />
-        </Link>
-        <h1 className="text-xl sm:text-2xl font-semibold">{t("title")}</h1>
-      </div>
-
-      <Separator orientation="horizontal" className="my-2" />
-
+      <Separator orientation="horizontal" className="my-1" />
       <div className="flex-column space-y-2">
         {data.length > 0 ? (
           data.map((user: UserAttributes) => <UserCard key={user.id} user={user} />)

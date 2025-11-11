@@ -47,7 +47,7 @@ export const Explore = () => {
     <section className="relative w-full min-h-screen overflow-hidden">
       {/* --- Stars Layer --- */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <StarsBackground className="!h-full !w-full opacity-50" />
+        <StarsBackground className="!h-full !w-full opacity-100" />
         <ShootingStars
           starColor={starColor}
           trailColor={trailColor}

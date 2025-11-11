@@ -14,7 +14,7 @@ import { PublicationActions } from "@/components/shared/publication/PublicationA
 import { SubscribeButton } from "@/components/shared/publication/SubscribeButton";
 import { UserProfile } from "@/components/shared/user/UserProfile";
 import { ExploreError, NotAuthorized } from "@/components/states/error/Error";
-import { ExploreLoader } from "@/components/states/loaders/Loaders";
+import { PublicationLoader } from "@/components/states/loaders/Loaders";
 import { API_URL } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 
@@ -23,7 +23,6 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
   const { data: user } = useUser();
   const { data: publication, isLoading, isError } = usePublication(publicationId);
 
-  // early returns to avoid accessing publication props when undefined
   if (!user)
     return (
       <div className="state-center">
@@ -36,7 +35,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
         <ExploreError />
       </div>
     );
-  if (isLoading) return <ExploreLoader />;
+  if (isLoading) return <PublicationLoader />;
   if (!publication) return null;
 
   return (
@@ -88,7 +87,6 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
           <div className="text-sm secondary-text mb-4">{formatDate(publication.createdAt)}</div>
         </div>
       </div>
-      {/* блок комментариев */}
       <CommentSection publicationId={publicationId} />
     </section>
   );

@@ -179,7 +179,7 @@
   }
 
   .link-text {
-    @apply text-purple-600 dark:text-purple-500 hover:underline;
+    @apply text-fuchsia-500 dark:text-fuchsia-500 hover:underline font-semibold;
   }
 
   .title-text {
@@ -195,7 +195,7 @@
   }
 
   .magic-hover {
-    @apply hover:text-purple-800 hover:bg-purple-400/50 hover:dark:text-purple-600 hover:dark:bg-purple-900/40;
+    @apply hover:text-black hover:bg-fuchsia-400/90 hover:dark:text-black hover:dark:bg-fuchsia-500;
   }
 
   .secondary-hover {
@@ -209,19 +209,19 @@
 
 @layer components {
   .btn-magic {
-    @apply bg-purple-200 border-purple-200/50 text-purple-500 dark:bg-purple-800/20 dark:text-purple-600 dark:border-purple-800/50 border shadow-purple-800/10 shadow-xl cursor-pointer
+    @apply bg-fuchsia-200 border-fuchsia-200/50 text-fuchsia-500 dark:bg-fuchsia-800/20 dark:text-fuchsia-600 dark:border-fuchsia-800/50 border shadow-fuchsia-800/10 shadow-xl cursor-pointer
   }
 
   .btn-login {
-    @apply !bg-purple-200 !border-purple-200/50 !text-purple-500 dark:!bg-purple-800/20 dark:!text-purple-600 dark:!border-purple-800/50 !border shadow-purple-800/10 !shadow-xl cursor-pointer;
+    @apply !bg-fuchsia-200 !border-fuchsia-200/50 !text-fuchsia-500 dark:!bg-fuchsia-800/20 dark:!text-fuchsia-600 dark:!border-fuchsia-800/50 !border shadow-fuchsia-800/10 !shadow-xl cursor-pointer;
   }
 
   .btn-outline {
-    @apply !bg-purple-200/20 !border-purple-300/70 !text-purple-500 dark:!bg-purple-800/20 dark:!text-purple-600 dark:!border-purple-800/50 !border cursor-pointer;
+    @apply !bg-fuchsia-200/20 !border-fuchsia-300/70 !text-fuchsia-500 dark:!bg-fuchsia-800/20 dark:!text-fuchsia-600 dark:!border-fuchsia-800/50 !border cursor-pointer;
   }
 
   .btn-solid {
-    @apply !bg-purple-400 !border-purple-400 !text-white dark:!bg-purple-800 dark:!border-purple-800 !border shadow-purple-800/10 !shadow-xl cursor-pointer;
+    @apply !bg-fuchsia-400 !border-fuchsia-400 !text-white dark:!bg-fuchsia-800 dark:!border-fuchsia-800 !border shadow-fuchsia-800/10 !shadow-xl cursor-pointer;
   }
 
   .btn-glass {

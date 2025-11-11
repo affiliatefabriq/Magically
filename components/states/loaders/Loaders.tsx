@@ -11,6 +11,15 @@ export const ExploreLoader = () => {
   );
 };
 
+export const PublicationLoader = () => {
+  return (
+    <div className="flex flex-col md:flex-row gap-4 section-padding">
+      <Skeleton className="w-full aspect-square rounded-lg" />
+      <Skeleton className="w-full h-16" />
+    </div>
+  )
+}
+
 export const SearchLoader = () => {
   return Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-16 w-full" />);
 };

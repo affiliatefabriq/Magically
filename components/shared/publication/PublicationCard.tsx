@@ -15,6 +15,7 @@ import { SubscribeButton } from "./SubscribeButton";
 type PublicationCardProps = {
   publication: Publication;
   userId?: string;
+  id?: any;
 };
 
 export const PublicationCard = ({ publication, userId }: PublicationCardProps) => {
@@ -22,11 +23,10 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
     <div className="flex flex-col items-start justify-center gap-2">
       <div className="flex justify-between md:hidden w-full">
         <UserProfile {...publication.author} />
-        <SubscribeButton publication={publication} style="btn-login" className={`${userId === publication.author.id ? 'hidden' : 'block'}`} />
       </div>
       <div className="relative w-full group">
         <Link href={`/publications/${publication.id}`} key={publication.id}>
-          {publication.videoUrl ? (
+          {publication.videoUrl && (
             <video
               src={`${API_URL}${publication.videoUrl}`}
               autoPlay
@@ -35,7 +35,8 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
               playsInline
               className="rounded-xl object-cover aspect-square w-full"
             />
-          ) : (
+          )}
+          {publication.imageUrl && (
             <Image
               src={`${API_URL}${publication.imageUrl}`}
               width={1024}
@@ -87,6 +88,35 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
           <div className="my-1">{publication.content}</div>
           <div className="text-sm secondary-text mb-4">{formatDate(publication.createdAt)}</div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+export const PublicationCardSimplified = ({ publication, id }: PublicationCardProps) => {
+  return (
+    <div className={`border border-white dark:border-black row-span-1 ${id === 3 || id === 6 ? "col-span-2 row-span-2" : "col-span-1"}`}>
+      <div className="relative group">
+        <Link href={`/publications/${publication.id}`} key={publication.id}>
+          {publication.videoUrl ? (
+            <video
+              src={`${API_URL}${publication.videoUrl}`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="object-cover aspect-square w-full"
+            />
+          ) : (
+            <Image
+              src={`${API_URL}${publication.imageUrl}`}
+              width={1024}
+              height={1024}
+              alt="publication"
+              className="object-cover aspect-square w-full"
+            />
+          )}
+        </Link>
       </div>
     </div>
   );

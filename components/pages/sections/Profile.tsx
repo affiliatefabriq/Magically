@@ -46,7 +46,7 @@ export const Profile = () => {
   };
 
   return (
-    <section className="section-padding container max-w-7xl mx-auto border-0 md:border border-muted h-full rounded-t-3xl mt-0 sm:mt-4">
+    <section className="section-padding container max-w-7xl mx-auto border-0 md:border border-muted h-full rounded-t-4xl mt-0 sm:mt-4">
       <div className="flex items-center justify-between my-4 px-2 md:px-4">
         <h1 className="title-text">{t("title")}</h1>
         <div className="flex items-center justify-center gap-1">
@@ -93,18 +93,14 @@ export const Profile = () => {
         </div>
       </div>
       <Separator className="bg-muted my-4" />
-      <div className="flex items-center justify-around gap-4 secondary-text">
+      <div className="flex items-center justify-evenly gap-4 secondary-text">
         <div className="text-center">
           <h3 className="font-semibold text-sm">{t("publications")}</h3>
           <p className="text-xs">{user.publicationsCount}</p>
         </div>
-        <Link href="/profile/followers" className="text-center">
-          <h3 className="font-semibold text-sm">{t("followers")}</h3>
-          <p className="text-xs">{user.followersCount === undefined ? 0 : user.followersCount}</p>
-        </Link>
-        <Link href="/profile/following" className="text-center">
-          <h3 className="font-semibold text-sm">{t("following")}</h3>
-          <p className="text-xs">{user.followingCount === undefined ? 0 : user.followingCount}</p>
+        <Link href="/profile/interested" className="text-center">
+          <h3 className="font-semibold text-sm">{t("interested")}</h3>
+          <p className="text-xs">{user.followersCount === undefined ? 0 : user.followersCount + user.followingCount}</p>
         </Link>
       </div>
       <Separator className="bg-muted my-4" />
@@ -126,7 +122,14 @@ export const Profile = () => {
               />
             )}
             {pub.videoUrl && (
-              <video src={`${API_URL}${pub.videoUrl}`} className="rounded-xl object-cover aspect-square" />
+              <video
+                src={`${API_URL}${pub.videoUrl}`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="rounded-none object-cover aspect-square"
+              />
             )}
           </Link>
         ))}

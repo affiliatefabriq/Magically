@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
+import { useUser } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
+import { useSearch } from "@/hooks/useSearch";
 import { useDebounceValue } from "usehooks-ts";
 
-import { PublicationCard } from "@/components/shared/publication/PublicationCard";
+import { SearchIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { UserCard } from "@/components/shared/user/UserCard";
+import { SearchLoader } from "@/components/states/loaders/Loaders";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PublicationCardSimplified } from "@/components/shared/publication/PublicationCard";
 import { SearchPublicationEmpty, SearchUserEmpty } from "@/components/states/empty/Empty";
 import { ExploreError, NotAuthorized, SearchError } from "@/components/states/error/Error";
-import { SearchLoader } from "@/components/states/loaders/Loaders";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useUser } from "@/hooks/useAuth";
-import { useSearch } from "@/hooks/useSearch";
+import { Separator } from "@/components/ui/separator";
 
 export const Search = () => {
   const t = useTranslations("Pages.Search");
@@ -29,10 +31,11 @@ export const Search = () => {
   return (
     <section className="flex flex-col container mx-auto section-padding">
       <h1 className="title-text my-6">{t("title")}</h1>
-      <div className="flex gap-4">
+      <div className="relative flex gap-4">
+        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
         <Input
           placeholder={t("search")}
-          className="w-full rounded-full placeholder:px-1"
+          className="component-dark pl-10 h-10 w-full"
           value={filters.query}
           onChange={(e: any) => setFilters((prev) => ({ ...prev, query: e.target.value }))}
         />
@@ -57,9 +60,9 @@ export const Search = () => {
         <TabsContent value="publications" className="space-y-4 mt-4">
           {searchResults?.publications.length > 0 && (
             <>
-              <div className="grid-3 gap-4">
-                {searchResults.publications.map((pub: any) => (
-                  <PublicationCard key={pub.id} publication={pub} />
+              <div className="grid grid-cols-3 gap-0 grid-flow-dense auto-rows-auto">
+                {searchResults.publications.map((pub: any, id: any) => (
+                  <PublicationCardSimplified key={pub.id} publication={pub} id={id} />
                 ))}
               </div>
             </>

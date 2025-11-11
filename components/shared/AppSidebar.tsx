@@ -12,13 +12,16 @@ import { NavUser } from "./user/NavUser";
 import { AuroraText } from "../ui/magic/aurora-text";
 
 import {
+  ChevronRight,
   CircleUserRound,
   Compass,
+  Folder,
   Globe,
-  Library,
+  Loader,
   Search,
   Sparkles,
-  UserRound
+  UserRound,
+  Wand
 } from "lucide-react";
 
 import {
@@ -61,7 +64,7 @@ export function AppSidebar() {
       id: 4,
       title: t("Library"),
       url: "/library",
-      icon: Library,
+      icon: Folder,
     },
     {
       id: 5,
@@ -82,20 +85,56 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-2">
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className={`p-[18px] mb-2 rounded-full text-md magic-transition
-                                        ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
-                  >
-                    <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) =>
+                item.id === 3 ? (
+                  <SidebarMenuItem key={item.title}>
+                    <details className="group">
+                      <summary
+                        className={`list-none px-5 py-2 mb-2 rounded-full text-md magic-transition flex items-center justify-between cursor-pointer
+                        ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
+                      >
+                        <div className={`${pathname === item.url ? "btn-magic" : "flex items-center gap-3"}`}>
+                          <item.icon className="size-4" />
+                          <span>{item.title}</span>
+                        </div>
+                        <span className="transition-transform duration-200 group-open:rotate-90">
+                          <ChevronRight className="size-4" />
+                        </span>
+                      </summary>
+
+                      <div className="flex flex-col pl-3 mt-2 gap-1">
+                        <SidebarMenuButton asChild className="p-[12px] rounded-full text-md magic-transition">
+                          <Link href="/create/magic-photo" className="btn-magic-secondary flex items-center justify-between">
+                            <Wand />
+                            <span className="font-semibold">{t("MagicPhoto")}</span>
+                            <div />
+                          </Link>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton asChild className="p-[12px] mb-1 rounded-full text-md magic-transition">
+                          <Link href="/create/effects" className="btn-magic-secondary flex items-center justify-between">
+                            <Loader />
+                            <span className="font-semibold">{t("Effects")}</span>
+                            <div />
+                          </Link>
+                        </SidebarMenuButton>
+                      </div>
+                    </details>
+                  </SidebarMenuItem>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={`p-[18px] mb-2 rounded-full text-md magic-transition
+                          ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
+                    >
+                      <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -116,14 +155,14 @@ export function AppSidebar() {
               >
                 <Link href="/login" className="btn-magic-secondary flex items-center justify-between">
                   <CircleUserRound />
-                  <span className="font-semibold">Log In</span>
+                  <span className="font-semibold">{t("Login")}</span>
                   <div />
                 </Link>
               </SidebarMenuButton>
               <SidebarMenuButton asChild className="p-[18px] mb-2 rounded-full text-md magic-hover magic-transition">
                 <Link href="/register" className="btn-magic flex items-center justify-between">
                   <Globe />
-                  <span className="font-semibold">Register</span>
+                  <span className="font-semibold">{t("Register")}</span>
                   <div />
                 </Link>
               </SidebarMenuButton>

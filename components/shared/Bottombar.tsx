@@ -4,9 +4,28 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Compass, Library, Search, Sparkles, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+import {
+  Compass,
+  Folder,
+  Loader,
+  Search,
+  Sparkles,
+  UserRound,
+  Wand
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export const Bottombar = () => {
+  const t = useTranslations("Components.Sidebar");
   const pathname = usePathname();
 
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(true);
@@ -35,7 +54,7 @@ export const Bottombar = () => {
       id: 4,
       title: "Library",
       url: "/library",
-      icon: Library,
+      icon: Folder,
     },
     {
       id: 5,
@@ -74,8 +93,32 @@ export const Bottombar = () => {
       className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-2 z-10 w-full h-[64px] px-2"
     >
       <div className="flex items-center justify-center gap-4 rounded-2xl border p-3 backdrop-blur-xl mx-auto bg-white/50 dark:bg-black/20">
-        {items.map((item) => {
-          return (
+        {items.map((item) =>
+          item.id === 3 ? (
+            <DropdownMenu key={item.id}>
+              <DropdownMenuTrigger asChild>
+                <item.icon strokeWidth={1.25} className="size-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-3 backdrop-blur-xl mx-auto bg-white/90 dark:bg-black/20" align="start">
+                <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
+                <DropdownMenuSeparator/>
+                <DropdownMenuItem className="mt-2 py-2">
+                  <Link href="/create/magic-photo" className="flex items-center justify-between gap-2">
+                    <Wand />
+                    <span className="font-semibold">{t("MagicPhoto")}</span>
+                    <div />
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="mt-2 py-2">
+                  <Link href="/create/effects" className="flex items-center justify-between gap-2">
+                    <Loader />
+                    <span className="font-semibold">{t("Effects")}</span>
+                    <div />
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
             <Link
               href={item.url}
               key={item.id}
@@ -83,8 +126,8 @@ export const Bottombar = () => {
             >
               <item.icon strokeWidth={1.25} className="size-5" />
             </Link>
-          );
-        })}
+          )
+        )}
       </div>
     </nav>
   );

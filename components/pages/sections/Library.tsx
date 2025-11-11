@@ -31,8 +31,8 @@ export const Library = () => {
   const { data: galleryItems, isLoading, isError } = useGallery(filters);
 
   return (
-    <section className="section-padding">
-      <h1 className="title-text my-6">{t("title")}</h1>
+    <section className="container mx-auto section-padding">
+      <h1 className="title-text mt-4 my-2">{t("title")}</h1>
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <Input
           placeholder={t("search")}

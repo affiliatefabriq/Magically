@@ -19,8 +19,9 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 export const metadata: Metadata = {
-  title: "Volshebny Bot",
+  title: "Volshebny",
   description: "Volshebny Bot is a AI powered generation model for generating an images.",
 };
 

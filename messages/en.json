@@ -92,6 +92,11 @@
         "title": "No item in gallery",
         "description": "No items was found in gallery, try to create one.",
         "button": "Add to gallery"
+      },
+      "Models": {
+        "title": "No models",
+        "description": "You have no models, create it for free to create magic photos.",
+        "button": "Create a model"
       }
     },
     "Error": {
@@ -135,7 +140,6 @@
       "users": "Users",
       "publications": "Publications"
     },
-    "Create": {},
     "Library": {
       "title": "Library",
       "search": "Search by prompt",
@@ -144,13 +148,14 @@
     },
     "Profile": {
       "title": "Profile",
-      "publications": "Publications",
+      "publications": "Activity",
+      "interested": "Interested",
       "followers": "Followers",
       "following": "Followings",
-      "tokens": "Your tokens",
-      "activity": "Your activity",
+      "tokens": "Balance",
+      "activity": "Activity",
       "share": "Share with profile",
-      "edit": "Edit profile"
+      "edit": "Manage"
     },
     "Settings": {
       "BackToProfile": "Profile",
@@ -158,6 +163,25 @@
       "Language": "Change the language",
       "Theme": "Change the theme",
       "Logout": "Logout from account"
+    },
+    "Effects": {
+      "title": "Effects",
+      "PhotoEffects": {
+        "title": "Photo effects",
+        "restoration": "Restoration",
+        "art": "Art",
+        "style": "Style",
+        "cartoon": "Cartoon"
+      },
+      "VideoEffects": {
+        "title": "Video effects",
+        "camera": "Camera control",
+        "visual": "Visual effects"
+      },
+      "PhotoEditor": {
+        "title": "Photo editor",
+        "angle": "Photo angle"
+      }
     }
   },
   "Components": {
@@ -166,10 +190,14 @@
       "Search": "Search",
       "Create": "Create",
       "Library": "Library",
-      "Profile": "Profile"
+      "Profile": "Profile",
+      "Login": "Log In",
+      "Register": "Register",
+      "MagicPhoto": "Magic photo",
+      "Effects": "Effects"
     },
     "EditProfile": {
-      "title": "Edit Profile",
+      "title": "Profile management",
       "fullname": "Full name",
       "bio": "Bio",
       "button": {
@@ -179,7 +207,7 @@
     },
     "NavUser": {
       "Settings": "Settings",
-      "Edit": "Edit profile",
+      "Edit": "Manage profile",
       "Logout": "Log out"
     },
     "Followers": {
@@ -189,6 +217,17 @@
     "Following": {
       "title": "Following",
       "empty": "No followings"
+    },
+    "Interested": {
+      "profile": "Profile",
+      "Followers": {
+        "title": "Followers",
+        "empty": "No followers"
+      },
+      "Following": {
+        "title": "Following",
+        "empty": "No followings"
+      }
     },
     "FollowButton": {
       "Follow": "Follow",
@@ -225,6 +264,9 @@
     "Theme": {
       "dark": "Dark theme",
       "light": "Light theme"
+    },
+    "Upload": {
+      "title": "Upload"
     }
   }
 }
