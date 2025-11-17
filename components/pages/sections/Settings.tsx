@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { useLogout } from "@/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { ThemeSwitcher } from "@/components/functions/ThemeSwitcher";
 import { LanguageSwitcher } from "@/components/functions/LanguageSwitcher";
 
@@ -20,31 +19,25 @@ export const Settings = () => {
     };
 
     return (
-        <section className="flex flex-col container mx-auto max-w-6xl rounded-t-2xl px-2 mt-4">
-            {/* Back button */}
-            <Link href="/profile" className="flex items-center justify-start link-text">
-                <ChevronLeft />
-                {t("BackToProfile")}
-            </Link>
-            {/* Title */}
-            <h1 className="title-text my-3">{t("Title")}</h1>
-            {/* Separator */}
-            <Separator className="bg-muted my-2" />
-            {/* Language Switch */}
-            <div className="flex justify-between items-center w-full">
-                <div className="text-base">{t("Language")}</div>
-                <div><LanguageSwitcher /></div>
+        <section className="flex flex-col container mx-auto max-w-6xl rounded-t-2xl px-4 mt-4">
+            <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
+                <Link href="/profile" className="flex items-center justify-start h-full ml-2 link-text">
+                    <ChevronLeft />
+                    {t("BackToProfile")}
+                </Link>
             </div>
-            {/* Separator */}
-            <Separator className="bg-muted my-2" />
-            {/* Theme Switch */}
-            <div className="flex justify-between items-center w-full">
-                <div className="text-base">{t("Theme")}</div>
-                <div><ThemeSwitcher /></div>
+            <h1 className="title-text mt-12 md:mt-4 mb-2">{t("Title")}</h1>
+            <div className="space-y-4">
+                <div className="flex justify-between items-center w-full btn-magic-secondary py-2 px-4 rounded-xl mt-4">
+                    <div className="text-base">{t("Language")}</div>
+                    <div><LanguageSwitcher /></div>
+                </div>
+                <div className="flex justify-between items-center w-full btn-magic-secondary py-2 px-4 rounded-xl">
+                    <div className="text-base">{t("Theme")}</div>
+                    <div><ThemeSwitcher /></div>
+                </div>
             </div>
-            <Separator className="bg-muted my-2" />
-            {/* Logout Button */}
-            <div className="flex items-end justify-center">
+            <div className="flex mt-8">
                 <Button className="w-full h-8 cursor-pointer bg-red-400 hover:bg-red-500 text-white" onClick={logout}>
                     {t("Logout")}
                 </Button>

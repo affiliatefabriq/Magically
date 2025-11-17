@@ -31,7 +31,7 @@ export const LanguageSwitcher = () => {
       onClick={toggleLocale}
       disabled={isPending}
       variant="ghost"
-      className="flex items-center justify-start cursor-pointer rounded-full py-2 w-full secondary-hover magic-transition"
+      className="flex items-center justify-start cursor-pointer rounded-full py-2 px-4! w-full secondary-hover magic-transition"
     >
       <GlobeIcon className="size-4" />
       {currentLocale === "en" ? "English" : "Русский"}

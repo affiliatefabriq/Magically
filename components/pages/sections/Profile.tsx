@@ -9,7 +9,6 @@ import { Cog, ForwardIcon, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { EditProfileDialog } from "@/components/shared/user/EditProfileDialog";
-import { UserProfile } from "@/components/shared/user/UserProfile";
 import { PersonalProfileEmpty } from "@/components/states/empty/Empty";
 import { NotAuthorized, ProfileError } from "@/components/states/error/Error";
 import { ProfileLoader } from "@/components/states/loaders/Loaders";
@@ -20,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useMyProfile } from "@/hooks/useProfile";
 import { API_URL, BASE_URL } from "@/lib/api";
+import { UserAvatar } from "@/components/shared/user/UserAvatar";
 
 export const Profile = () => {
   const t = useTranslations("Pages.Profile");
@@ -47,20 +47,47 @@ export const Profile = () => {
 
   return (
     <section className="section-padding container max-w-7xl mx-auto border-0 md:border border-muted h-full rounded-t-4xl mt-0 sm:mt-4">
-      <div className="flex items-center justify-between my-4 px-2 md:px-4">
-        <h1 className="title-text">{t("title")}</h1>
-        <div className="flex items-center justify-center gap-1">
-          <Link href="/settings" className="ease hover:bg-muted p-2 rounded-md">
-            <Cog />
-          </Link>
+      <div className="flex flex-col px-2 md:px-4 mt-4">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col items-start justify-center md:justify-between">
+            <UserAvatar {...user} size="xl" />
+            <span className="text-sm font-semibold mt-4">{user.fullname}</span>
+            <span className="hidden md:flex text-neutral-400 text-sm">@{user.username}</span>
+          </div>
+          <div className="flex md:flex-row flex-col items-start md:items-center justify-between mt-0 md:mt-4 px-0 gap-2">
+            <div className="flex md:hidden items-center justify-between w-full">
+              <span className="text-2xl font-bold">{user.username}</span>
+              <Link href="/settings" className="ease hover:bg-muted p-2 rounded-md">
+                <Cog />
+              </Link>
+            </div>
+            <div className="flex items-center justify-start gap-2">
+              <div onClick={copyLink} className="flex items-center justify-center w-full">
+                <ConfettiButton className="btn-outline text-xs sm:text-sm px-1.5! sm:px-2!">
+                  <ForwardIcon className="hidden sm:flex" />
+                  {t("share")}
+                </ConfettiButton>
+              </div>
+              <div className="w-full">
+                <Dialog open={editProfileOpen} onOpenChange={setEditProfileOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full btn-login text-xs sm:text-sm px-1.5! sm:px-2!" size="sm">
+                      <Pencil className="hidden sm:flex" />
+                      {t("edit")}
+                    </Button>
+                  </DialogTrigger>
+                  <EditProfileDialog user={user} setOpen={setEditProfileOpen} />
+                </Dialog>
+              </div>
+            </div>
+            <div className="hidden md:flex items-center justify-center gap-1">
+              <Link href="/settings" className="ease hover:bg-muted p-2 rounded-md">
+                <Cog />
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-      <Separator className="bg-muted my-4" />
-      <div className="flex flex-col px-2 md:px-4">
-        <div className="flex items-center justify-between">
-          <UserProfile {...user} />
-        </div>
-        <p className="text-sm text-muted-foreground break-words mt-6">{user.bio}</p>
+        <p className="text-sm text-muted-foreground break-words mt-2">{user.bio}</p>
         <div className="flex items-center gap-2 text-muted-foreground mt-4">
           <p className="text-sm">{t("tokens")}</p>
           <span className="text-sm">✦ {user.tokens}</span>
@@ -73,25 +100,7 @@ export const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="flex md:flex-row flex-col items-center justify-between w-full mt-4 px-2 gap-2">
-        <div onClick={copyLink} className="flex items-center justify-center w-full">
-          <ConfettiButton className="w-full btn-outline">
-            <ForwardIcon />
-            {t("share")}
-          </ConfettiButton>
-        </div>
-        <div className="w-full">
-          <Dialog open={editProfileOpen} onOpenChange={setEditProfileOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full btn-login">
-                <Pencil />
-                {t("edit")}
-              </Button>
-            </DialogTrigger>
-            <EditProfileDialog user={user} setOpen={setEditProfileOpen} />
-          </Dialog>
-        </div>
-      </div>
+
       <Separator className="bg-muted my-4" />
       <div className="flex items-center justify-evenly gap-4 secondary-text">
         <div className="text-center">

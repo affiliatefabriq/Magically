@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { useRef } from "react";
 import { useUser } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
@@ -35,10 +36,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { MagicButton } from "../ui/magic/magic-button";
 
 export function AppSidebar() {
   const t = useTranslations("Components.Sidebar");
   const pathname = usePathname();
+  const summaryRef = useRef<HTMLElement | null>(null);
+
   const { data: user, isLoading, isError } = useUser();
 
   const items = [
@@ -90,16 +94,24 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <details className="group">
                       <summary
-                        className={`list-none px-5 py-2 mb-2 rounded-full text-md magic-transition flex items-center justify-between cursor-pointer
-                        ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
+                        className={`list-none rounded-full text-md magic-transition flex items-center justify-between cursor-pointer`}
+                        ref={summaryRef}
                       >
-                        <div className={`${pathname === item.url ? "btn-magic" : "flex items-center gap-3"}`}>
-                          <item.icon className="size-4" />
-                          <span>{item.title}</span>
+                        <div
+                          className={`w-full mb-2 ${pathname === item.url ? "btn-magic" : "flex items-center gap-3"}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            summaryRef.current?.click();
+                          }}
+                        >
+                          <MagicButton
+                            icon={item.icon}
+                            title={t("Create")}
+                            className="w-full"
+                            btn="px-5 py-2 rounded-full text-white"
+                          />
                         </div>
-                        <span className="transition-transform duration-200 group-open:rotate-90">
-                          <ChevronRight className="size-4" />
-                        </span>
                       </summary>
 
                       <div className="flex flex-col pl-3 mt-2 gap-1">

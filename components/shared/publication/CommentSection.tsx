@@ -31,6 +31,7 @@ import {
   useReplyToComment,
   useUnlikeComment,
 } from "@/hooks/useComments";
+import { Separator } from "@/components/ui/separator";
 
 export const CommentSection = ({ publicationId }: { publicationId: string }) => {
   const { data: user } = useUser();
@@ -83,78 +84,79 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
         <CardContent className="px-2">
           <div className="flex items-start gap-4">
             <div className="flex-1 min-w-0 space-y-2">
-              <div className="flex justify-between items-center gap-2 text-muted-foreground">
-                <UserAvatar {...comment.author} />
-                <div className="min-w-0 flex-1 flex items-center">
-                  <span className="font-semibold text-sm truncate">@{comment.author?.username}</span>
-                  <Dot />
-                  <span className="text-xs ">
-                    {formatDistanceToNow(new Date(comment.createdAt), {
-                      addSuffix: true,
-                      locale: locale === "ru" ? ru : enUS,
-                    })}
-                  </span>
+              <div className="flex justify-start items-start gap-3 text-muted-foreground">
+                <UserAvatar {...comment.author} size="sm" />
+                <div className="flex flex-col justify-start items-start -mt-1.5">
+                  <div className="min-w-0 flex-1 flex items-center">
+                    <span className="font-semibold text-sm truncate">@{comment.author?.username}</span>
+                    <Dot />
+                    <span className="text-xs ">
+                      {formatDistanceToNow(new Date(comment.createdAt), {
+                        addSuffix: true,
+                        locale: locale === "ru" ? ru : enUS,
+                      })}
+                    </span>
+                  </div>
+                  <p className="text-sm leading-relaxed break-words">{comment.text}</p>
+                  <div className="flex items-center gap-3 flex-shrink-0 mt-1">
+                    <motion.div whileTap={{ scale: 0.9 }}>
+                      <button
+                        onClick={() => handleLikeToggle(comment)}
+                        className="h-8 w-8 rounded-full bg-none hover:bg-transparent"
+                      >
+                        <motion.div
+                          animate={{
+                            scale: comment.isLiked ? [1, 1.3, 1] : 1,
+                          }}
+                          transition={{ duration: 0.3 }}
+                          className="flex items-center justify-center gap-1 secondary-text"
+                        >
+                          <Heart
+                            className={`h-4 w-4 transition-colors ${comment.isLiked ? "text-red-500 fill-red-500" : "text-muted-foreground"
+                              }`}
+                          />
+                          <span>{comment.likeCount}</span>
+                        </motion.div>
+                      </button>
+                    </motion.div>
+
+                    <motion.div whileTap={{ scale: 0.9 }}>
+                      <button
+                        onClick={() =>
+                          setReplyTo({
+                            id: comment.id,
+                            name: comment.author?.fullname,
+                          })
+                        }
+                        className="flex items-center justify-center h-8 w-8 rounded-full bg-none hover:bg-transparent secondary-text gap-1"
+                      >
+                        <MessageCircle className="h-4 w-4 text-muted-foreground" />
+                        <span>{comment.replies?.length}</span>
+                      </button>
+                    </motion.div>
+                    {user!.id === comment.author.id ? (
+                      <motion.div whileTap={{ scale: 0.9 }}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(comment.id)}
+                          className="h-8 w-8 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20"
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500 hover:text-red-500" />
+                        </Button>
+                      </motion.div>
+                    ) : null}
+                  </div>
                 </div>
               </div>
 
-              <p className="text-sm mt-2 leading-relaxed break-words">{comment.text}</p>
-
-              <div className="flex items-center gap-4 flex-shrink-0">
-                <motion.div whileTap={{ scale: 0.9 }}>
-                  <button
-                    onClick={() => handleLikeToggle(comment)}
-                    className="h-8 w-8 rounded-full bg-none hover:bg-transparent"
-                  >
-                    <motion.div
-                      animate={{
-                        scale: comment.isLiked ? [1, 1.3, 1] : 1,
-                      }}
-                      transition={{ duration: 0.3 }}
-                      className="flex items-center justify-center gap-1 secondary-text"
-                    >
-                      <Heart
-                        className={`h-4 w-4 transition-colors ${comment.isLiked ? "text-red-500 fill-red-500" : "text-muted-foreground"
-                          }`}
-                      />
-                      <span>{comment.likeCount}</span>
-                    </motion.div>
-                  </button>
-                </motion.div>
-
-                <motion.div whileTap={{ scale: 0.9 }}>
-                  <button
-                    onClick={() =>
-                      setReplyTo({
-                        id: comment.id,
-                        name: comment.author?.fullname,
-                      })
-                    }
-                    className="flex items-center justify-center h-8 w-8 rounded-full bg-none hover:bg-transparent secondary-text gap-1"
-                  >
-                    <MessageCircle className="h-4 w-4 text-muted-foreground" />
-                    <span>{comment.replies?.length}</span>
-                  </button>
-                </motion.div>
-
-                {user!.id === comment.author.id ? (
-                  <motion.div whileTap={{ scale: 0.9 }}>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(comment.id)}
-                      className="h-8 w-8 rounded-full hover:bg-red-50 dark:hover:bg-red-950/20"
-                    >
-                      <Trash2 className="h-4 w-4 text-red-500 hover:text-red-500" />
-                    </Button>
-                  </motion.div>
-                ) : null}
-              </div>
-
               {comment.replies?.length! > 0 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 space-y-2 border-l-2">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-3 space-y-2">
                   {comment.replies!.map((reply: any) => renderComment(reply, depth + 1))}
                 </motion.div>
               )}
+
+              <Separator className="w-screen" />
             </div>
           </div>
         </CardContent>

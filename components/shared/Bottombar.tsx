@@ -98,9 +98,9 @@ export const Bottombar = () => {
           item.id === 3 ? (
             <DropdownMenu key={item.id}>
               <DropdownMenuTrigger asChild>
-                <MagicButton icon={item.icon} />
+                <MagicButton icon={item.icon} className="w-[36px] h-[36px] text-white" btn="rounded-lg" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-3 backdrop-blur-xl mx-auto bg-white/90 dark:bg-black/20" align="start">
+              <DropdownMenuContent className="relative p-3 mx-auto rounded-xl overflow-hidden" align="center">
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="mt-2 py-2">

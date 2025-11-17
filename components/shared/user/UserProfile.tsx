@@ -1,15 +1,26 @@
 import Link from "next/link";
-
-import { Author } from "@/types";
 import { UserAvatar } from "./UserAvatar";
 
-export const UserProfile = (author: Author) => {
+type UserProfileProps = {
+  username: string;
+  fullname: string;
+  avatar?: string | null;
+  size?: "sm" | "md" | "lg" | "xl";
+};
+
+export const UserProfile = ({
+  size,
+  ...user
+}: UserProfileProps) => {
   return (
-    <Link href={`/profile/${author.username}`} className="flex items-center justify-center gap-2">
-      <UserAvatar {...author} />
+    <Link
+      href={`/profile/${user.username}`}
+      className="flex items-center justify-center gap-2"
+    >
+      <UserAvatar {...user} size={size} />
       <div className="flex flex-col items-start justify-center">
-        <span className="text-sm font-semibold">{author.fullname}</span>
-        <span className="text-neutral-400 text-sm">@{author.username}</span>
+        <span className="text-sm font-semibold">{user.fullname}</span>
+        <span className="text-neutral-400 text-sm">@{user.username}</span>
       </div>
     </Link>
   );
