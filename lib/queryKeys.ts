@@ -4,7 +4,7 @@ export const queryKeys = {
     all: ["auth"] as const,
     me: () => [...queryKeys.auth.all, "me"] as const,
   },
-  
+
   // user
   users: {
     all: ["users"] as const,
@@ -43,6 +43,12 @@ export const queryKeys = {
   recommendations: {
     all: ["recommendations"] as const,
     users: (limit: number) => [...queryKeys.recommendations.all, "users", limit] as const,
+  },
+
+  history: {
+    all: ["history"] as const,
+    list: (page: number, limit: number) => [...queryKeys.history.all, "list", page, limit] as const,
+    detail: (id: string) => [...queryKeys.history.all, "detail", id] as const,
   },
 
   // Higgsfield

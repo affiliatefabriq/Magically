@@ -1,11 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 
 import { useUser } from "@/hooks/useAuth";
 import { ExploreLoader } from "@/components/states/loaders/Loaders";
-import { HiggsfieldMotionError, NotAuthorized } from "@/components/states/error/Error";
-import { HiggsMotion, useHiggsfieldMotions } from "@/hooks/useHiggsfield";
+import {
+  HiggsMotion,
+  useHiggsfieldMotions
+} from "@/hooks/useHiggsfield";
+import {
+  HiggsfieldMotionError,
+  NotAuthorized
+} from "@/components/states/error/Error";
 
 export const VideoEffects = () => {
   const { data: user } = useUser();
@@ -34,7 +41,8 @@ export const VideoEffects = () => {
       <h1 className="title-text my-4">Видеоэффекты</h1>
       <div className="grid-4 gap-6!">
         {motions?.map((motion: HiggsMotion) => (
-          <div
+          <Link
+            href={`/create/video-effects/${motion.id}`}
             key={motion.id}
             className="flex flex-col items-start justify-start hover:scale-102 magic-transition cursor-pointer"
           >
@@ -47,7 +55,7 @@ export const VideoEffects = () => {
             />
 
             <div className="mt-2 font-medium">{motion.name}</div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

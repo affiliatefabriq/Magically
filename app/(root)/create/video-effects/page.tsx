@@ -1,4 +1,4 @@
-import { VideoEffects } from '@/components/pages/generations/effects/VideoEffects';
+import { VideoEffects } from '@/components/pages/generations/effects/video/VideoEffects';
 
 const Page = () => {
     return <VideoEffects />
