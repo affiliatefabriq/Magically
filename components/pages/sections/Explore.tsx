@@ -1,22 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import { useTheme } from "next-themes";
 import { useUser } from "@/hooks/useAuth";
+import { useEffect, useRef, useState } from "react";
 import { usePublications } from "@/hooks/usePublications";
 
-import { Button } from "@/components/ui/button";
 import { ExploreEmpty } from "@/components/states/empty/Empty";
 import { ExploreLoader } from "@/components/states/loaders/Loaders";
 import { ShootingStars } from "@/components/ui/magic/shooting-stars";
 import { StarsBackground } from "@/components/ui/magic/stars-background";
-import { ExploreError, NotAuthorized } from "@/components/states/error/Error";
+import { ExploreError } from "@/components/states/error/Error";
 import { PublicationCard } from "@/components/shared/publication/PublicationCard";
 
 export const Explore = () => {
-  const { data: user, isError } = useUser();
+  const { data: user } = useUser();
   const { theme } = useTheme();
-  const [filters, setFilters] = useState({ sortBy: "newest", hashtag: "" });
+  const [filters] = useState({ sortBy: "newest", hashtag: "" });
 
   const {
     data,
@@ -24,28 +23,58 @@ export const Explore = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
+    isError,
   } = usePublications(filters);
 
-  const handleFilterChange = (value: string) => {
-    setFilters((prev) => ({ ...prev, sortBy: value }));
-  };
+  const observerRef = useRef<HTMLDivElement>(null);
 
-  const handleHashtagClick = (tag: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      hashtag: prev.hashtag === tag ? "" : tag,
-    }));
-  };
+  // Infinite scroll with IntersectionObserver
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
 
-  const categories = ["Higgsfield", "Kling", "GPT", "FalAI"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
 
-  // Динамичные цвета под тему
+    const currentRef = observerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const starColor = theme === "dark" ? "#FFFFFF" : "#111111";
   const trailColor = theme === "dark" ? "#F020F0" : "#A174D1";
 
+  if (isLoading) {
+    return (
+      <div className="section-padding">
+        <ExploreLoader />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="h-screen! state-center">
+        <ExploreError />
+      </div>
+    );
+  }
+
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
-      {/* --- Stars Layer --- */}
+      {/* Stars Layer */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <StarsBackground className="h-full! w-full! opacity-100" />
         <ShootingStars
@@ -55,7 +84,7 @@ export const Explore = () => {
         />
       </div>
 
-      {/* --- Scrollable content --- */}
+      {/* Scrollable content */}
       <div className="relative z-10 w-full h-full section-padding">
         <div className="grid-4 mt-4 gap-6">
           {data?.pages.map((page) =>
@@ -69,29 +98,16 @@ export const Explore = () => {
           )}
         </div>
 
-        {data?.pages[0].publications.length === 0 && <div className="h-screen! state-center"><ExploreEmpty /></div>}
+        {data?.pages[0].publications.length === 0 && (
+          <div className="h-screen! state-center">
+            <ExploreEmpty />
+          </div>
+        )}
 
+        {/* Infinite scroll trigger */}
         {hasNextPage && (
-          <div className="flex justify-center mt-8">
-            <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-              {isFetchingNextPage ? "Loading more..." : "Load More"}
-            </Button>
-          </div>
-        )}
-
-        {!user && (
-          <div className="h-screen! state-center">
-            <NotAuthorized />
-          </div>
-        )}
-        {user && isError && (
-          <div className="h-screen! state-center">
-            <ExploreError />
-          </div>
-        )}
-        {user && isLoading && (
-          <div>
-            <ExploreLoader />
+          <div ref={observerRef} className="h-20 flex items-center justify-center mt-8">
+            {isFetchingNextPage && <ExploreLoader />}
           </div>
         )}
       </div>

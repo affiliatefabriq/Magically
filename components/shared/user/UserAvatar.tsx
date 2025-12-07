@@ -18,7 +18,7 @@ export const UserAvatar = ({
     <Avatar
       className={`
         flex items-center flex-wrap justify-center theme-2 rounded-full
-        ${size === "sm" && "size-8"}
+        ${size === "sm" && "size-10"}
         ${size === "md" && "size-12"}
         ${size === "lg" && "size-16"}
         ${size === "xl" && "size-24"}

@@ -267,6 +267,12 @@
         "PhotoEffects": "Photo effects"
       }
     },
+    "AuthRequired": {
+      "title": "Auth required",
+      "message": "For this action you need to auth",
+      "login": "Log in",
+      "register": "Register"
+    },
     "EditProfile": {
       "title": "Profile management",
       "fullname": "Full name",
@@ -313,7 +319,10 @@
       },
       "comment": "Write comment...",
       "commentary": "Comment",
-      "commentaries": "Comments"
+      "commentaries": "Comments",
+      "reply": "Reply",
+      "showReplies": "Show replies",
+      "hideReplies": "Hide replies"
     },
     "PublicationActions": {
       "back": "Back to explore",

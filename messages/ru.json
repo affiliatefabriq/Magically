@@ -267,6 +267,12 @@
         "PhotoEffects": "Фотоэффекты"
       }
     },
+    "AuthRequired": {
+      "title": "Нужна авторизация",
+      "message": "Для этого действия вам нужно зарегистрироваться",
+      "login": "Логин",
+      "register": "Регистрация"
+    },
     "EditProfile": {
       "title": "Управление профилем",
       "fullname": "Полное имя",
@@ -313,7 +319,10 @@
       },
       "comment": "Написать комментарий...",
       "commentary": "Комментарий",
-      "commentaries": "Комментарии"
+      "commentaries": "Комментарии",
+      "reply": "Ответ",
+      "showReplies": "Показать ответы",
+      "hideReplies": "Скрыть ответы"
     },
     "PublicationActions": {
       "back": "Назад к главной",

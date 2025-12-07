@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
 import { useDebounceValue } from "usehooks-ts";
@@ -15,7 +15,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PublicationCardSimplified } from "@/components/shared/publication/PublicationCard";
 import { SearchPublicationEmpty, SearchUserEmpty } from "@/components/states/empty/Empty";
 import { ExploreError, NotAuthorized, SearchError } from "@/components/states/error/Error";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 export const Search = () => {
@@ -42,6 +41,33 @@ export const Search = () => {
   } = usePublications({ sortBy: "newest" });
 
   const isEmptySearch = !debouncedQuery;
+
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  // Infinite scroll with IntersectionObserver
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    const currentRef = observerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <section className="flex flex-col container mx-auto section-padding">
@@ -84,11 +110,19 @@ export const Search = () => {
               <>
                 <div className="grid grid-cols-3 gap-0 grid-flow-dense auto-rows-auto">
                   {feedData.pages.map((page) =>
-                    page.publications.map((pub: any, id: any) => (
+                    page.publications.map((pub: any, id: number) => (
                       <PublicationCardSimplified key={pub.id} publication={pub} id={id} />
                     ))
                   )}
                 </div>
+
+                {isFetchingNextPage && (
+                  <div className="flex justify-center mt-4">
+                    <SearchLoader />
+                  </div>
+                )}
+
+                {/* sentinel for IntersectionObserver to auto-load next page */}
                 {hasNextPage && (
                   <div className="flex justify-center mt-4">
                     <Button
