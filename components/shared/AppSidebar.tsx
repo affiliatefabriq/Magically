@@ -1,18 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 import { useRef } from "react";
 import { useUser } from "@/hooks/useAuth";
-import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { ThemeSwitcher } from "../functions/ThemeSwitcher";
-import { LanguageSwitcher } from "../functions/LanguageSwitcher";
+import { useLocale, useTranslations } from "next-intl";
 
 import { NavUser } from "./user/NavUser";
 import { AuroraText } from "../ui/magic/aurora-text";
+import { MagicButton } from "../ui/magic/magic-button";
+import { ThemeSwitcher } from "../functions/ThemeSwitcher";
+import { LanguageSwitcher } from "../functions/LanguageSwitcher";
 
 import {
+  Brush,
   ChevronRight,
   CircleUserRound,
   Compass,
@@ -21,6 +24,7 @@ import {
   Loader,
   Search,
   Sparkles,
+  TriangleAlert,
   UserRound,
   Video,
   Wand
@@ -37,10 +41,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { MagicButton } from "../ui/magic/magic-button";
 
 export function AppSidebar() {
   const t = useTranslations("Components.Sidebar");
+  const locale = useLocale();
   const pathname = usePathname();
   const summaryRef = useRef<HTMLElement | null>(null);
 
@@ -83,9 +87,10 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent className="theme border-none px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="flex items-center my-6">
+          <SidebarGroupLabel className="flex items-center gap-2 my-6">
+            <Image src="/assets/logo.jpg" alt="logo" width={36} height={36} className="border border-violet-500 rounded-lg" />
             <h1 className="text-xl font-bold">
-              <AuroraText>Волшебный</AuroraText>
+              <AuroraText>{t("Logo")}</AuroraText>
             </h1>
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -116,35 +121,59 @@ export function AppSidebar() {
                       </summary>
 
                       <div className="flex flex-col pl-3 mt-2 gap-1">
-                        <SidebarMenuButton asChild className="p-[12px] rounded-full text-md magic-transition">
-                          <Link href="/create/magic-photo" className="btn-magic-secondary flex items-center justify-between">
-                            <Wand />
-                            <span className="font-semibold">{t("MagicPhoto")}</span>
-                            <div />
+                        <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
+                          {/* <Link href="/create/magic-photo" className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed"> */}
+                          <div className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
+                            <div className="flex items-center relative gap-1 blur-xs">
+                              <Wand className="size-5" />
+                              <span className="font-semibold z-20">{t("MagicPhoto")}</span>
+                            </div>
+                            <div className="absolute flex items-center gap-1 text-xs font-bold text-yellow-200">
+                              <TriangleAlert className="size-5" />
+                              {t("InDevelopment")}
+                            </div>
+                          </div>
+                          {/* </Link> */}
+                        </SidebarMenuButton>
+                        <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
+                          <Link href="/create/photo-editor" className="btn-magic-secondary flex items-center justify-start">
+                            <Brush />
+                            <span className="font-semibold">{t("Effects.PhotoEditor")}</span>
                           </Link>
                         </SidebarMenuButton>
-                        <SidebarMenuButton asChild className="p-[12px] rounded-full text-md magic-transition">
-                          <Link href="/create/photo-effects" className="btn-magic-secondary flex items-center justify-between">
+                        <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
+                          <Link href="/create/photo-effects" className="btn-magic-secondary flex items-center justify-start">
                             <Loader />
                             <span className="font-semibold">{t("Effects.PhotoEffects")}</span>
-                            <div />
                           </Link>
                         </SidebarMenuButton>
-                        <SidebarMenuButton asChild className="p-[12px] mb-1 rounded-full text-md magic-transition">
-                          <Link href="/create/video-effects" className="btn-magic-secondary flex items-center justify-between">
+                        <SidebarMenuButton asChild className="p-3 mb-1 rounded-full text-md magic-transition">
+                          <Link href="/create/video-effects" className="btn-magic-secondary flex items-center justify-start">
                             <Video />
                             <span className="font-semibold">{t("Effects.VideoEffects")}</span>
-                            <div />
                           </Link>
                         </SidebarMenuButton>
                       </div>
                     </details>
                   </SidebarMenuItem>
+                ) : item.id === 1 ? (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={`p-4.5 mb-2 rounded-full text-md magic-transition
+                          ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
+                    >
+                      <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
+                        <span className="flex justify-center items-center size-5">{locale === 'ru' ? 'В' : 'M'}</span>
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 ) : (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      className={`p-[18px] mb-2 rounded-full text-md magic-transition
+                      className={`p-4.5 mb-2 rounded-full text-md magic-transition
                           ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
                     >
                       <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
@@ -171,7 +200,7 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                className="p-[18px] mb-2 rounded-full text-md secondary-transition magic-transition "
+                className="p-4.5 mb-2 rounded-full text-md secondary-transition magic-transition "
               >
                 <Link href="/login" className="btn-magic-secondary flex items-center justify-between">
                   <CircleUserRound />
@@ -179,7 +208,7 @@ export function AppSidebar() {
                   <div />
                 </Link>
               </SidebarMenuButton>
-              <SidebarMenuButton asChild className="p-[18px] mb-2 rounded-full text-md magic-hover magic-transition">
+              <SidebarMenuButton asChild className="p-4.5 mb-2 rounded-full text-md magic-hover magic-transition">
                 <Link href="/register" className="btn-magic flex items-center justify-between">
                   <Globe />
                   <span className="font-semibold">{t("Register")}</span>

@@ -21,7 +21,7 @@ export const PublicationLoader = () => {
 }
 
 export const SearchLoader = () => {
-  return Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-16 w-full" />);
+  return Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-16 w-full mb-2" />);
 };
 
 export const ListLoader = () => {
@@ -42,6 +42,23 @@ export const ListLoader = () => {
     </div>
   );
 };
+
+export const LargeListLoader = () => {
+  return Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-48 w-full mb-4" />);
+};
+
+export const JobLoader = () => {
+  return (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="w-96 aspect-square" />
+      <div className="flex gap-2 items-center justify-center w-full">
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-12 w-full" />
+      </div>
+      <Skeleton className="w-96 h-12" />
+    </div>
+  )
+}
 
 export const ProfileLoader = () => {
   return (

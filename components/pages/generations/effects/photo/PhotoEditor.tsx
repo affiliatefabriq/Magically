@@ -14,33 +14,45 @@ export const PhotoEditor = () => {
         },
         {
             id: 2,
-            name:  t("LongShot"),
+            name: t("LongShot"),
             url: "/long-shot",
             image: "/effects/edit/long-shot.jpg"
         },
         {
             id: 3,
-            name:  t("FromAHeight"),
+            name: t("FromAHeight"),
             url: "/from-a-height",
             image: "/effects/edit/from-a-height.jpg"
         },
         {
             id: 4,
-            name:  t("FromBack"),
+            name: t("FromBack"),
             url: "/from-back",
             image: "/effects/edit/from-back.jpg"
         },
         {
             id: 5,
-            name:  t("Profile"),
+            name: t("Profile"),
             url: "/profile",
             image: "/effects/edit/profile.jpg"
         },
         {
             id: 6,
-            name:  t("AntiBlur"),
+            name: t("AntiBlur"),
             url: "/anti-blur",
             image: "/effects/edit/anti-blur.jpg"
+        },
+        {
+            id: 7,
+            name: t("RemovePeople"),
+            url: "/anti-blur",
+            image: "/effects/edit/remove-people.jpg"
+        },
+        {
+            id: 8,
+            name: t("OwnRequest"),
+            url: "/own-request",
+            image: "/effects/edit/own-request.jpg"
         },
     ]
 

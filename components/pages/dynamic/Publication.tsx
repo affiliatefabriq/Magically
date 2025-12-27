@@ -9,27 +9,22 @@ import { usePublication } from "@/hooks/usePublications";
 
 import { API_URL } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
-import { ChevronLeft, MessageCircle } from "lucide-react";
+import { ExploreError } from "@/components/states/error/Error";
+import { ChevronLeft, Heart, MessageCircle } from "lucide-react";
 import { UserProfile } from "@/components/shared/user/UserProfile";
 import { LikeButton } from "@/components/shared/publication/LikeButton";
 import { PublicationLoader } from "@/components/states/loaders/Loaders";
 import { VideoRender } from "@/components/shared/publication/VideoRender";
-import { ExploreError, NotAuthorized } from "@/components/states/error/Error";
 import { CommentSection } from "@/components/shared/publication/CommentSection";
 import { SubscribeButton } from "@/components/shared/publication/SubscribeButton";
 import { PublicationActions } from "@/components/shared/publication/PublicationActions";
+import { AuthRequiredPopover } from "@/components/shared/publication/AuthRequiredPopover";
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
   const t = useTranslations("Components.PublicationActions");
   const { data: user } = useUser();
   const { data: publication, isLoading, isError } = usePublication(publicationId);
 
-  if (!user)
-    return (
-      <div className="state-center">
-        <NotAuthorized />
-      </div>
-    );
   if (isError)
     return (
       <div className="state-center">
@@ -40,7 +35,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
   if (!publication) return null;
 
   return (
-    <section className="grid-2 section-padding">
+    <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 section-padding">
       <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
         <Link href="/" className="flex items-center justify-start h-full ml-2 link-text">
           <ChevronLeft className="size-4 " />
@@ -50,7 +45,11 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
       <div className="flex flex-col items-start justify-start gap-4 mt-12 md:mt-4">
         <div className="flex justify-between w-full">
           <UserProfile {...publication.author} />
-          <SubscribeButton publication={publication} style="login" className={`${user.id === publication.author.id ? 'hidden' : 'block'}`} />
+          <SubscribeButton
+            publication={publication}
+            style="login"
+            className={`${user?.id === publication.author.id ? 'hidden' : 'block'} ${!user ? 'hidden' : 'block'}`}
+          />
         </div>
         {publication.videoUrl ? (
           <VideoRender
@@ -69,12 +68,21 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
 
         <div className="flex flex-col items-start justify-center gap-2 px-2">
           <div className="flex items-center justify-start gap-4">
-            <LikeButton {...publication} />
-            <button className="flex items-center justify-center bg-none hover:bg-transparent p-0 magic-transition gap-1">
-              <MessageCircle className="size-5 hover:text-white hover:fill-white stroke-1" />
+            {user ? (
+              <LikeButton {...publication} />
+            ) : (
+              <AuthRequiredPopover>
+                <button className="flex items-center justify-center bg-none hover:bg-transparent p-0 magic-transition gap-1 hover:text-red-500 hover:dark:text-red-400 transition-colors">
+                  <Heart className="size-5 stroke-1" />
+                  <span>{publication.likeCount}</span>
+                </button>
+              </AuthRequiredPopover>
+            )}
+            <button className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors">
+              <MessageCircle className="size-5 stroke-1" />
               <span>{publication.commentCount}</span>
             </button>
-            {publication.author.id === user.id ? (
+            {publication.author.id === user?.id ? (
               <PublicationActions publicationId={publication.id} initialContent={publication.content} />
             ) : (
               ""

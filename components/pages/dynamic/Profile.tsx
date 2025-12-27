@@ -34,7 +34,7 @@ export const Profile = ({ username }: { username: string }) => {
         <div className="flex items-center justify-between">
           <UserProfile {...user} />
         </div>
-        <p className="text-sm text-muted-foreground break-words mt-6">{user.bio}</p>
+        <p className="text-sm text-muted-foreground wrap-break-word mt-6">{user.bio}</p>
       </div>
       <Separator className="bg-muted my-4" />
       <div className="flex items-center justify-evenly gap-4 secondary-text">
@@ -55,7 +55,7 @@ export const Profile = ({ username }: { username: string }) => {
       )}
       <div className="grid-3-mobile">
         {user.publications.map((pub: any) => (
-          <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border-1 border-white dark:border-black">
+          <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border border-white dark:border-black">
             {pub.imageUrl && (
               <Image
                 src={`${API_URL}${pub.imageUrl}`}

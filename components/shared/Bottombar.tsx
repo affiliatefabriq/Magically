@@ -4,14 +4,17 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { MagicButton } from "../ui/magic/magic-button";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
+  Brush,
   Compass,
   Folder,
   Loader,
   Search,
   Sparkles,
+  TriangleAlert,
   UserRound,
   Video,
   Wand
@@ -24,11 +27,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MagicButton } from "../ui/magic/magic-button";
 
 export const Bottombar = () => {
-  const t = useTranslations("Components.Sidebar");
+  const locale = useLocale();
   const pathname = usePathname();
+  const t = useTranslations("Components.Sidebar");
 
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -92,41 +95,60 @@ export const Bottombar = () => {
   return (
     <nav
       style={bottomBarStyle}
-      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-2 z-10 w-full h-[64px] px-2"
+      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-2 z-10 w-full h-16 px-2"
     >
       <div className="flex items-center justify-center gap-4 rounded-2xl border p-3 backdrop-blur-xl mx-auto bg-white/50 dark:bg-black/20">
         {items.map((item) =>
           item.id === 3 ? (
             <DropdownMenu key={item.id}>
               <DropdownMenuTrigger asChild>
-                <MagicButton icon={item.icon} className="w-[36px] h-[36px] text-white" btn="rounded-lg" />
+                <MagicButton icon={item.icon} className="w-9 h-9 text-white" btn="rounded-lg" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="relative p-3 mx-auto rounded-xl overflow-hidden" align="center">
+              <DropdownMenuContent className="relative p-4 mx-auto rounded-xl overflow-hidden" align="center">
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/create/magic-photo" className="flex items-center justify-between gap-2">
-                    <Wand />
-                    <span className="font-semibold">{t("MagicPhoto")}</span>
-                    <div />
+                  {/* <Link href="/create/magic-photo" className="flex items-center justify-start gap-2"> */}
+                  <div className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
+                    <div className="flex items-center relative gap-1 blur-xs">
+                      <Wand className="size-4" />
+                      <span className="font-semibold z-20">{t("MagicPhoto")}</span>
+                    </div>
+                    <div className="absolute flex items-center gap-2 text-xs font-bold text-yellow-200">
+                      <TriangleAlert className="size-4 text-yellow-200" />
+                      {t("InDevelopment")}
+                    </div>
+                  </div>
+                  {/* </Link> */}
+                </DropdownMenuItem>
+                <DropdownMenuItem className="mt-2 py-2">
+                  <Link href="/create/photo-editor" className="flex items-center justify-start gap-2">
+                    <Brush />
+                    <span className="font-semibold">{t("Effects.PhotoEditor")}</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/create/photo-effects" className="flex items-center justify-between gap-2">
+                  <Link href="/create/photo-effects" className="flex items-center justify-start gap-2">
                     <Loader />
                     <span className="font-semibold">{t("Effects.PhotoEffects")}</span>
-                    <div />
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/create/video-effects" className="flex items-center justify-between gap-2">
+                  <Link href="/create/video-effects" className="flex items-center justify-start gap-2">
                     <Video />
                     <span className="font-semibold">{t("Effects.VideoEffects")}</span>
-                    <div />
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : item.id === 1 ? (
+            <Link
+              href={item.url}
+              key={item.id}
+              className={`relative flex flex-col items-center gap-4 rounded-lg p-2 font-semibold ${pathname === item.url ? "btn-magic" : ""}`}
+            >
+              <span className="flex justify-center items-center size-5">{locale === 'ru' ? 'В' : 'M'}</span>
+            </Link>
           ) : (
             <Link
               href={item.url}

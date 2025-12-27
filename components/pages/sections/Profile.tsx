@@ -87,7 +87,7 @@ export const Profile = () => {
             </div>
           </div>
         </div>
-        <p className="text-sm text-muted-foreground break-words mt-2">{user.bio}</p>
+        <p className="text-sm text-muted-foreground wrap-break-word mt-2">{user.bio}</p>
         <div className="flex items-center gap-2 text-muted-foreground mt-4">
           <p className="text-sm">{t("tokens")}</p>
           <span className="text-sm">✦ {user.tokens}</span>
@@ -95,7 +95,7 @@ export const Profile = () => {
         <div className="flex flex-row items-center gap-3 text-muted-foreground">
           <div className="flex text-sm w-auto">{t("activity")}</div>
           <div className="flex flex-1 items-center w-full mt-1">
-            <Progress value={user.dailyActions.count * 10} className="w-full max-w-[75px] lg:max-w-[150px]" />
+            <Progress value={user.dailyActions.count * 10} className="w-full max-w-18.75 lg:max-w-37.5" />
             <span className="px-2 w-16 text-sm text-muted-foreground text-center">{user.dailyActions.count} / 10</span>
           </div>
         </div>
@@ -120,7 +120,7 @@ export const Profile = () => {
       )}
       <div className="grid-3-mobile">
         {user.publications.map((pub: any) => (
-          <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border-1 border-white dark:border-black">
+          <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border border-white dark:border-black">
             {pub.imageUrl && (
               <Image
                 src={`${API_URL}${pub.imageUrl}`}

@@ -12,7 +12,7 @@ export const UserAvatar = ({
   username,
   fullname,
   avatar,
-  size="md"
+  size = "md"
 }: UserAvatarProps) => {
   return (
     <Avatar
@@ -29,7 +29,14 @@ export const UserAvatar = ({
         alt={username}
         className="rounded-full h-full w-full object-cover"
       />
-      <AvatarFallback className="rounded-full text-black dark:text-white">
+      <AvatarFallback
+        className={`rounded-full text-black dark:text-white         
+          ${size === "sm" && "text-base"}
+          ${size === "md" && "text-lg"}
+          ${size === "lg" && "text-xl"}
+          ${size === "xl" && "text-2xl"}
+        `}
+      >
         {!avatar ? fullname.charAt(0) : ""}
       </AvatarFallback>
     </Avatar>

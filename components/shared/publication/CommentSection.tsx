@@ -62,6 +62,7 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
   const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null);
   const [text, setText] = useState("");
   const [showRepliesMap, setShowRepliesMap] = useState<Record<string, boolean>>({});
+  const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
 
   const locale = typeof window !== "undefined" ? localStorage.getItem("locale") || "en" : "en";
 
@@ -120,18 +121,38 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
               <div className="flex items-center">
                 <span className="font-semibold text-sm truncate">@{comment.author?.username}</span>
                 <Dot className="text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground truncate">
                   {formatDistanceToNow(new Date(comment.createdAt), {
                     addSuffix: true,
                     locale: locale === "ru" ? ru : enUS,
                   })}
                 </span>
+
               </div>
               <p className="text-sm leading-relaxed wrap-break-word">
                 {parentAuthor && (
                   <span className="text-lime-500 font-medium mr-1">@{parentAuthor} </span>
                 )}
-                {comment.text}
+                {comment.text.length > 128 ? (
+                  <>
+                    <span>{expandedCommentsMap[comment.id] ? comment.text : `${comment.text.slice(0, 128)}...`}</span>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="px-2 h-auto cursor-pointer text-muted-foreground"
+                      onClick={() => {
+                        setExpandedCommentsMap(prev => ({
+                          ...prev,
+                          [comment.id]: !prev[comment.id]
+                        }));
+                      }}
+                    >
+                      {expandedCommentsMap[comment.id] ? t("readLess") : t("readMore")}
+                    </Button>
+                  </>
+                ) : (
+                  <span>{comment.text}</span>
+                )}
               </p>
               <div className="flex items-center gap-3 mt-2">
                 <motion.div whileTap={{ scale: 0.9 }}>
@@ -162,7 +183,7 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                   </button>
                 </motion.div>
 
-                {user!.id === comment.author.id && (
+                {user?.id === comment.author.id ? (
                   <motion.div whileTap={{ scale: 0.9 }}>
                     <Button
                       variant="ghost"
@@ -173,7 +194,7 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                       <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>
                   </motion.div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
@@ -223,7 +244,6 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                   className="space-y-1"
                 >
                   {allReplies.map((reply, index) => {
-                    // Find parent author for mention
                     let parentAuthor = comment.author.username;
                     if (index > 0) {
                       parentAuthor = allReplies[index - 1].author.username;
@@ -285,7 +305,7 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
         <div className="h-24" />
       </ScrollArea>
 
-      <div className="backdrop-blur-3xl bg-transparent py-4 px-2 sticky w-full bottom-0 z-50">
+      <div className="theme py-4 px-2 sticky w-full bottom-0 z-50">
         <AnimatePresence>
           {replyTo && (
             <motion.div
@@ -323,12 +343,13 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                 handleSubmit(e);
               }
             }}
+            disabled={!user}
             className="flex-1 h-11"
           />
           <motion.div whileTap={{ scale: 0.95 }}>
             <Button
               onClick={handleSubmit}
-              disabled={createComment.isPending || replyToComment.isPending || !text.trim()}
+              disabled={!user || createComment.isPending || replyToComment.isPending || !text.trim()}
               className="h-11 btn-login"
             >
               <Send className="size-4" />

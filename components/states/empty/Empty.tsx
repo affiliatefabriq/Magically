@@ -8,7 +8,8 @@ import {
   GalleryHorizontalEnd,
   Newspaper,
   SearchX,
-  UserRoundX
+  UserRoundX,
+  Workflow
 } from "lucide-react";
 import {
   Empty,
@@ -123,6 +124,19 @@ export const LibraryEmpty = () => {
     />
   );
 };
+
+export const JobEmpty = () => {
+    const t = useTranslations("States.Empty.Job");
+  return (
+    <EmptyComponent
+      title={t("title")}
+      description={t("description")}
+      button={t("button")}
+      buttonLink="/"
+      icon={Workflow}
+    />
+  );
+}
 
 export const ModelsEmpty = () => {
   const t = useTranslations("States.Empty.Models");

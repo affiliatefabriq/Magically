@@ -64,9 +64,10 @@ export const GenerateVideo = ({ motionId }: { motionId: string }) => {
 
             const response = await generateVideo.mutateAsync(formData);
 
-            if (response?.data?.historyId) {
-                router.push(`/library?historyId=${response.data.historyId}`);
-            }
+            if (response) {
+                 window.dispatchEvent(new Event("generation-started"));
+                 router.push(`/library`); 
+            };
         } catch (error: any) {
             console.error("Generation error:", error);
         } finally {
@@ -101,7 +102,7 @@ export const GenerateVideo = ({ motionId }: { motionId: string }) => {
                                         <FormControl>
                                             <Textarea
                                                 placeholder={t("Prompt.placeholder")}
-                                                className="min-h-[100px]"
+                                                className="min-h-25"
                                                 {...field}
                                             />
                                         </FormControl>

@@ -30,7 +30,6 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
       <div className="relative w-full group">
         <div className="flex flex-col md:hidden">
           <div className="flex md:hidden flex-row gap-2">
-
             <UserAvatar {...publication.author} size="sm" />
             {/* {publication.author.id === userId ? (
               <PublicationActions publicationId={publication.id} initialContent={publication.content} />
@@ -43,7 +42,7 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                 <Dot />
                 <div className="text-sm secondary-text">{formatDate(publication.createdAt)}</div>
               </div>
-              <div className="text-sm my-0.5">{publication.content}</div>
+              <div className="text-sm mb-1">{publication.content}</div>
               {publication.videoUrl && (
                 <VideoRender
                   src={`${API_URL}${publication.videoUrl}`}
@@ -71,7 +70,11 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                   </AuthRequiredPopover>
                 )}
                 <motion.div whileTap={{ scale: 0.9 }}>
-                  <Link href={`/publications/${publication.id}`} key={publication.id} className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors">
+                  <Link
+                    href={`/publications/${publication.id}`}
+                    key={publication.id}
+                    className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors"
+                  >
                     <MessageCircle className="size-5 stroke-1" />
                     <span>{publication.commentCount}</span>
                   </Link>

@@ -48,6 +48,7 @@ export const formSchema = z.object({
     aspect_ratio: z.string(),
     images: z.array(z.instanceof(File)).optional(),
     publish: z.boolean(),
+    model_type: z.string()
 });
 
 export type FormValues = z.infer<typeof formSchema>;

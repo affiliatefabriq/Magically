@@ -246,6 +246,10 @@
     @apply grid grid-cols-1 md:grid-cols-2 gap-4;
   }
 
+  .grid-1 {
+    @apply grid grid-cols-1 gap-4;
+  }
+
   .grid-3-mobile {
     @apply grid grid-cols-3 gap-0;
   }

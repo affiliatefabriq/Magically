@@ -37,9 +37,9 @@
         "Failure": "Couldn't register. Fill all fields."
       },
       "Steps": {
-        "1": "Шаг 1",
-        "2": "Шаг 2",
-        "3": "Шаг 3"
+        "1": "Step 1",
+        "2": "Step 2",
+        "3": "Step 3"
       },
       "OTP": "One-Time Password",
       "EnterOTP": "Enter the OTP sent to"
@@ -91,6 +91,11 @@
       "Library": {
         "title": "No item in gallery",
         "description": "No items was found in gallery, try to create one.",
+        "button": "Go to home page"
+      },
+      "Job": {
+        "title": "No job was found here",
+        "description": "No job was found in here, try another one.",
         "button": "Add to gallery"
       },
       "Models": {
@@ -150,9 +155,9 @@
     },
     "Library": {
       "title": "Library",
-      "search": "Search by prompt",
-      "newest": "Newest",
-      "oldest": "Oldest"
+      "Gallery": "Gallery",
+      "Jobs": "Generations",
+      "Transactions": "Transactions"
     },
     "Profile": {
       "title": "Profile",
@@ -217,7 +222,9 @@
         "FromAHeight": "From a height",
         "FromBack": "From back",
         "Profile": "Profile",
-        "AntiBlur": "Anti blur"
+        "AntiBlur": "Anti blur",
+        "RemovePeople": "Remove people",
+        "OwnRequest": "Own request"
       },
       "PhotoGenerate": {
         "title": "Custom request",
@@ -248,12 +255,29 @@
         "FromAHeight": "From a height",
         "FromBack": "From back",
         "Profile": "Profile",
-        "AntiBlur": "Anti blur"
+        "AntiBlur": "Anti blur",
+        "RemovePeople": "Remove people",
+        "OwnRequest": "Own request"
       }
+    },
+    "Job": {
+      "Status": {
+        "Pending": "Creating magic",
+        "Processing": "Processing",
+        "Fail": "Generation failed",
+        "Finish": "Result Ready"
+      },
+      "Button": {
+        "Save": "Save",
+        "Share": "Share",
+        "Done": "Done"
+      },
+      "Back": "Back to library"
     }
   },
   "Components": {
     "Sidebar": {
+      "Logo": "Magical",
       "Explore": "Explore",
       "Search": "Search",
       "Create": "Create",
@@ -261,10 +285,12 @@
       "Profile": "Profile",
       "Login": "Log In",
       "Register": "Register",
+      "InDevelopment": "In development",
       "MagicPhoto": "Magic photo",
       "Effects": {
         "VideoEffects": "Video effects",
-        "PhotoEffects": "Photo effects"
+        "PhotoEffects": "Photo effects",
+        "PhotoEditor": "Photo editor"
       }
     },
     "AuthRequired": {
@@ -317,6 +343,8 @@
         "for": "Response for",
         "write": "Write response..."
       },
+      "readMore": "Read more",
+      "readLess": "Read less",
       "comment": "Write comment...",
       "commentary": "Comment",
       "commentaries": "Comments",

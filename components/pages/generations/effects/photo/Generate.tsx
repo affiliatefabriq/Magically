@@ -4,15 +4,16 @@ import Link from "next/link";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useGenerateNanoImage } from "@/hooks/useNano";
 import { formSchema, FormValues } from "@/lib/validation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useGenerateNanoImage } from "@/hooks/useNano";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { UploadImage } from "@/components/shared/create/UploadImage";
 import {
     ToggleGroup,
@@ -33,7 +34,13 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import { useTranslations } from "next-intl";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 
 export const Generate = () => {
     const t = useTranslations("Pages.Effects.PhotoGenerate")
@@ -48,6 +55,7 @@ export const Generate = () => {
             aspect_ratio: "1:1",
             images: [],
             publish: false,
+            model_type: "nano",
         },
     });
 
@@ -178,6 +186,30 @@ export const Generate = () => {
                                                 {t("Publish.description")}
                                             </p>
                                         </div>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="model_type"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Generation Model</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select Model" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="nano">Nano Banana (Fastest)</SelectItem>
+                                                <SelectItem value="nano-pro">Nano Pro (Balanced)</SelectItem>
+                                                <SelectItem value="gpt-1.0">GPT Image 1.0 (Creative)</SelectItem>
+                                                <SelectItem value="gpt-1.5">GPT Image 1.5 (High Detail)</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />

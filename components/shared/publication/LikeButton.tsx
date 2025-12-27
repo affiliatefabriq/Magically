@@ -44,7 +44,6 @@ export const LikeButton = (publication: Publication) => {
 
   return (
     <motion.div whileTap={{ scale: 0.9 }}>
-
       <button
         className="flex items-center justify-center bg-none hover:bg-transparent p-0 magic-transition gap-1 hover:text-red-500 hover:dark:text-red-400 transition-colors"
         onClick={publication.isLiked ? handleUnlike : handleLike}

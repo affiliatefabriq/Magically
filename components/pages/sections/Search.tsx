@@ -29,7 +29,6 @@ export const Search = () => {
     isError: isSearchError,
   } = useSearch({ ...filters, query: debouncedQuery });
 
-  // Рекомендации при пустом поиске
   const { data: recommendedUsers, isLoading: isLoadingRecommended } = useRecommendedUsers(
     !debouncedQuery
   );
@@ -83,7 +82,6 @@ export const Search = () => {
       </div>
 
       {isEmptySearch ? (
-        // Показываем рекомендации при пустом поиске
         <Tabs defaultValue="users" className="w-full">
           <TabsList className="w-full mt-2">
             <TabsTrigger value="users">{t("recommended")}</TabsTrigger>
@@ -100,9 +98,9 @@ export const Search = () => {
                   <UserCard key={user.id} user={user} />
                 ))}
               </>
-            ) : (
+            ) : (user ? (
               <SearchUserEmpty />
-            )}
+            ) : null)}
           </TabsContent>
 
           <TabsContent value="publications" className="space-y-4 mt-4">
@@ -135,9 +133,9 @@ export const Search = () => {
                   </div>
                 )}
               </>
-            ) : (
+            ) : (user ? (
               <SearchPublicationEmpty />
-            )}
+            ) : null)}
           </TabsContent>
         </Tabs>
       ) : (
@@ -153,9 +151,9 @@ export const Search = () => {
                   <UserCard key={user.id} user={user} />
                 ))}
               </>
-            ) : (
+            ) : (user ? (
               <SearchUserEmpty />
-            )}
+            ) : null)}
           </TabsContent>
           <TabsContent value="publications" className="space-y-4 mt-4">
             {searchResults?.publications.length > 0 ? (
@@ -166,9 +164,9 @@ export const Search = () => {
                   ))}
                 </div>
               </>
-            ) : (
+            ) : (user ? (
               <SearchPublicationEmpty />
-            )}
+            ) : null)}
           </TabsContent>
         </Tabs>
       )}
@@ -190,7 +188,7 @@ export const Search = () => {
             <SearchLoader />
           </div>
         )}
-        {isSearchError && <SearchError />}
+        {user && isSearchError && <SearchError />}
       </div>
     </section>
   );

@@ -13,7 +13,7 @@ export const Effects = () => {
             <div className="grid-3 gap-4 mt-6">
                 <Link
                     href="/create/photo-effects/effects"
-                    className="border border-black/[0.2] dark:border-white/[0.2] flex flex-col items-start w-full p-2 relative"
+                    className="border border-black/20 dark:border-white/20 flex flex-col items-start w-full p-2 relative"
                 >
                     <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
                     <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />
@@ -41,7 +41,7 @@ export const Effects = () => {
                 </Link>
                 <Link
                     href="/create/photo-effects/editor"
-                    className="border border-black/[0.2] dark:border-white/[0.2] flex flex-col items-start w-full p-2 relative"
+                    className="border border-black/20 dark:border-white/20 flex flex-col items-start w-full p-2 relative"
                 >
                     <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
                     <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />
@@ -64,7 +64,7 @@ export const Effects = () => {
                 </Link>
                 <Link
                     href="/create/photo-effects/generate"
-                    className="border border-black/[0.2] dark:border-white/[0.2] flex flex-col items-start w-full p-2 relative"
+                    className="border border-black/20 dark:border-white/20 flex flex-col items-start w-full p-2 relative"
                 >
                     <Icon className="absolute h-6 w-6 -top-3 -left-3 dark:text-white text-black" />
                     <Icon className="absolute h-6 w-6 -bottom-3 -left-3 dark:text-white text-black" />

@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useSubscribe, useUnsubscribe } from "@/hooks/useProfile";
+import {
+  useSubscribe,
+  useUnsubscribe
+} from "@/hooks/useProfile";
 
 import { Publication } from "@/types";
 import { Button } from "@/components/ui/button";
