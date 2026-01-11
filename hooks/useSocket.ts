@@ -1,10 +1,8 @@
 "use client";
 
-import { toast } from "sonner";
-import { API_URL } from "@/lib/api";
-import { useUser } from "./useAuth";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { useUser } from "./useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const useSocket = () => {
@@ -15,25 +13,29 @@ export const useSocket = () => {
   useEffect(() => {
     if (!user) return;
 
-    const socketUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:5000';
-    socketRef.current = io(socketUrl);
+    const socketUrl =
+      process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "") ||
+      "http://localhost:5000";
 
-    socketRef.current.emit("registerUser", user.id);
-
-    socketRef.current.on("jobUpdate", (data: any) => {
-      queryClient.invalidateQueries({ queryKey: ["activeGeneration"] });
-      queryClient.invalidateQueries({ queryKey: ["generationHistory"] });
-      queryClient.invalidateQueries({ queryKey: ["generation", data.jobId] });
-
-      if (data.type === "completed") {
-        toast.success(`Generation completed! (${data.service})`);
-      } else if (data.type === "failed") {
-        toast.error(`Generation failed: ${data.error}`);
-      }
+    const socket = io(socketUrl, {
+      transports: ["websocket"],
     });
 
+    socketRef.current = socket;
+
+    socket.emit("registerUser", user.id);
+
+    socket.on("jobUpdate", (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["activeGeneration"] });
+
+      queryClient.invalidateQueries({ queryKey: ["generation", data.jobId] });
+      queryClient.invalidateQueries({ queryKey: ["generationHistory"] });
+    });
+    
     return () => {
-      socketRef.current?.disconnect();
+      socket.off("jobUpdate");
+      socket.disconnect();
+      socketRef.current = null;
     };
   }, [user, queryClient]);
 

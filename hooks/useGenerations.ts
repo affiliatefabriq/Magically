@@ -6,11 +6,13 @@ export const useActiveGeneration = () => {
     queryKey: ["activeGeneration"],
     queryFn: async () => {
       const { data } = await api.get("/job/active");
-      return data.data;
+      return data.data ?? null;
     },
     refetchInterval: 5000,
+    staleTime: 0,
   });
 };
+
 
 export const useGenerationHistory = () => {
   return useQuery({

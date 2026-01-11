@@ -3,20 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { useState } from "react";
 import { API_URL } from "@/lib/api";
-import { motion } from "framer-motion";
 import { Publication } from "@/types";
+import { motion } from "framer-motion";
 import { formatDate } from "@/lib/utils";
-import { LikeButton } from "./LikeButton";
 import { VideoRender } from "./VideoRender";
+
+import { LikeButton } from "./LikeButton";
+import { UserAvatar } from "../user/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { UserProfile } from "../user/UserProfile";
 import { SubscribeButton } from "./SubscribeButton";
+import { Separator } from "@/components/ui/separator";
 import { Dot, Heart, MessageCircle } from "lucide-react";
 import { PublicationActions } from "./PublicationActions";
 import { AuthRequiredPopover } from "./AuthRequiredPopover";
-import { UserAvatar } from "../user/UserAvatar";
-import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 
 type PublicationCardProps = {
   publication: Publication;
@@ -25,6 +28,9 @@ type PublicationCardProps = {
 };
 
 export const PublicationCard = ({ publication, userId }: PublicationCardProps) => {
+  const t = useTranslations("Components.Publication")
+  const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
+
   return (
     <div className="flex flex-col items-start justify-center gap-2">
       <div className="relative w-full group">
@@ -42,7 +48,28 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                 <Dot />
                 <div className="text-sm secondary-text">{formatDate(publication.createdAt)}</div>
               </div>
-              <div className="text-sm mb-1">{publication.content}</div>
+              <article className="mb-2">
+                {publication.content.length > 128 ? (
+                  <>
+                    <span className="prompt-text text-tertiary-text">{expandedCommentsMap[publication.id] ? publication.content : `${publication.content.slice(0, 128)}...`}</span>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="px-0 h-auto cursor-pointer text-muted-foreground font-normal"
+                      onClick={() => {
+                        setExpandedCommentsMap(prev => ({
+                          ...prev,
+                          [publication.id]: !prev[publication.id]
+                        }));
+                      }}
+                    >
+                      {expandedCommentsMap[publication.id] ? null : t("readMore")}
+                    </Button>
+                  </>
+                ) : (
+                  <span className="prompt-text text-tertiary-text">{publication.content}</span>
+                )}
+              </article>
               {publication.videoUrl && (
                 <VideoRender
                   src={`${API_URL}${publication.videoUrl}`}

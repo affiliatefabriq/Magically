@@ -293,6 +293,13 @@
         "PhotoEditor": "Photo editor"
       }
     },
+    "Toaster": {
+      "Pending": "Getting started",
+      "Processing": "Creating magic",
+      "Fail": "Couldn't create the magic",
+      "Success": "Magic created",
+      "Open": "Open"
+    },
     "AuthRequired": {
       "title": "Auth required",
       "message": "For this action you need to auth",
@@ -336,6 +343,10 @@
       "Follow": "Follow",
       "Unfollow": "Unfollow"
     },
+    "Publication": {
+      "readMore": "Read more",
+      "readLess": "Read less"
+    },
     "CommentSection": {
       "title": "Comments",
       "empty": "No comments yet, be first!",
@@ -356,6 +367,8 @@
       "back": "Back to explore",
       "title": "Edit publication",
       "edit": "Edit",
+      "readMore": "Read more",
+      "readLess": "Read less",
       "delete": {
         "title": "Delete",
         "deleting": "Deleting..."

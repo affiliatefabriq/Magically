@@ -6,7 +6,7 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const api = axios.create({
   baseURL: `${API_URL}/api/v1`,
   withCredentials: true,
-  params: { "ngrok-skip-browser-warning": 1 },
+  // params: { "ngrok-skip-browser-warning": 1 },
   timeout: 900000,
 });
 

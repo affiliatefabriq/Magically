@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 
+import { useState } from "react";
+import { API_URL } from "@/lib/api";
+import { formatDate } from "@/lib/utils";
 import { useUser } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
 import { usePublication } from "@/hooks/usePublications";
 
-import { API_URL } from "@/lib/api";
-import { formatDate } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { ExploreError } from "@/components/states/error/Error";
 import { ChevronLeft, Heart, MessageCircle } from "lucide-react";
 import { UserProfile } from "@/components/shared/user/UserProfile";
@@ -22,12 +24,13 @@ import { AuthRequiredPopover } from "@/components/shared/publication/AuthRequire
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
   const t = useTranslations("Components.PublicationActions");
+  const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
   const { data: user } = useUser();
   const { data: publication, isLoading, isError } = usePublication(publicationId);
 
   if (isError)
     return (
-      <div className="state-center">
+      <div className="state-center section-padding">
         <ExploreError />
       </div>
     );
@@ -88,7 +91,28 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
               ""
             )}
           </div>
-          <div className="my-1">{publication.content}</div>
+          <article className="mb-2">
+            {publication.content.length > 256 ? (
+              <>
+                <span className="text-base! prompt-text text-tertiary-text">{expandedCommentsMap[publication.id] ? publication.content : `${publication.content.slice(0, 256)}...`}</span>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="px-0 h-auto cursor-pointer text-muted-foreground font-normal"
+                  onClick={() => {
+                    setExpandedCommentsMap(prev => ({
+                      ...prev,
+                      [publication.id]: !prev[publication.id]
+                    }));
+                  }}
+                >
+                  {expandedCommentsMap[publication.id] ? null : t("readMore")}
+                </Button>
+              </>
+            ) : (
+              <span className="prompt-text text-tertiary-text">{publication.content}</span>
+            )}
+          </article>
           <div className="text-sm secondary-text mb-4">{formatDate(publication.createdAt)}</div>
         </div>
       </div>

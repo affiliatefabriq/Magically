@@ -77,7 +77,7 @@ export const Library = () => {
               <div key={item.id} className="relative group rounded-lg overflow-hidden border">
                 <Image src={`${API_URL}${item.imageUrl}`} alt={item.prompt} width={300} height={300} className="object-cover w-full aspect-square" />
                 <div className="flex flex-col items-start justify-center p-4 text-sm gap-4">
-                  <p>{item.prompt}</p>
+                  <p className="prompt-text text-tertiary-text">{item.prompt}</p>
                   <time className="text-muted-foreground">{new Date(item.createdAt).toLocaleString()}</time>
                 </div>
               </div>
@@ -106,13 +106,18 @@ export const Library = () => {
                         <Clock /> {job.status}
                       </Badge>
                     )}
+                    {job.status === 'processing' && (
+                      <Badge className="btn-magic-secondary">
+                        <Clock /> {job.status}
+                      </Badge>
+                    )}
                     {job.status === 'failed' && (
                       <Badge variant="destructive">
                         <X /> {job.status}
                       </Badge>
                     )}
                   </CardHeader>
-                  <CardContent className="p-4 pt-0 text-sm w-fit">
+                  <CardContent className="p-4 pt-0 w-fit prompt-text text-tertiary-text">
                     {job.meta?.prompt || "No prompt"}
                   </CardContent>
                 </Card>
@@ -122,16 +127,31 @@ export const Library = () => {
         </TabsContent>
         <TabsContent value="transactions">
           {isTransLoading && <SearchLoader />}
-          {transactionsData.length === 0 && <JobEmpty />}
+
+          {!isTransLoading && transactionsData?.rows?.length === 0 && (
+            <JobEmpty />
+          )}
+
           <div className="flex flex-col gap-2">
             {transactionsData?.rows?.map((tx: any) => (
-              <div key={tx.id} className="flex justify-between items-center p-3 border rounded-xl theme">
+              <div
+                key={tx.id}
+                className="flex justify-between items-center p-3 border rounded-xl theme"
+              >
                 <div className="flex flex-col">
                   <span className="font-medium text-sm">{tx.description}</span>
-                  <span className="text-xs text-muted-foreground">{new Date(tx.createdAt).toLocaleDateString()}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(tx.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
-                <span className={`font-bold ${tx.type === 'credit' ? 'text-lime-400 dark:text-lime-500' : 'text-red-500'}`}>
-                  {tx.type === 'credit' ? '+' : '-'}{tx.amount} ✦
+                <span
+                  className={`font-bold ${tx.type === "credit"
+                    ? "text-lime-400 dark:text-lime-500"
+                    : "text-red-500"
+                    }`}
+                >
+                  {tx.type === "credit" ? "+" : "-"}
+                  {tx.amount} ✦
                 </span>
               </div>
             ))}

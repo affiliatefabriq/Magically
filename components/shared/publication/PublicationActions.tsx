@@ -100,7 +100,7 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
               placeholder={t("enter")}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="min-h-[60px]"
+              className="min-h-15"
             />
           </div>
 

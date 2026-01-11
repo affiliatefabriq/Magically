@@ -1,76 +1,83 @@
 "use client";
 
-import { io } from "socket.io-client";
+import Link from "next/link";
+
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { useActiveGeneration } from "@/hooks/useGenerations";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-
-type ToastState = "idle" | "pending" | "processing" | "completed" | "failed";
 
 export const GenerationToaster = () => {
-    const socketUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:5000';
-    const socket = io(socketUrl);
-    const [status, setStatus] = useState<ToastState>("idle");
-    const [message, setMessage] = useState("");
-    const queryClient = useQueryClient();
+    const t = useTranslations("Components.Toaster");
+    const { data: job } = useActiveGeneration();
+    const [showFinal, setShowFinal] = useState<
+        "success" | "failed" | null
+    >(null);
 
     useEffect(() => {
-        if (!socket) return;
-        const handleUpdate = (data: any) => {
-            if (data.type === "processing") {
-                setStatus("processing");
-                setMessage("Generating magic...");
-            }
-            else if (data.type === "completed") {
-                setStatus("completed");
-                setMessage("Generation complete!");
+        if (!job) return;
 
-                queryClient.invalidateQueries({ queryKey: ["gallery"] });
-                queryClient.invalidateQueries({ queryKey: ["transactions"] });
-                queryClient.invalidateQueries({ queryKey: ["generations"] });
+        if (job.status === "completed") {
+            setShowFinal("success");
+            setTimeout(() => setShowFinal(null), 7000);
+        }
 
-                setTimeout(() => setStatus("idle"), 4000);
-            }
-            else if (data.type === "failed") {
-                setStatus("failed");
-                setMessage("Generation failed.");
-                setTimeout(() => setStatus("idle"), 5000);
-            }
-        };
+        if (job.status === "failed") {
+            setShowFinal("failed");
+            setTimeout(() => setShowFinal(null), 7000);
+        }
+    }, [job]);
 
-        socket.on("jobUpdate", handleUpdate);
+    if (!job && !showFinal) return null;
 
-        return () => {
-            socket.off("jobUpdate", handleUpdate);
-        };
-    }, [queryClient]);
-    useEffect(() => {
-        const handleStart = () => {
-            setStatus("pending");
-            setMessage("Queued...");
-        };
-        window.addEventListener("generation-started", handleStart);
-        return () => window.removeEventListener("generation-started", handleStart);
-    }, []);
+    const progress =
+        typeof job?.progress === "number"
+            ? Math.min(Math.max(job.progress, 0), 100)
+            : null;
 
     return (
         <AnimatePresence>
-            {status !== "idle" && (
-                <motion.div
-                    initial={{ opacity: 0, y: 50, x: "-50%" }}
-                    animate={{ opacity: 1, y: 0, x: "-50%" }}
-                    exit={{ opacity: 0, y: 50, x: "-50%" }}
-                    className="fixed top-8 left-1/2 transform z-50 flex items-center gap-3 px-6 py-3 rounded-full shadow-2xl border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
-                >
-                    {status === "pending" && <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />}
-                    {status === "processing" && <Loader2 className="w-5 h-5 text-primary animate-spin" />}
-                    {status === "completed" && <CheckCircle2 className="w-5 h-5 text-lime-500" />}
-                    {status === "failed" && <XCircle className="w-5 h-5 text-red-500" />}
+            <motion.div
+                initial={{ y: -100, opacity: 1 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -100, opacity: 1 }}
+                className="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none px-4"
+            >
+                <div className="pointer-events-auto bg-background/80 backdrop-blur-md border px-4 py-3 rounded-2xl shadow-lg w-[320px]">
+                    <div className="flex items-center gap-3">
+                        {(job?.status === "pending" ||
+                            job?.status === "processing") && (
+                                <Loader2 className="animate-spin text-lime-500 size-4" />
+                            )}
 
-                    <span className="font-medium text-sm">{message}</span>
-                </motion.div>
-            )}
+                        {showFinal === "success" && (
+                            <CheckCircle2 className="text-lime-500 size-5" />
+                        )}
+
+                        {showFinal === "failed" && (
+                            <XCircle className="text-red-500 size-5" />
+                        )}
+
+                        <span className="text-sm font-medium flex-1">
+                            {job?.status === "pending" && `${t("Pending")}...`}
+                            {job?.status === "processing" && `${t("Processing")}...`}
+                            {showFinal === "success" && `${t("Success")}...`}
+                            {showFinal === "failed" && `${t("Fail")}...`}
+                        </span>
+
+                        {job && (
+                            <Link
+                                href={`/create/generation/${job.id}`}
+                                className="text-xs text-muted-foreground hover:underline"
+                            >
+                                {t("Open")}
+                            </Link>
+                        )}
+                    </div>
+                </div>
+            </motion.div>
         </AnimatePresence>
     );
 };
