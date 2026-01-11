@@ -87,7 +87,7 @@ export const Register = () => {
       {
         onSuccess: () => {
           // On success, redirect to login or directly to the app
-          router.push("/login");
+          router.push("/");
           router.refresh();
         },
         onError: (error: any) => setError(error),
