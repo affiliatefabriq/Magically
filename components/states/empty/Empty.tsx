@@ -119,7 +119,7 @@ export const LibraryEmpty = () => {
       title={t("title")}
       description={t("description")}
       button={t("button")}
-      buttonLink="/create"
+      buttonLink="/create/photo-effects"
       icon={GalleryHorizontalEnd}
     />
   );
