@@ -20,6 +20,7 @@ import { Dot, Heart, MessageCircle } from "lucide-react";
 import { PublicationActions } from "./PublicationActions";
 import { AuthRequiredPopover } from "./AuthRequiredPopover";
 import { useTranslations } from "next-intl";
+import { PublicationImage } from "./PublicationImage";
 
 type PublicationCardProps = {
   publication: Publication;
@@ -77,12 +78,9 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                 />
               )}
               {publication.imageUrl && (
-                <Image
+                <PublicationImage
                   src={`${API_URL}${publication.imageUrl}`}
-                  width={1024}
-                  height={1024}
                   alt="publication"
-                  className="rounded-xl object-cover aspect-square w-full"
                 />
               )}
               <div className="flex items-center justify-start gap-4 mt-2">
@@ -119,12 +117,9 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
             />
           )}
           {publication.imageUrl && (
-            <Image
+            <PublicationImage
               src={`${API_URL}${publication.imageUrl}`}
-              width={1024}
-              height={1024}
               alt="publication"
-              className="rounded-xl object-cover aspect-square w-full"
             />
           )}
         </div>
@@ -195,12 +190,9 @@ export const PublicationCardSimplified = ({ publication, id }: PublicationCardPr
               className="object-cover aspect-square w-full"
             />
           ) : (
-            <Image
+            <PublicationImage
               src={`${API_URL}${publication.imageUrl}`}
-              width={1024}
-              height={1024}
               alt="publication"
-              className="object-cover aspect-square w-full"
             />
           )}
         </Link>

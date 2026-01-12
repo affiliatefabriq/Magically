@@ -93,7 +93,7 @@ export function AppSidebar() {
               <AuroraText>{t("Logo")}</AuroraText>
             </h1>
           </SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="font-medium">
             <SidebarMenu className="mt-2">
               {items.map((item) =>
                 item.id === 3 ? (
@@ -122,18 +122,10 @@ export function AppSidebar() {
 
                       <div className="flex flex-col pl-3 mt-2 gap-1">
                         <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
-                          {/* <Link href="/create/magic-photo" className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed"> */}
-                          <div className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
-                            <div className="flex items-center relative gap-1 blur-xs">
-                              <Wand className="size-5" />
-                              <span className="font-semibold z-20">{t("MagicPhoto")}</span>
-                            </div>
-                            <div className="absolute flex items-center gap-1 text-xs font-bold text-yellow-200">
-                              <TriangleAlert className="size-5" />
-                              {t("InDevelopment")}
-                            </div>
-                          </div>
-                          {/* </Link> */}
+                          <Link href="/create/magic-photo" className="btn-magic-secondary flex items-center justify-start">
+                            <Wand className="size-5" />
+                            <span className="font-semibold z-20">{t("MagicPhoto")}</span>
+                          </Link>
                         </SidebarMenuButton>
                         <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
                           <Link href="/create/photo-editor" className="btn-magic-secondary flex items-center justify-start">

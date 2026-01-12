@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 
 import { useState } from "react";
 import { API_URL } from "@/lib/api";
@@ -21,6 +20,7 @@ import { CommentSection } from "@/components/shared/publication/CommentSection";
 import { SubscribeButton } from "@/components/shared/publication/SubscribeButton";
 import { PublicationActions } from "@/components/shared/publication/PublicationActions";
 import { AuthRequiredPopover } from "@/components/shared/publication/AuthRequiredPopover";
+import { PublicationImage } from "@/components/shared/publication/PublicationImage";
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
   const t = useTranslations("Components.PublicationActions");
@@ -60,12 +60,9 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
             className="rounded-xl object-cover aspect-square w-full"
           />
         ) : (
-          <Image
+          <PublicationImage
             src={`${API_URL}${publication.imageUrl}`}
-            width={4096}
-            height={4096}
             alt="publication"
-            className="rounded-xl object-cover aspect-square w-full"
           />
         )}
 

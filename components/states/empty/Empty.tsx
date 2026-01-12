@@ -60,7 +60,7 @@ export const ExploreEmpty = () => {
       title={t("title")}
       description={t("description")}
       button={t("button")}
-      buttonLink="/create"
+      buttonLink="/create/photo-effects"
       icon={Newspaper}
     />
   );
@@ -95,7 +95,7 @@ export const PersonalProfileEmpty = () => {
       title={t("title")}
       description={t("description")}
       button={t("button")}
-      buttonLink="/create"
+      buttonLink="/create/photo-effects"
       icon={BookOpen}
     />
   );
@@ -126,7 +126,7 @@ export const LibraryEmpty = () => {
 };
 
 export const JobEmpty = () => {
-    const t = useTranslations("States.Empty.Job");
+  const t = useTranslations("States.Empty.Job");
   return (
     <EmptyComponent
       title={t("title")}
@@ -136,7 +136,22 @@ export const JobEmpty = () => {
       icon={Workflow}
     />
   );
-}
+};
+
+export const NotFoundPage = () => {
+  const t = useTranslations("States.Empty.NotFound");
+
+  return (
+    <EmptyComponent
+      title={t("title")}
+      description={t("description")}
+      button={t("button")}
+      buttonLink="/"
+      icon={SearchX}
+    />
+  );
+};
+
 
 export const ModelsEmpty = () => {
   const t = useTranslations("States.Empty.Models");
@@ -163,4 +178,4 @@ export const ModelsEmpty = () => {
       </EmptyContent>
     </Empty>
   )
-}
+};

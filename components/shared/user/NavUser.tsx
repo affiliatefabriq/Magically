@@ -50,7 +50,7 @@ export function NavUser(user: UserAttributes) {
               {user && <UserAvatar {...user} size="md" />}
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.username}</span>
-                <span className="truncate text-xs">✦{user.tokens}</span>
+                <Link href="/transactions" className="truncate text-xs link-text">✦{user.tokens}</Link>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>

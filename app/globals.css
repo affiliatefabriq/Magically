@@ -179,7 +179,7 @@
   }
 
   .prompt-text {
-    @apply break-all text-pretty text-sm;
+    @apply break-all text-balance text-sm;
   }
 
   .secondary-text {

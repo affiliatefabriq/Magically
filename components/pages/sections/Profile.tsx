@@ -90,7 +90,9 @@ export const Profile = () => {
         <p className="text-sm text-muted-foreground wrap-break-word mt-2">{user.bio}</p>
         <div className="flex items-center gap-2 text-muted-foreground mt-4">
           <p className="text-sm">{t("tokens")}</p>
-          <span className="text-sm">✦ {user.tokens}</span>
+          <Link href="/transactions" className="text-sm link-text cursor-pointer">
+            ✦ {user.tokens}
+          </Link>
         </div>
         <div className="flex flex-row items-center gap-3 text-muted-foreground">
           <div className="flex text-sm w-auto">{t("activity")}</div>

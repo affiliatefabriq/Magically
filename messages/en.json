@@ -98,6 +98,11 @@
         "description": "No job was found in here, try another one.",
         "button": "Add to gallery"
       },
+      "NotFound": {
+        "title": "Not found",
+        "description": "Possibly the requested resource was deleted or moved.",
+        "button": "Go to home page"
+      },
       "Models": {
         "title": "No models",
         "description": "You have no models, create it for free to create magic photos.",
@@ -157,7 +162,35 @@
       "title": "Library",
       "Gallery": "Gallery",
       "Jobs": "Generations",
-      "Transactions": "Transactions"
+      "Models": "Models",
+      "Flux": "Flux 2 Pro"
+    },
+    "Models": {
+      "title": "My Models",
+      "create": "Create Model",
+      "createMagic": "Create Magic Photo",
+      "emptyTitle": "No Models Found",
+      "emptyDesc": "Create your first model to start generating magic photos.",
+      "createFirst": "Create your first model",
+      "back": "Back to Models",
+      "trainingData": "Training Data",
+      "generate": "Generate Magic Photo"
+    },
+    "MagicPhoto": {
+      "title": "Magic Photo Generator",
+      "description": "Select your trained model and describe the scene.",
+      "selectModel": "Select Model",
+      "selectPlaceholder": "Select a model...",
+      "promptLabel": "Prompt",
+      "promptPlaceholder": "A cinematic shot of [person] standing on a neon street...",
+      "promptDesc": "Describe the pose, lighting, background, and style in detail.",
+      "publishLabel": "Publish to Feed",
+      "publishDesc": "Share the generated image with the community.",
+      "generateBtn": "Generate",
+      "generatingBtn": "Generating...",
+      "noModelsTitle": "No Models Found",
+      "noModelsDesc": "You need to create a model first to generate magic photos.",
+      "createModelBtn": "Create Model"
     },
     "Profile": {
       "title": "Profile",
@@ -345,7 +378,8 @@
     },
     "Publication": {
       "readMore": "Read more",
-      "readLess": "Read less"
+      "readLess": "Read less",
+      "noImage": "No image"
     },
     "CommentSection": {
       "title": "Comments",

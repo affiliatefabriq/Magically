@@ -108,18 +108,10 @@ export const Bottombar = () => {
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="mt-2 py-2">
-                  {/* <Link href="/create/magic-photo" className="flex items-center justify-start gap-2"> */}
-                  <div className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
-                    <div className="flex items-center relative gap-1 blur-xs">
-                      <Wand className="size-4" />
-                      <span className="font-semibold z-20">{t("MagicPhoto")}</span>
-                    </div>
-                    <div className="absolute flex items-center gap-2 text-xs font-bold text-yellow-200">
-                      <TriangleAlert className="size-4 text-yellow-200" />
-                      {t("InDevelopment")}
-                    </div>
-                  </div>
-                  {/* </Link> */}
+                  <Link href="/create/magic-photo" className="flex items-center justify-start gap-2">
+                    <Wand className="size-4" />
+                    <span className="font-semibold z-20">{t("MagicPhoto")}</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="mt-2 py-2">
                   <Link href="/create/photo-editor" className="flex items-center justify-start gap-2">
@@ -160,6 +152,6 @@ export const Bottombar = () => {
           )
         )}
       </div>
-    </nav>
+    </nav >
   );
 };
