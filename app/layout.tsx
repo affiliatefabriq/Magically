@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
+
 import { RootLayoutProps } from "@/types";
 import { ClientLayout } from "./providers/ClientLayout";
 import { QueryProvider } from "./providers/QueryProvider";
