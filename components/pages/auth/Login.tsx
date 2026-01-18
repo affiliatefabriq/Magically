@@ -24,10 +24,11 @@ export const Login = () => {
   const loginMutation = useLogin();
   const queryClient = useQueryClient();
   const t = useTranslations("Auth.Login");
+
   const [isTelegramWebApp, setIsTelegramWebApp] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && (window as any).Telegram?.WebApp?.initData) {
+    if ((window as any)?.Telegram?.WebApp?.initData) {
       setIsTelegramWebApp(true);
     }
   }, []);
@@ -54,16 +55,12 @@ export const Login = () => {
   };
 
   const handleTelegramAuth = async (user: any) => {
-    const dataParams = new URLSearchParams();
-    Object.keys(user).forEach((key) => {
-      if (key !== "hash") dataParams.append(key, user[key]);
-    });
-
-    dataParams.append("hash", user.hash);
-    const initData = dataParams.toString();
-
     try {
-      const { data } = await api.post("/auth/telegram", { initData });
+      const { data } = await api.post(
+        "/auth/telegram/widget",
+        user
+      );
+
       queryClient.setQueryData(["auth", "me"], data.data.user);
       toast.success("Logged in with Telegram!");
       router.push("/");
@@ -82,17 +79,16 @@ export const Login = () => {
       <div className="w-full max-w-sm space-y-4 border p-6 rounded-xl theme z-20">
         <h1 className="title-text">{t("Title")}</h1>
         {!isTelegramWebApp && (
-          <div className="flex justify-center w-full my-4">
-            <LoginButton
-              botUsername="volshebhy_bot"
-              onAuthCallback={handleTelegramAuth}
-              buttonSize="large"
-              cornerRadius={5}
-              showAvatar={true}
-              lang="en"
-            />
-          </div>
+          <LoginButton
+            botUsername="volshebhy_bot"
+            onAuthCallback={handleTelegramAuth}
+            buttonSize="large"
+            cornerRadius={5}
+            showAvatar
+            lang="en"
+          />
         )}
+
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
