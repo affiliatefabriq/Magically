@@ -48,26 +48,20 @@ export const MagicPhoto = () => {
     },
   });
 
-  // Логика установки начального значения modelId
   useEffect(() => {
-    if (models && models.length > 0) {
-      const currentModelId = form.getValues("modelId");
+    if (!models?.length) return;
 
-      // Если у нас есть ID из URL и он валиден
-      if (queryModelId && models.some(m => m.id === queryModelId)) {
-        // Устанавливаем его, только если он отличается от текущего
-        if (currentModelId !== queryModelId) {
-          form.setValue("modelId", queryModelId);
-        }
-      }
-      // Если ID из URL нет, и в форме пусто, ставим первый попавшийся
-      else if (!currentModelId) {
-        form.setValue("modelId", models[0].id);
-      }
+    if (queryModelId && models.some(m => m.id === queryModelId)) {
+      form.setValue("modelId", queryModelId, { shouldValidate: true });
+    } else {
+      form.setValue("modelId", models[0].id, { shouldValidate: true });
     }
-  }, [models, queryModelId, form]);
+  }, [models, queryModelId]);
+
 
   const onSubmit = async (values: FormValues) => {
+    console.log(values)
+
     setIsGenerating(true);
     try {
       await generateImage.mutateAsync({
@@ -121,12 +115,17 @@ export const MagicPhoto = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("selectModel")}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      key={field.value}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder={t("selectPlaceholder")} />
                         </SelectTrigger>
                       </FormControl>
+
                       <SelectContent>
                         {models.map((model) => (
                           <SelectItem key={model.id} value={model.id}>
@@ -135,10 +134,12 @@ export const MagicPhoto = () => {
                         ))}
                       </SelectContent>
                     </Select>
+
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
 
               <FormField
                 control={form.control}
