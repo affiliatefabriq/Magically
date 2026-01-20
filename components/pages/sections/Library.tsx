@@ -14,10 +14,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/hooks/useAuth";
-import { useFluxModels } from "@/hooks/useFlux";
 import { useGallery } from "@/hooks/useGallery";
 import { useGenerationHistory } from "@/hooks/useGenerations";
 import { API_URL } from "@/lib/api";
+import { useTtModels } from "@/hooks/useTtapi";
 
 export const Library = () => {
   const t = useTranslations("Pages.Library");
@@ -26,7 +26,7 @@ export const Library = () => {
 
   const { data: galleryItems, isLoading: isGalleryLoading } = useGallery(galleryFilters);
   const { data: jobs, isLoading: isJobsLoading } = useGenerationHistory();
-  const { data: models, isLoading: isModelsLoading } = useFluxModels();
+  const { data: models, isLoading: isModelsLoading } = useTtModels();
 
   if (!user)
     return (
@@ -124,7 +124,7 @@ export const Library = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {models?.map((model) => (
               // Redirect to main models page as requested
-              <Link href="/create/models" key={model.id}>
+              <Link href="/create/models/ttapi" key={model.id}>
                 <Card className="group relative overflow-hidden theme shadow-none py-0">
                   <div className="relative aspect-square bg-muted overflow-hidden">
                     <PublicationImage
