@@ -63,7 +63,7 @@ export const Search = () => {
 
   return (
     <section className="flex flex-col container mx-auto section-padding">
-      <h1 className="title-text my-6">{t("title")}</h1>
+      <h1 className="title-text my-4">{t("title")}</h1>
       <div className="relative flex gap-4">
         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
         <Input

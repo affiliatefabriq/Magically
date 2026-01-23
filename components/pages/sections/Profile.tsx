@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Cog, ForwardIcon, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -23,6 +23,7 @@ import { API_URL, BASE_URL } from "@/lib/api";
 export const Profile = () => {
   const t = useTranslations("Pages.Profile");
   const pathname = usePathname();
+  const router = useRouter();
   const { data: user, isLoading, isError } = useMyProfile();
   const [editProfileOpen, setEditProfileOpen] = useState(false);
 
@@ -55,6 +56,13 @@ export const Profile = () => {
   return (
     <section className="section-padding container max-w-7xl mx-auto border-0 md:border border-muted h-full rounded-t-4xl mt-0 sm:mt-4">
       <div className="flex flex-col px-2 md:px-4 mt-4">
+        <div className="flex md:hidden items-center justify-between">
+          <span className="text-2xl font-bold">{user.username}</span>
+          <Link href="/settings" className="ease hover:bg-muted p-2 rounded-md">
+            <Cog />
+          </Link>
+        </div>
+        <Separator className="flex md:hidden my-2" />
         <div className="flex items-start justify-between">
           <div className="flex flex-col items-start justify-center md:justify-between">
             <UserAvatar {...user} size="xl" />
@@ -62,12 +70,6 @@ export const Profile = () => {
             <span className="hidden md:flex text-neutral-400 text-sm">@{user.username}</span>
           </div>
           <div className="flex md:flex-row flex-col items-start md:items-center justify-between mt-0 md:mt-4 px-0 gap-2">
-            <div className="flex md:hidden items-center justify-between w-full">
-              <span className="text-2xl font-bold">{user.username}</span>
-              <Link href="/settings" className="ease hover:bg-muted p-2 rounded-md">
-                <Cog />
-              </Link>
-            </div>
             <div className="flex items-center justify-start gap-2">
               <div onClick={copyLink} className="flex items-center justify-center w-full">
                 <ConfettiButton className="btn-outline text-xs sm:text-sm px-1.5! sm:px-2!">
@@ -95,7 +97,7 @@ export const Profile = () => {
           </div>
         </div>
         <p className="text-sm text-muted-foreground wrap-break-word mt-2">{user.bio}</p>
-        <div className="flex items-center gap-2 text-muted-foreground mt-4">
+        {/* <div className="flex items-center gap-2 text-muted-foreground mt-4">
           <p className="text-sm">{t("tokens")}</p>
           <Link href="/transactions" className="text-sm link-text cursor-pointer">
             ✦ {user.tokens}
@@ -107,10 +109,19 @@ export const Profile = () => {
             <Progress value={user.dailyActions.count * 10} className="w-full max-w-18.75 lg:max-w-37.5" />
             <span className="px-2 w-16 text-sm text-muted-foreground text-center">{user.dailyActions.count} / 10</span>
           </div>
-        </div>
+        </div> */}
+      </div>
+      <div className="flex flex-wrap items-center justify-start gap-2">
+        <Button className="btn-outline" onClick={() => router.push('/transactions')}>
+          История расходов | ✦ {user.tokens}
+        </Button>
+        <Button className="">
+          <span className="px-2 text-sm">{t("activity")} {user.dailyActions.count} / 10</span>
+        </Button>
       </div>
 
       <Separator className="bg-muted my-4" />
+
       <div className="flex items-center justify-evenly gap-4 secondary-text">
         <div className="text-center">
           <h3 className="font-semibold text-sm">{t("publications")}</h3>

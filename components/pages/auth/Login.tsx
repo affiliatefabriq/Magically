@@ -16,7 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useLogin } from "@/hooks/useAuth";
-import api from "@/lib/api";
+import api, { API_URL } from "@/lib/api";
 import { LoginFormValues, loginSchema } from "@/lib/validation";
 
 export const Login = () => {
@@ -86,7 +86,13 @@ export const Login = () => {
           showAvatar
           lang="en"
         />
-
+        <Button
+          onClick={() => {
+            window.location.href = `${API_URL}/api/v1/auth/google`;
+          }}
+        >
+          Continue with Google
+        </Button>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />

@@ -9,14 +9,14 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useFluxModel } from "@/hooks/useFlux";
+import { useAIModel } from "@/hooks/useAi";
 import { API_URL } from "@/lib/api";
 
 export const ModelDetails = ({ modelId }: { modelId: string }) => {
   const router = useRouter();
   const t = useTranslations("Pages.Models");
 
-  const { data: model, isLoading } = useFluxModel(modelId);
+  const { data: model, isLoading } = useAIModel(modelId);
 
   if (isLoading)
     return (
@@ -45,8 +45,11 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
     <section className="section-padding container mx-auto max-w-5xl min-h-screen flex flex-col">
       <div className="mb-6 flex-1">
         <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
-          <Link href="/create/models" className="flex items-center justify-start h-full ml-2 link-text">
-            <ChevronLeft className="size-4 " />
+          <Link
+            href="/create/models"
+            className="flex items-center justify-start h-full ml-2 link-text"
+          >
+            <ChevronLeft className="size-4" />
             <span>{t("back")}</span>
           </Link>
         </div>
@@ -54,7 +57,9 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
         <div className="flex flex-col gap-1 mt-12 md:mt-4">
           <h1 className="title-text text-3xl">{model.name}</h1>
           <p className="text-muted-foreground text-base">{model.description}</p>
-          <span className="text-muted-foreground text-base">{new Date(model.createdAt).toLocaleDateString()}</span>
+          <span className="text-muted-foreground text-base">
+            {new Date(model.createdAt).toLocaleDateString()}
+          </span>
         </div>
 
         <Separator className="my-2" />
@@ -62,7 +67,10 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
         <h3 className="text-lg font-semibold mb-4">{t("trainingData")}</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {model.imagePaths.map((path, idx) => (
-            <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border bg-muted group">
+            <div
+              key={idx}
+              className="relative aspect-square rounded-xl overflow-hidden border bg-muted group"
+            >
               <Image
                 src={`${API_URL}${path}`}
                 alt={`${model.name} sample ${idx + 1}`}
@@ -74,10 +82,12 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
         </div>
       </div>
 
-      {/* Кнопка генерации внизу страницы */}
       <div className="mt-8 mb-4 sticky bottom-4 z-10 w-full">
         <div className="flex items-center justify-center w-full">
-          <Button onClick={handleGenerateClick} className="btn-solid w-full gap-2 py-3">
+          <Button
+            onClick={handleGenerateClick}
+            className="btn-solid w-full gap-2 py-3"
+          >
             <Sparkles />
             {t("generate")}
           </Button>

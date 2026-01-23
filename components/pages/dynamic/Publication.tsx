@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { ChevronLeft, Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { AuthRequiredPopover } from "@/components/shared/publication/AuthRequiredPopover";
@@ -20,6 +19,7 @@ import { useUser } from "@/hooks/useAuth";
 import { usePublication } from "@/hooks/usePublications";
 import { API_URL } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
+import { BackButton } from "@/components/shared/BackButton";
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
   const t = useTranslations("Components.PublicationActions");
@@ -38,12 +38,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 section-padding">
-      <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
-        <Link href="/" className="flex items-center justify-start h-full ml-2 link-text">
-          <ChevronLeft className="size-4 " />
-          <span>{t("back")}</span>
-        </Link>
-      </div>
+      <BackButton />
       <div className="flex flex-col items-start justify-start gap-4 mt-12 md:mt-4">
         <div className="flex justify-between w-full">
           <UserProfile {...publication.author} />

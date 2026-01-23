@@ -96,7 +96,7 @@ export const Bottombar = () => {
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/create/magic-photo/tt" className="flex items-center justify-start gap-2">
+                  <Link href="/create/magic-photo" className="flex items-center justify-start gap-2">
                     <Wand className="size-4" />
                     <span className="font-semibold z-20">{t("MagicPhoto")}</span>
                   </Link>

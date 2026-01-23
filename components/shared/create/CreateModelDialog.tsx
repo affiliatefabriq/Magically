@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateFluxModel, useUpdateFluxModel } from "@/hooks/useFlux";
+import { useCreateAIModel, useUpdateAIModel } from "@/hooks/useAi";
 // ttapi хуки пока убрал, если мы работаем только с Flux как основным, либо добавить по аналогии
 
 const formSchema = z.object({
@@ -37,8 +37,8 @@ export const CreateModelDialog = ({ open, onOpenChange, modelToEdit, type }: Cre
   const t = useTranslations("Pages.Models.Dialog");
   const tAlerts = useTranslations("Pages.Models.Alerts");
 
-  const createFluxModel = useCreateFluxModel();
-  const updateFluxModel = useUpdateFluxModel();
+  const createFluxModel = useCreateAIModel();
+  const updateFluxModel = useUpdateAIModel();
 
   const isEditing = !!modelToEdit;
 
