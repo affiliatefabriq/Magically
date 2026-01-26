@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -10,12 +11,24 @@ import { useTranslations } from "next-intl";
 
 import { UploadImage } from "@/components/shared/create/UploadImage";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateAIModel, useUpdateAIModel } from "@/hooks/useAi";
-// ttapi хуки пока убрал, если мы работаем только с Flux как основным, либо добавить по аналогии
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -31,11 +44,19 @@ interface CreateModelDialogProps {
   onOpenChange: (open: boolean) => void;
   modelToEdit?: any;
   type: "ttapi" | "flux";
+  redirectToGenerate?: boolean;
 }
 
-export const CreateModelDialog = ({ open, onOpenChange, modelToEdit, type }: CreateModelDialogProps) => {
+export const CreateModelDialog = ({
+  open,
+  onOpenChange,
+  modelToEdit,
+  type,
+  redirectToGenerate = false,
+}: CreateModelDialogProps) => {
   const t = useTranslations("Pages.Models.Dialog");
   const tAlerts = useTranslations("Pages.Models.Alerts");
+  const router = useRouter();
 
   const createFluxModel = useCreateAIModel();
   const updateFluxModel = useUpdateAIModel();
@@ -90,16 +111,25 @@ export const CreateModelDialog = ({ open, onOpenChange, modelToEdit, type }: Cre
         });
       }
 
-      // Используем Flux хуки
+      let createdModelId: string | undefined;
+
       if (isEditing && modelToEdit) {
         await updateFluxModel.mutateAsync({ id: modelToEdit.id, formData });
         toast.success(tAlerts("updated"));
+        createdModelId = modelToEdit.id;
       } else {
-        await createFluxModel.mutateAsync(formData);
+        const response = await createFluxModel.mutateAsync(formData);
         toast.success(tAlerts("created"));
+        // Получаем ID созданной модели из ответа
+        createdModelId = response?.data?.id;
       }
 
       onOpenChange(false);
+
+      // Редирект на страницу генерации с выбранной моделью
+      if (redirectToGenerate && createdModelId) {
+        router.push(`/create/magic-photo?modelId=${createdModelId}`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -109,7 +139,7 @@ export const CreateModelDialog = ({ open, onOpenChange, modelToEdit, type }: Cre
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-xl h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? t("editTitle") : t("createTitle")}
@@ -182,7 +212,12 @@ export const CreateModelDialog = ({ open, onOpenChange, modelToEdit, type }: Cre
             />
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isLoading}
+              >
                 {t("cancel")}
               </Button>
               <Button type="submit" className="btn-solid" disabled={isLoading}>

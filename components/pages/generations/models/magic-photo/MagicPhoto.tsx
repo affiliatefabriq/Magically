@@ -1,14 +1,31 @@
 "use client";
 
+import { z } from "zod";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, Send, Sparkles, X } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -21,9 +38,15 @@ import { useAIModels, useGenerateAI } from "@/hooks/useAi";
 import { ModelsEmpty } from "@/components/states/empty/Empty";
 import { useUser } from "@/hooks/useAuth";
 import { NotAuthorized } from "@/components/states/error/Error";
-import { API_URL } from "@/lib/api";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+
+const formSchema = z.object({
+  prompt: z.string().min(3),
+  modelId: z.string().min(1),
+  aspect_ratio: z.string(),
+  publish: z.boolean(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 export const MagicPhoto = () => {
   const t = useTranslations("Pages.MagicPhoto");
@@ -33,53 +56,50 @@ export const MagicPhoto = () => {
 
   const generateImage = useGenerateAI();
   const { data: models, isLoading: isModelsLoading } = useAIModels();
-
-  const [prompt, setPrompt] = useState("");
-  const [selectedModelId, setSelectedModelId] = useState("");
-  const [aspectRatio, setAspectRatio] = useState("1:1");
-  const [publish, setPublish] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [hasStartedGeneration, setHasStartedGeneration] = useState(false);
 
   const queryModelId = searchParams.get("modelId");
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      prompt: "",
+      modelId: "",
+      aspect_ratio: "1:1",
+      publish: false,
+    },
+  });
 
   useEffect(() => {
     if (!models?.length) return;
 
     if (queryModelId && models.some((m) => m.id === queryModelId)) {
-      setSelectedModelId(queryModelId);
+      form.setValue("modelId", queryModelId, { shouldValidate: true });
     } else {
-      setSelectedModelId(models[0].id);
+      form.setValue("modelId", models[0].id, { shouldValidate: true });
     }
-  }, [models, queryModelId]);
+  }, [models, queryModelId, form]);
 
-  const selectedModel = models?.find((m) => m.id === selectedModelId);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!prompt.trim() || !selectedModelId) return;
+  const onSubmit = async (values: FormValues) => {
+    console.log(values);
 
     setIsGenerating(true);
-    setHasStartedGeneration(true);
-
     try {
       await generateImage.mutateAsync({
-        prompt: prompt.trim(),
-        modelId: selectedModelId,
-        publish,
-        aspect_ratio: aspectRatio,
+        prompt: values.prompt,
+        modelId: values.modelId,
+        publish: values.publish,
+        aspect_ratio: values.aspect_ratio,
       });
-
-      setTimeout(() => {
-        router.push("/library?tab=jobs");
-      }, 1000);
+      router.push("/library?tab=jobs");
     } catch (error) {
       console.error(error);
+    } finally {
       setIsGenerating(false);
     }
   };
 
+  // Auth check
   if (!user) {
     return (
       <div className="state-center">
@@ -88,178 +108,148 @@ export const MagicPhoto = () => {
     );
   }
 
+  // Loading state
   if (user && isModelsLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-[50vh]">
         <Loader2 className="animate-spin size-8" />
       </div>
     );
   }
 
+  // Empty state - no models
   if (user && (!models || models.length === 0)) {
-    return <ModelsEmpty />;
+    return (
+      <div className="section-padding">
+        <ModelsEmpty />
+      </div>
+    );
   }
 
+  // Main form
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center section-padding">
-      <div className="w-full max-w-4xl mx-auto flex flex-col h-[calc(100vh-8rem)]">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="title-text text-3xl mb-2 flex items-center justify-center gap-2">
-            <Sparkles className="size-8" />
+    <section className="max-w-3xl mx-auto min-h-screen section-padding">
+      <Card className="bg-transparent shadow-none border-none">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 title-text text-2xl sm:text-3xl">
             {t("title")}
-          </h1>
-          <p className="text-muted-foreground">{t("description")}</p>
-        </div>
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base">
+            {t("description")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="modelId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("selectModel")}</FormLabel>
+                    <Select key={field.value} value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t("selectPlaceholder")} />
+                        </SelectTrigger>
+                      </FormControl>
 
-        {/* Main Content Area */}
-        <div
-          className={`flex-1 flex flex-col ${hasStartedGeneration ? "justify-start" : "justify-center"
-            } transition-all duration-500`}
-        >
-          {/* Preview Images - показываются когда модель выбрана */}
-          {selectedModel && !hasStartedGeneration && (
-            <Card className="mb-6 p-6 bg-muted/50 backdrop-blur-sm border-dashed">
-              <div className="flex items-center gap-3 mb-4">
-                <Badge variant="secondary" className="text-sm">
-                  {selectedModel.name}
-                </Badge>
-                <span className="text-xs text-muted-foreground">
-                  {selectedModel.imagePaths.length} training images
-                </span>
-              </div>
-              <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
-                {selectedModel.imagePaths.slice(0, 6).map((path, idx) => (
-                  <div
-                    key={idx}
-                    className="relative aspect-square rounded-lg overflow-hidden border bg-background group"
-                  >
-                    <Image
-                      src={`${API_URL}${path}`}
-                      alt={`Training ${idx + 1}`}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+                      <SelectContent>
+                        {models!.map((model) => (
+                          <SelectItem key={model.id} value={model.id}>
+                            <div className="flex items-center gap-2">
+                              <span>{model.name}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-          {/* Generation Status */}
-          {hasStartedGeneration && isGenerating && (
-            <Card className="p-8 text-center bg-muted/50 backdrop-blur-sm mb-6">
-              <Loader2 className="animate-spin size-12 mx-auto mb-4 text-primary" />
-              <h3 className="text-lg font-semibold mb-2">
-                {t("generatingBtn")}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Creating your magic photo...
-              </p>
-            </Card>
-          )}
-        </div>
-
-        {/* Input Area - fixed at bottom */}
-        <div className="w-full space-y-4 pb-4">
-          {/* Options Row */}
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="publish"
-                checked={publish}
-                onCheckedChange={(checked) => setPublish(checked as boolean)}
-              />
-              <Label
-                htmlFor="publish"
-                className="text-sm font-medium leading-none cursor-pointer"
-              >
-                {t("publishLabel")}
-              </Label>
-            </div>
-
-            <Select value={aspectRatio} onValueChange={setAspectRatio}>
-              <SelectTrigger className="w-full sm:w-45">
-                <SelectValue placeholder="Aspect Ratio" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1:1">{t("Aspect.Square")}</SelectItem>
-                <SelectItem value="16:9">{t("Aspect.Landscape")}</SelectItem>
-                <SelectItem value="9:16">{t("Aspect.Portrait")}</SelectItem>
-                <SelectItem value="4:3">{t("Aspect.Standard")}</SelectItem>
-                <SelectItem value="3:4">{t("Aspect.Tall")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Main Input */}
-          <form onSubmit={handleSubmit} className="relative">
-            <div className="flex gap-2 items-end">
-              {/* Model Select */}
-              <div className="shrink-0">
-                <Select value={selectedModelId} onValueChange={setSelectedModelId}>
-                  <SelectTrigger className="w-45 md:w-50">
-                    <SelectValue placeholder={t("selectModel")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {models!.map((model) => (
-                      <SelectItem key={model.id} value={model.id}>
-                        {model.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Textarea */}
-              <div className="flex-1 relative">
-                <Textarea
-                  placeholder={t("promptPlaceholder")}
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="min-h-15 max-h-30 resize-none pr-12"
-                  disabled={isGenerating}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                />
-                {prompt && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 bottom-2 size-8"
-                    onClick={() => setPrompt("")}
-                  >
-                    <X className="size-4" />
-                  </Button>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              {/* Submit Button */}
+              <FormField
+                control={form.control}
+                name="prompt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("promptLabel")}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t("promptPlaceholder")}
+                        className="min-h-30 resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>{t("promptDesc")}</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="aspect_ratio"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("aspectLabel")}</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Aspect Ratio" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1:1">{t("Aspect.Square")}</SelectItem>
+                        <SelectItem value="16:9">{t("Aspect.Landscape")}</SelectItem>
+                        <SelectItem value="9:16">{t("Aspect.Portrait")}</SelectItem>
+                        <SelectItem value="4:3">{t("Aspect.Standard")}</SelectItem>
+                        <SelectItem value="3:4">{t("Aspect.Tall")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="publish"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>{t("publishLabel")}</FormLabel>
+                      <p className="text-sm text-muted-foreground">{t("publishDesc")}</p>
+                    </div>
+                  </FormItem>
+                )}
+              />
+
               <Button
                 type="submit"
-                disabled={isGenerating || !prompt.trim() || !selectedModelId}
-                className="btn-solid h-15 px-6"
+                className="w-full btn-solid py-2"
+                disabled={isGenerating || generateImage.isPending}
               >
-                {isGenerating ? (
-                  <Loader2 className="animate-spin size-5" />
+                {isGenerating || generateImage.isPending ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2" />
+                    {t("generatingBtn")}
+                  </>
                 ) : (
-                  <Send className="size-5" />
+                  <>
+                    <Sparkles className="mr-2" /> {t("generateBtn")}
+                  </>
                 )}
               </Button>
-            </div>
-          </form>
-
-          {/* Helper Text */}
-          <p className="text-xs text-muted-foreground text-center">
-            Press Enter to send, Shift+Enter for new line
-          </p>
-        </div>
-      </div>
-    </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </section>
   );
 };

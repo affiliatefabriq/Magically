@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Cog, ForwardIcon, Pencil } from "lucide-react";
+import { BrainCircuit, Cog, ForwardIcon, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { EditProfileDialog } from "@/components/shared/user/EditProfileDialog";
@@ -115,8 +115,12 @@ export const Profile = () => {
         <Button className="btn-outline" onClick={() => router.push('/transactions')}>
           История расходов | ✦ {user.tokens}
         </Button>
-        <Button className="">
+        <Button className="btn-outline">
           <span className="px-2 text-sm">{t("activity")} {user.dailyActions.count} / 10</span>
+        </Button>
+        <Button className="btn-solid" onClick={() => router.push('/create/models')}>
+          <BrainCircuit />
+          К моделям
         </Button>
       </div>
 
