@@ -1,81 +1,87 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-
 import api from "@/lib/api";
 
-export interface TtModel {
+export interface AIModel {
   id: string;
   userId: string;
   name: string;
   description?: string;
+  instruction?: string;
   imagePaths: string[];
+  provider: "unifically" | "ttapi";
   createdAt: string;
 }
 
-export interface GenerateTtParams {
+export interface GenerateAIParams {
   prompt: string;
   modelId: string;
   publish: boolean;
+  aspect_ratio?: string;
+  width?: number;
+  height?: number;
+  seed?: number;
 }
 
-const getModels = async (): Promise<TtModel[]> => {
-  const { data } = await api.get("/ttapi/models");
+// API Functions
+const getModels = async (): Promise<AIModel[]> => {
+  const { data } = await api.get("/ai/models");
   return data.data;
 };
 
-const getModelById = async (id: string): Promise<TtModel> => {
-  const { data } = await api.get(`/ttapi/models/${id}`);
+const getModelById = async (id: string): Promise<AIModel> => {
+  const { data } = await api.get(`/ai/models/${id}`);
   return data.data;
 };
 
 const createModel = async (formData: FormData) => {
-  const { data } = await api.post("/ttapi/models", formData, {
+  const { data } = await api.post("/ai/models", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return data;
 };
 
 const updateModel = async ({ id, formData }: { id: string; formData: FormData }) => {
-  const { data } = await api.put(`/ttapi/models/${id}`, formData, {
+  const { data } = await api.put(`/ai/models/${id}`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return data;
 };
 
 const deleteModel = async (id: string) => {
-  const { data } = await api.delete(`/ttapi/models/${id}`);
+  const { data } = await api.delete(`/ai/models/${id}`);
   return data;
 };
 
-const generateImage = async (params: GenerateTtParams) => {
-  const { data } = await api.post("/ttapi/generate", params);
+const generateImage = async (params: GenerateAIParams) => {
+  const { data } = await api.post("/ai/generate", params);
   return data;
 };
 
-// Hooks
-export const useTtModels = () => {
+// React Query Hooks
+export const useAIModels = () => {
   return useQuery({
-    queryKey: ["ttapi", "models"],
+    queryKey: ["ai", "models"],
     queryFn: getModels,
   });
 };
 
-export const useTtModel = (id: string) => {
+export const useAIModel = (id: string) => {
   return useQuery({
-    queryKey: ["ttapi", "model", id],
+    queryKey: ["ai", "model", id],
     queryFn: () => getModelById(id),
     enabled: !!id,
     retry: 1,
   });
 };
 
-export const useCreateTtModel = () => {
+export const useCreateAIModel = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createModel,
     onSuccess: () => {
       toast.success("Model created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["ttapi", "models"] });
+      queryClient.invalidateQueries({ queryKey: ["ai", "models"] });
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.message || "Failed to create model");
@@ -83,13 +89,13 @@ export const useCreateTtModel = () => {
   });
 };
 
-export const useUpdateTtModel = () => {
+export const useUpdateAIModel = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateModel,
     onSuccess: () => {
       toast.success("Model updated successfully!");
-      queryClient.invalidateQueries({ queryKey: ["ttapi", "models"] });
+      queryClient.invalidateQueries({ queryKey: ["ai", "models"] });
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.message || "Failed to update model");
@@ -97,13 +103,13 @@ export const useUpdateTtModel = () => {
   });
 };
 
-export const useDeleteTtModel = () => {
+export const useDeleteAIModel = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteModel,
     onSuccess: () => {
-      toast.success("Model deleted!");
-      queryClient.invalidateQueries({ queryKey: ["ttapi", "models"] });
+      toast.success("Model deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["ai", "models"] });
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.message || "Failed to delete model");
@@ -111,7 +117,7 @@ export const useDeleteTtModel = () => {
   });
 };
 
-export const useGenerateTtImage = () => {
+export const useGenerateAI = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: generateImage,

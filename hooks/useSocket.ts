@@ -4,12 +4,15 @@ import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { io, Socket } from "socket.io-client";
 
+import { toast } from "sonner";
 import { useUser } from "./useAuth";
+import { useRouter } from "next/navigation";
 
 export const useSocket = () => {
   const { data: user } = useUser();
   const socketRef = useRef<Socket | null>(null);
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   useEffect(() => {
     if (!user) return;
@@ -29,6 +32,20 @@ export const useSocket = () => {
 
       queryClient.invalidateQueries({ queryKey: ["generation", data.jobId] });
       queryClient.invalidateQueries({ queryKey: ["generationHistory"] });
+    });
+
+    socket.on("jobUpdate", (data: any) => {
+      if (data.type === "completed") {
+        // Toaster
+        toast.success("Ваше фото готово!", {
+          action: { label: "Открыть", onClick: () => router.push('/library') }
+        });
+
+        // Browser Notification
+        if (Notification.permission === "granted") {
+          new Notification("Volshebny Bot", { body: "Генерация завершена!" });
+        }
+      }
     });
 
     return () => {

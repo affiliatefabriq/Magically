@@ -1,10 +1,15 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, GalleryHorizontalEnd, Newspaper, SearchX, UserRoundX, Workflow } from "lucide-react";
+
+import { BookOpen, GalleryHorizontalEnd, Newspaper, Plus, SearchX, UserRoundX, Workflow } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { CreateModelDialog } from "@/components/shared/create/CreateModelDialog";
 
 export const EmptyComponent = ({
   title,
@@ -46,7 +51,7 @@ export const ExploreEmpty = () => {
       title={t("title")}
       description={t("description")}
       button={t("button")}
-      buttonLink="/create/photo-effects"
+      buttonLink="/create/magic-photo"
       icon={Newspaper}
     />
   );
@@ -69,7 +74,7 @@ export const PersonalProfileEmpty = () => {
       title={t("title")}
       description={t("description")}
       button={t("button")}
-      buttonLink="/create/photo-effects"
+      buttonLink="/create/magic-photo"
       icon={BookOpen}
     />
   );
@@ -87,7 +92,7 @@ export const LibraryEmpty = () => {
       title={t("title")}
       description={t("description")}
       button={t("button")}
-      buttonLink="/create/photo-effects"
+      buttonLink="/create/magic-photo"
       icon={GalleryHorizontalEnd}
     />
   );
@@ -122,21 +127,41 @@ export const NotFoundPage = () => {
 
 export const ModelsEmpty = () => {
   const t = useTranslations("States.Empty.Models");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
-    <Empty>
-      <EmptyHeader>
-        <EmptyMedia variant="default">
-          <Image src="/model.jpg" alt="model" width={1024} height={1024} className="rounded-xl" />
-        </EmptyMedia>
-        <EmptyTitle>{t("title")}</EmptyTitle>
-        <EmptyDescription>{t("description")}</EmptyDescription>
-      </EmptyHeader>
-      <EmptyContent>
-        <Link href="/create/models">
-          <Button className="btn-login">{t("button")}</Button>
-        </Link>
-      </EmptyContent>
-    </Empty>
+    <>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="default">
+            <Image
+              src="/model.jpg"
+              alt="model"
+              width={1024}
+              height={1024}
+              className="rounded-xl"
+            />
+          </EmptyMedia>
+          <EmptyTitle>{t("title")}</EmptyTitle>
+          <EmptyDescription>{t("description")}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="btn-login gap-2"
+          >
+            <Plus className="size-4" />
+            {t("button")}
+          </Button>
+        </EmptyContent>
+      </Empty>
+
+      <CreateModelDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        type="flux"
+        redirectToGenerate
+      />
+    </>
   );
 };

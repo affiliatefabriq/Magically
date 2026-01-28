@@ -37,6 +37,7 @@ export const queryKeys = {
   gallery: {
     all: ["gallery"] as const,
     list: (filters: any) => [...queryKeys.gallery.all, "list", filters] as const,
+    publish: (galleryItemId: string) => [...queryKeys.gallery.all, "publish", galleryItemId] as const,
   },
 
   // Recommendations

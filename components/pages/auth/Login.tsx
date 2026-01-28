@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import api, { API_URL } from "@/lib/api";
+
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoginButton } from "@telegram-auth/react";
 import { ChevronLeft } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
@@ -14,16 +16,16 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { useLogin } from "@/hooks/useAuth";
-import api from "@/lib/api";
 import { LoginFormValues, loginSchema } from "@/lib/validation";
+import Image from "next/image";
 
 export const Login = () => {
   const router = useRouter();
   const loginMutation = useLogin();
   const queryClient = useQueryClient();
   const t = useTranslations("Auth.Login");
+  const locale = useLocale();
 
   const [isTelegramWebApp, setIsTelegramWebApp] = useState(false);
 
@@ -78,24 +80,6 @@ export const Login = () => {
 
       <div className="w-full max-w-sm space-y-4 border p-6 rounded-xl theme z-20">
         <h1 className="title-text">{t("Title")}</h1>
-        <LoginButton
-          botUsername="volshebny_bot"
-          onAuthCallback={handleTelegramAuth}
-          buttonSize="large"
-          cornerRadius={5}
-          showAvatar
-          lang="en"
-        />
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-          </div>
-        </div>
-
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
           <FormField
             control={form.control}
@@ -135,12 +119,43 @@ export const Login = () => {
             {loginMutation.isPending ? t("Button.Sending") : t("Button.Send")}
           </Button>
 
-          <Separator orientation="horizontal" className="bg-secondary my-4" />
-
           <div className="flex items-center justify-between">
             <Link className="link-text text-sm" href="/register/">
               {t("Register")}
             </Link>
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-center flex-1 grow flex-wrap gap-2 w-full h-full">
+            <LoginButton
+              botUsername="volshebhy_bot"
+              onAuthCallback={handleTelegramAuth}
+              showAvatar={false}
+              buttonSize="large"
+              cornerRadius={6}
+              lang={locale === "ru" ? "ru" : "en"}
+            />
+            <Button
+              onClick={() => {
+                window.location.href = `${API_URL}/api/v1/auth/google`;
+              }}
+              className="h-10 text-base cursor-pointer"
+            >
+              <Image
+                src="/assets/google.svg"
+                alt="logo"
+                width={18}
+                height={18}
+                className="invert dark:invert-0"
+              />
+              Continue with Google
+            </Button>
           </div>
         </form>
       </div>

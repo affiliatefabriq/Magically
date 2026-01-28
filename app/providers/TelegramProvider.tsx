@@ -1,25 +1,55 @@
 "use client";
 
 import api from "@/lib/api";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { RootLayoutProps } from "@/types";
 
-export const TelegramProvider = ({ children }: { children: React.ReactNode }) => {
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp: any;
+    };
+  }
+}
+
+export const TelegramProvider = ({ children }: RootLayoutProps) => {
+  const sentRef = useRef(false);
+
   useEffect(() => {
-    const tg = (window as any)?.Telegram?.WebApp;
+    const tryInit = () => {
+      const tg = window?.Telegram?.WebApp;
+      if (!tg) return false;
 
-    if (!tg || !tg.initData) return;
+      tg.ready();
+      tg.expand();
 
-    tg.ready();
+      if (!tg.initData || sentRef.current) return false;
 
-    api.post("/auth/telegram/webapp", {
-      initData: tg.initData,
-    })
-      .then(() => {
-        console.log("Telegram WebApp auto-login success");
+      sentRef.current = true;
+
+      api.post("/auth/telegram/webapp", {
+        initData: tg.initData,
       })
-      .catch((err) => {
-        console.error("Telegram WebApp auth error", err);
-      });
+        .then(() => {
+          console.log("Telegram WebApp auto-login success");
+        })
+        .catch(err => {
+          console.error("Telegram WebApp auth error", err);
+          sentRef.current = false;
+        });
+
+      return true;
+    };
+
+    // пробуем сразу
+    if (tryInit()) return;
+
+    // fallback — ждём Telegram
+    const interval = setInterval(() => {
+      if (tryInit()) clearInterval(interval);
+    }, 300);
+
+    return () => clearInterval(interval);
   }, []);
 
   return <>{children}</>;

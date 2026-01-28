@@ -59,7 +59,7 @@ export const Explore = () => {
 
   if (isError) {
     return (
-      <div className="h-screen! state-center">
+      <div className="section-padding state-center">
         <ExploreError />
       </div>
     );
