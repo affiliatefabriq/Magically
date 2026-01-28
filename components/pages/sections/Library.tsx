@@ -1,32 +1,35 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+
 import { useState } from "react";
-import { Clock, Verified, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { PublicationImage } from "@/components/shared/publication/PublicationImage";
-import { JobEmpty, LibraryEmpty, ModelsEmpty } from "@/components/states/empty/Empty";
+import { JobEmpty, LibraryEmpty } from "@/components/states/empty/Empty";
 import { NotAuthorized } from "@/components/states/error/Error";
-import { ExploreLoader, LargeListLoader, SearchLoader } from "@/components/states/loaders/Loaders";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExploreLoader, LargeListLoader } from "@/components/states/loaders/Loaders";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/hooks/useAuth";
-import { useFluxModels } from "@/hooks/useFlux";
-import { useGallery } from "@/hooks/useGallery";
+import { useGallery, usePublishGallery } from "@/hooks/useGallery";
 import { useGenerationHistory } from "@/hooks/useGenerations";
 import { API_URL } from "@/lib/api";
+import { JobImage } from "@/components/shared/create/JobImage";
+import { Button } from "@/components/ui/button";
 
 export const Library = () => {
   const t = useTranslations("Pages.Library");
-  const { data: user } = useUser();
   const [galleryFilters] = useState({ sortBy: "newest" });
 
+  const { data: user } = useUser();
   const { data: galleryItems, isLoading: isGalleryLoading } = useGallery(galleryFilters);
   const { data: jobs, isLoading: isJobsLoading } = useGenerationHistory();
-  const { data: models, isLoading: isModelsLoading } = useFluxModels();
+  const publishGalleryItem = usePublishGallery();
+
+  const handlePublishGallery = (galleryItemId: string) => {
+    publishGalleryItem.mutate(galleryItemId);
+  };
 
   if (!user)
     return (
@@ -39,12 +42,41 @@ export const Library = () => {
     <section className="container mx-auto section-padding">
       <h1 className="title-text mt-4 mb-6">{t("title")}</h1>
 
-      <Tabs defaultValue="gallery" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-2">
-          <TabsTrigger value="gallery">{t("Gallery")}</TabsTrigger>
+      <Tabs defaultValue="jobs" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 mb-2">
           <TabsTrigger value="jobs">{t("Jobs")}</TabsTrigger>
-          <TabsTrigger value="models">{t("Models")}</TabsTrigger>
+          <TabsTrigger value="gallery">{t("Gallery")}</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="jobs">
+          {isJobsLoading && <LargeListLoader />}
+          {jobs?.length === 0 && (
+            <div className="state-center">
+              <JobEmpty />
+            </div>
+          )}
+          <div className="grid-3 gap-6!">
+            {jobs?.map((job: any) => (
+              <div key={job.id}>
+                <Card className="theme shadow-none overflow-hidden p-0 border-none rounded-none">
+                  <CardContent className="p-0 pt-0 space-y-3">
+                    <JobImage
+                      status={job.status}
+                      imageUrl={job.resultUrl}
+                      alt={job.meta?.prompt}
+                      error={job.errorMessage}
+                    />
+
+                    <p className="text-sm text-tertiary-text">
+                      {job.meta?.prompt || "No prompt"}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+
+          </div>
+        </TabsContent>
 
         <TabsContent value="gallery">
           {isGalleryLoading && <ExploreLoader />}
@@ -55,92 +87,18 @@ export const Library = () => {
           )}
           <div className="grid-4 gap-4">
             {galleryItems?.map((item: any) => (
-              <div key={item.id} className="relative group rounded-lg overflow-hidden border">
-                <PublicationImage
-                  src={`${API_URL}${item.imageUrl}`}
-                  alt={item.prompt}
-                  className="object-cover w-full aspect-square"
-                />
-                <div className="flex flex-col items-start justify-center p-4 text-sm gap-4">
-                  <p className="prompt-text text-tertiary-text">{item.prompt}</p>
-                  <time className="justify-self-end text-muted-foreground">
-                    {new Date(item.createdAt).toLocaleString()}
-                  </time>
-                </div>
+              <div className="flex flex-col" key={item.id}>
+                <Link href={`${API_URL}${item.imageUrl}`} className="relative group rounded-lg overflow-hidden hover:scale-102 magic-transition">
+                  <PublicationImage
+                    src={`${API_URL}${item.imageUrl}`}
+                    alt={item.prompt}
+                    className="object-cover w-full aspect-square"
+                  />
+                </Link>
+                <Button className="btn-outline w-full mt-2" onClick={() => { handlePublishGallery(item.id) }}>
+                  Upload to reel
+                </Button>
               </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="jobs">
-          {isJobsLoading && <LargeListLoader />}
-          {jobs?.length === 0 && (
-            <div className="state-center">
-              <JobEmpty />
-            </div>
-          )}
-          <div className="flex flex-col gap-3">
-            {jobs?.map((job: any) => (
-              <Link href={`/create/generation/${job.id}`} key={job.id}>
-                <Card className="theme shadow-none rounded-xl">
-                  <CardHeader className="p-4 flex flex-row items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="font-bold text-sm uppercase">{job.service}</span>
-                      <span className="text-xs text-muted-foreground">{new Date(job.createdAt).toLocaleString()}</span>
-                    </div>
-                    {job.status === "completed" && (
-                      <Badge className="flex items-center justify-center btn-solid">
-                        <Verified /> {job.status}
-                      </Badge>
-                    )}
-                    {(job.status === "pending" || job.status === "processing") && (
-                      <Badge className="btn-magic-secondary">
-                        <Clock /> {job.status}
-                      </Badge>
-                    )}
-                    {job.status === "failed" && (
-                      <Badge variant="destructive">
-                        <X /> {job.status}
-                      </Badge>
-                    )}
-                  </CardHeader>
-                  <CardContent className="p-4 pt-0 w-fit prompt-text text-tertiary-text">
-                    {job.meta?.prompt || "No prompt"}
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Models Tab */}
-        <TabsContent value="models">
-          {isModelsLoading && <ExploreLoader />}
-          {(!models || models.length === 0) && (
-            <div className="state-center">
-              <ModelsEmpty />
-            </div>
-          )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {models?.map((model) => (
-              // Redirect to main models page as requested
-              <Link href="/create/models" key={model.id}>
-                <Card className="group relative overflow-hidden theme shadow-none py-0">
-                  <div className="relative aspect-square bg-muted overflow-hidden">
-                    <PublicationImage
-                      src={`${API_URL}${model.imagePaths[0]}`}
-                      alt={model.name}
-                      className="rounded-none!"
-                    />
-                  </div>
-                  <CardHeader className="p-4 pb-2">
-                    <CardTitle className="text-lg truncate">{model.name}</CardTitle>
-                  </CardHeader>
-                  <CardFooter className="p-4 pt-0 text-xs text-muted-foreground flex justify-between">
-                    <span>{new Date(model.createdAt).toLocaleDateString()}</span>
-                  </CardFooter>
-                </Card>
-              </Link>
             ))}
           </div>
         </TabsContent>

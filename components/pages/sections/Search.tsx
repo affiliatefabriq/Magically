@@ -3,14 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { SearchIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useDebounceValue } from "usehooks-ts";
 
 import { PublicationCardSimplified } from "@/components/shared/publication/PublicationCard";
 import { UserCard } from "@/components/shared/user/UserCard";
 import { SearchPublicationEmpty, SearchUserEmpty } from "@/components/states/empty/Empty";
 import { ExploreError, NotAuthorized, SearchError } from "@/components/states/error/Error";
 import { SearchLoader } from "@/components/states/loaders/Loaders";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUser } from "@/hooks/useAuth";
@@ -20,7 +18,15 @@ import { useRecommendedUsers, useSearch } from "@/hooks/useSearch";
 export const Search = () => {
   const t = useTranslations("Pages.Search");
   const [filters, setFilters] = useState({ query: "", type: "all", sortBy: "newest" });
-  const [debouncedQuery] = useDebounceValue(filters.query, 500);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(filters.query);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [filters.query]);
 
   const { data: user, isError } = useUser();
   const {
@@ -29,14 +35,22 @@ export const Search = () => {
     isError: isSearchError,
   } = useSearch({ ...filters, query: debouncedQuery });
 
-  const { data: recommendedUsers, isLoading: isLoadingRecommended } = useRecommendedUsers(!debouncedQuery);
+  const {
+    data: recommendedUsersData,
+    isLoading: isLoadingRecommended,
+  } = useRecommendedUsers(!debouncedQuery);
+
   const { data: feedData, fetchNextPage, hasNextPage, isFetchingNextPage } = usePublications({ sortBy: "newest" });
 
   const isEmptySearch = !debouncedQuery;
-
   const observerRef = useRef<HTMLDivElement>(null);
+  const recommendedObserverRef = useRef<HTMLDivElement>(null);
 
-  // Infinite scroll with IntersectionObserver
+  // Filter out current user from recommended
+  const recommendedUsers = (recommendedUsersData as any[])
+    ?.filter((u: any) => u.id !== user?.id && u.id !== undefined) || [];
+
+  // Infinite scroll for publications
   useEffect(() => {
     if (!hasNextPage || isFetchingNextPage) return;
 
@@ -61,9 +75,34 @@ export const Search = () => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  // Infinite scroll for recommended users
+  // useEffect(() => {
+  //   if (!hasNextRecommended || isFetchingNextRecommended || debouncedQuery) return;
+
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       if (entries[0].isIntersecting) {
+  //         fetchNextRecommended();
+  //       }
+  //     },
+  //     { threshold: 1.0 }
+  //   );
+
+  //   const currentRef = recommendedObserverRef.current;
+  //   if (currentRef) {
+  //     observer.observe(currentRef);
+  //   }
+
+  //   return () => {
+  //     if (currentRef) {
+  //       observer.unobserve(currentRef);
+  //     }
+  //   };
+  // }, [hasNextRecommended, isFetchingNextRecommended, fetchNextRecommended, debouncedQuery]);
+
   return (
     <section className="flex flex-col container mx-auto section-padding">
-      <h1 className="title-text my-6">{t("title")}</h1>
+      <h1 className="title-text my-4">{t("title")}</h1>
       <div className="relative flex gap-4">
         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
         <Input
@@ -87,8 +126,8 @@ export const Search = () => {
             ) : recommendedUsers && recommendedUsers.length > 0 ? (
               <>
                 <p className="text-xs text-muted-foreground mb-4">{t("recommendedDescription")}</p>
-                {recommendedUsers.map((user: any) => (
-                  <UserCard key={user.id} user={user} />
+                {recommendedUsers.map((u: any) => (
+                  <UserCard key={u.id} user={u} />
                 ))}
               </>
             ) : user ? (
@@ -113,14 +152,7 @@ export const Search = () => {
                   </div>
                 )}
 
-                {/* sentinel for IntersectionObserver to auto-load next page */}
-                {hasNextPage && (
-                  <div className="flex justify-center mt-4">
-                    <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage} variant="outline">
-                      {isFetchingNextPage ? t("loading") : t("loadMore")}
-                    </Button>
-                  </div>
-                )}
+                {hasNextPage && <div ref={observerRef} className="h-4" />}
               </>
             ) : user ? (
               <SearchPublicationEmpty />
@@ -136,8 +168,8 @@ export const Search = () => {
           <TabsContent value="users" className="space-y-2 mt-4">
             {searchResults?.users.length > 0 ? (
               <>
-                {searchResults.users.map((user: any) => (
-                  <UserCard key={user.id} user={user} />
+                {searchResults.users.map((u: any) => (
+                  <UserCard key={u.id} user={u} />
                 ))}
               </>
             ) : user ? (

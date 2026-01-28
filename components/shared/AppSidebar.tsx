@@ -127,7 +127,7 @@ export function AppSidebar() {
                       <div className="flex flex-col pl-3 mt-2 gap-1">
                         <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
                           <Link
-                            href="/create/magic-photo"
+                            href="/create/magic-photo/"
                             className="btn-magic-secondary flex items-center justify-start"
                           >
                             <Wand className="size-5"/>
