@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import {useRef} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import {
   Brush,
-  ChevronRight,
   CircleUserRound,
   Compass,
   Folder,
@@ -18,8 +17,9 @@ import {
   UserRound,
   Video,
   Wand,
+  Coins
 } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import {useLocale, useTranslations} from "next-intl";
 
 import {
   Sidebar,
@@ -32,20 +32,21 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useUser } from "@/hooks/useAuth";
-import { LanguageSwitcher } from "../functions/LanguageSwitcher";
-import { ThemeSwitcher } from "../functions/ThemeSwitcher";
-import { AuroraText } from "../ui/magic/aurora-text";
-import { MagicButton } from "../ui/magic/magic-button";
-import { NavUser } from "./user/NavUser";
+import {useUser} from "@/hooks/useAuth";
+import {LanguageSwitcher} from "../functions/LanguageSwitcher";
+import {ThemeSwitcher} from "../functions/ThemeSwitcher";
+import {AuroraText} from "../ui/magic/aurora-text";
+import {MagicButton} from "../ui/magic/magic-button";
+import {NavUser} from "./user/NavUser";
 
 export function AppSidebar() {
   const t = useTranslations("Components.Sidebar");
   const locale = useLocale();
   const pathname = usePathname();
   const summaryRef = useRef<HTMLElement | null>(null);
+  const profileRef = useRef<HTMLElement | null>(null);
 
-  const { data: user, isLoading, isError } = useUser();
+  const {data: user, isLoading, isError} = useUser();
 
   const items = [
     {
@@ -129,7 +130,7 @@ export function AppSidebar() {
                             href="/create/magic-photo"
                             className="btn-magic-secondary flex items-center justify-start"
                           >
-                            <Wand className="size-5" />
+                            <Wand className="size-5"/>
                             <span className="font-semibold z-20">{t("MagicPhoto")}</span>
                           </Link>
                         </SidebarMenuButton>
@@ -139,11 +140,11 @@ export function AppSidebar() {
                             className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed"
                           >
                             <div className="flex items-center relative gap-1 blur-xs">
-                              <Brush />
+                              <Brush/>
                               <span className="font-semibold">{t("Effects.PhotoEditor")}</span>
                             </div>
                             <div className="absolute flex items-center gap-1 text-xs font-bold text-yellow-200">
-                              <TriangleAlert className="size-5" />
+                              <TriangleAlert className="size-5"/>
                               {t("InDevelopment")}
                             </div>
                           </Link>
@@ -154,11 +155,11 @@ export function AppSidebar() {
                             className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed"
                           >
                             <div className="flex items-center relative gap-1 blur-xs">
-                              <Loader />
+                              <Loader/>
                               <span className="font-semibold">{t("Effects.PhotoEffects")}</span>
                             </div>
                             <div className="absolute flex items-center gap-1 text-xs font-bold text-yellow-200">
-                              <TriangleAlert className="size-5" />
+                              <TriangleAlert className="size-5"/>
                               {t("InDevelopment")}
                             </div>
                           </Link>
@@ -169,11 +170,11 @@ export function AppSidebar() {
                             className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed"
                           >
                             <div className="flex items-center relative gap-1 blur-xs">
-                              <Video />
+                              <Video/>
                               <span className="font-semibold">{t("Effects.VideoEffects")}</span>
                             </div>
                             <div className="absolute flex items-center gap-1 text-xs font-bold text-yellow-200">
-                              <TriangleAlert className="size-5" />
+                              <TriangleAlert className="size-5"/>
                               {t("InDevelopment")}
                             </div>
                           </Link>
@@ -194,20 +195,56 @@ export function AppSidebar() {
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                ) : (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      className={`p-4.5 mb-2 rounded-full text-md magic-transition
+                ) : item.id === 5 && user ? (
+                    <SidebarMenuItem key={item.title}>
+                      <details className="group">
+                        <summary
+                          className={`list-none rounded-full text-md magic-transition flex items-center justify-between cursor-pointer`}
+                          ref={profileRef}
+                        >
+                          <SidebarMenuButton
+                            asChild
+                            className={`p-4.5 mb-2 rounded-full text-md magic-transition
                           ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
-                    >
-                      <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
+                            onClick={(e) => {
+                              profileRef.current?.click();
+                            }}
+                          >
+                            <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
+                              <item.icon/>
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </summary>
+
+                        <div className="flex flex-col pl-3 mt-2 gap-1">
+                          <SidebarMenuButton asChild className="p-3 rounded-full text-md magic-transition">
+                            <Link
+                              href="/pay"
+                              className="btn-magic-secondary flex items-center justify-start"
+                            >
+                              <Coins className="size-5"/>
+                              <span className="font-semibold z-20">{t("BalanceTopUp")}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </div>
+                      </details>
+                    </SidebarMenuItem>
+                  )
+                  : (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={`p-4.5 mb-2 rounded-full text-md magic-transition
+                          ${pathname === item.url ? "magic-hover" : "secondary-hover"}`}
+                      >
+                        <Link href={item.url} className={`${pathname === item.url ? "btn-magic" : ""}`}>
+                          <item.icon/>
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
               )}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -216,8 +253,8 @@ export function AppSidebar() {
       <SidebarFooter className="theme border-none px-4">
         <SidebarMenu className="mt-2">
           <div className="flex flex-col items-start gap-2 my-4 w-full">
-            <LanguageSwitcher />
-            <ThemeSwitcher />
+            <LanguageSwitcher/>
+            <ThemeSwitcher/>
           </div>
           {user ? (
             <NavUser {...user} />
@@ -228,16 +265,16 @@ export function AppSidebar() {
                 className="p-4.5 mb-2 rounded-full text-md secondary-transition magic-transition "
               >
                 <Link href="/login" className="btn-magic-secondary flex items-center justify-between">
-                  <CircleUserRound />
+                  <CircleUserRound/>
                   <span className="font-semibold">{t("Login")}</span>
-                  <div />
+                  <div/>
                 </Link>
               </SidebarMenuButton>
               <SidebarMenuButton asChild className="p-4.5 mb-2 rounded-full text-md magic-hover magic-transition">
                 <Link href="/register" className="btn-magic flex items-center justify-between">
-                  <Globe />
+                  <Globe/>
                   <span className="font-semibold">{t("Register")}</span>
-                  <div />
+                  <div/>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

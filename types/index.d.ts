@@ -1,5 +1,30 @@
 declare type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
 
+// bePaid Widget Types
+declare global {
+  interface Window {
+    BeGateway?: new (params: BeGatewayParams) => BeGatewayInstance;
+  }
+}
+
+interface BeGatewayParams {
+  checkout_url: string;
+  fromWebview?: boolean;
+  checkout: {
+    iframe: boolean;
+    test?: boolean;
+    transaction_type: "payment";
+  };
+  token: string;
+  closeWidget: (status: BeGatewayStatus | null) => void;
+}
+
+interface BeGatewayInstance {
+  createWidget: () => void;
+}
+
+type BeGatewayStatus = "successful" | "failed" | "pending" | "redirected" | "error";
+
 export interface Author {
   id: string;
   username: string;

@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ['l.app.volshebny.by']
 };
 
 const withNextIntl = createNextIntlPlugin("./app/i18n/requests.ts");

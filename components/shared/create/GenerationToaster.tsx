@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, Loader2, XCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {AnimatePresence, motion} from "framer-motion";
+import {CheckCircle2, Loader2, XCircle} from "lucide-react";
+import {useTranslations} from "next-intl";
 
-import { useActiveGeneration } from "@/hooks/useGenerations";
+import {useActiveGeneration} from "@/hooks/useGenerations";
 
 export const GenerationToaster = () => {
   const t = useTranslations("Components.Toaster");
-  const { data: job } = useActiveGeneration();
+  const {data: job} = useActiveGeneration();
   const [showFinal, setShowFinal] = useState<"success" | "failed" | null>(null);
 
   useEffect(() => {
@@ -34,20 +34,21 @@ export const GenerationToaster = () => {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ y: -100, opacity: 1 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -100, opacity: 1 }}
+        initial={{y: -100, opacity: 1}}
+        animate={{y: 0, opacity: 1}}
+        exit={{y: -100, opacity: 1}}
         className="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none px-4"
       >
-        <div className="pointer-events-auto bg-background/80 backdrop-blur-md border px-4 py-3 rounded-2xl shadow-lg w-[320px]">
+        <div
+          className="pointer-events-auto bg-background/80 backdrop-blur-md border px-4 py-3 rounded-2xl shadow-lg w-[320px]">
           <div className="flex items-center gap-3">
             {(job?.status === "pending" || job?.status === "processing") && (
-              <Loader2 className="animate-spin text-lime-500 size-4" />
+              <Loader2 className="animate-spin text-lime-500 size-4"/>
             )}
 
-            {showFinal === "success" && <CheckCircle2 className="text-lime-500 size-5" />}
+            {showFinal === "success" && <CheckCircle2 className="text-lime-500 size-5"/>}
 
-            {showFinal === "failed" && <XCircle className="text-red-500 size-5" />}
+            {showFinal === "failed" && <XCircle className="text-red-500 size-5"/>}
 
             <span className="text-sm font-medium flex-1">
               {job?.status === "pending" && `${t("Pending")}...`}

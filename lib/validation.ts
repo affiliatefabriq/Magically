@@ -52,3 +52,9 @@ export const formSchema = z.object({
 });
 
 export type FormValues = z.infer<typeof formSchema>;
+
+export const paySchema = z.object({
+  amount: z.number().min(10, "Minimal amount is 10"),
+});
+
+export type PayFormValues = z.infer<typeof paySchema>;

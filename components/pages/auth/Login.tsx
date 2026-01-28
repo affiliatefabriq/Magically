@@ -79,7 +79,7 @@ export const Login = () => {
       <div className="w-full max-w-sm space-y-4 border p-6 rounded-xl theme z-20">
         <h1 className="title-text">{t("Title")}</h1>
         <LoginButton
-          botUsername="volshebhy_bot"
+          botUsername="volshebny_bot"
           onAuthCallback={handleTelegramAuth}
           buttonSize="large"
           cornerRadius={5}
