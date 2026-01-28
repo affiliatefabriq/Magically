@@ -1,4 +1,7 @@
-import Image from "next/image";
+"use client"
+
+import { useState } from "react";
+import { API_URL } from "@/lib/api";
 import { AlertTriangle, Sparkles } from "lucide-react";
 import { PublicationImage } from "../publication/PublicationImage";
 
@@ -10,10 +13,29 @@ type Props = {
 };
 
 export function JobImage({ status, imageUrl, alt, error }: Props) {
+    const [imageError, setImageError] = useState(false);
+
+    console.log("JobImage received:", { status, imageUrl, alt });
+
+    const getImageUrl = () => {
+        if (!imageUrl) return null;
+
+        if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+            console.warn("External URL detected:", imageUrl);
+            return imageUrl;
+        };
+
+        const fullUrl = `${API_URL}${imageUrl}`;
+        console.log("Constructed URL:", fullUrl);
+        return fullUrl;
+    };
+
+    const finalImageUrl = getImageUrl();
+
     if (status === "completed" && imageUrl) {
         return (
             <PublicationImage
-                src={imageUrl}
+                src={finalImageUrl!}
                 alt={alt || "result"}
                 className="rounded-xl object-cover"
             />
