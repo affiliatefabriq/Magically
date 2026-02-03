@@ -1,108 +1,91 @@
 "use client";
 
-import Link from "next/link";
-
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-
-import { PublicationImage } from "@/components/shared/publication/PublicationImage";
-import { JobEmpty, LibraryEmpty } from "@/components/states/empty/Empty";
-import { NotAuthorized } from "@/components/states/error/Error";
-import { ExploreLoader, LargeListLoader } from "@/components/states/loaders/Loaders";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useUser } from "@/hooks/useAuth";
-import { useGallery, usePublishGallery } from "@/hooks/useGallery";
-import { useGenerationHistory } from "@/hooks/useGenerations";
-import { API_URL } from "@/lib/api";
+import { useGenerationHistory, usePublishJob } from "@/hooks/useGenerations";
 import { JobImage } from "@/components/shared/create/JobImage";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { DownloadCloud, Loader2, Share2, UploadCloud } from "lucide-react";
+import { JobEmpty } from "@/components/states/empty/Empty";
+import { LargeListLoader } from "@/components/states/loaders/Loaders";
+import { API_URL } from "@/lib/api";
 
 export const Library = () => {
   const t = useTranslations("Pages.Library");
-  const [galleryFilters] = useState({ sortBy: "newest" });
+  const { data: jobs, isLoading } = useGenerationHistory();
 
-  const { data: user } = useUser();
-  const { data: galleryItems, isLoading: isGalleryLoading } = useGallery(galleryFilters);
-  const { data: jobs, isLoading: isJobsLoading } = useGenerationHistory();
-  const publishGalleryItem = usePublishGallery();
-
-  const handlePublishGallery = (galleryItemId: string) => {
-    publishGalleryItem.mutate(galleryItemId);
-  };
-
-  if (!user)
-    return (
-      <div className="state-center">
-        <NotAuthorized />
-      </div>
-    );
+  const publishJob = usePublishJob();
 
   return (
-    <section className="container mx-auto section-padding">
+    <section className="container mx-auto section-padding pb-24">
       <h1 className="title-text mt-4 mb-6">{t("title")}</h1>
 
-      <Tabs defaultValue="jobs" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-2">
-          <TabsTrigger value="jobs">{t("Jobs")}</TabsTrigger>
-          <TabsTrigger value="gallery">{t("Gallery")}</TabsTrigger>
-        </TabsList>
+      {isLoading && <LargeListLoader />}
+      {!isLoading && jobs?.length === 0 && <JobEmpty />}
 
-        <TabsContent value="jobs">
-          {isJobsLoading && <LargeListLoader />}
-          {jobs?.length === 0 && (
-            <div className="state-center">
-              <JobEmpty />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {jobs?.map((job: any) => (
+          <Card key={job.id} className="theme shadow-none border overflow-hidden p-0">
+            <div className="relative aspect-square">
+              <JobImage
+                status={job.status}
+                imageUrl={job.resultUrl}
+                alt={job.meta?.prompt}
+                error={job.errorMessage}
+              />
             </div>
-          )}
-          <div className="grid-3 gap-6!">
-            {jobs?.map((job: any) => (
-              <div key={job.id}>
-                <Card className="theme shadow-none overflow-hidden p-0 border-none rounded-none">
-                  <CardContent className="p-0 pt-0 space-y-3">
-                    <JobImage
-                      status={job.status}
-                      imageUrl={job.resultUrl}
-                      alt={job.meta?.prompt}
-                      error={job.errorMessage}
-                    />
+            <CardContent className="p-4 space-y-3">
+              <p className="text-sm text-muted-foreground line-clamp-2 min-h-10">
+                {job.meta?.prompt || "No prompt"}
+              </p>
 
-                    <p className="text-sm text-tertiary-text">
-                      {job.meta?.prompt || "No prompt"}
-                    </p>
-                  </CardContent>
-                </Card>
+              <div className="flex flex-wrap gap-2">
+                {job.status === 'completed' && (
+                  <Button variant="outline" className="flex-1" onClick={() => {
+                    if (navigator.share) navigator.share({ url: job.resultUrl });
+                  }}>
+                    <Share2 className="mr-2 size-4" /> Поделиться
+                  </Button>
+                )}
+
+                {job.status === 'completed' && !job.isPublished && (
+                  <Button
+                    className="flex-1 btn-solid"
+                    onClick={() => publishJob.mutate(job.id)}
+                    disabled={publishJob.isPending}
+                  >
+                    {publishJob.isPending ? <Loader2 className="animate-spin" /> : <UploadCloud className="mr-2 size-4" />}
+                    В ленту!
+                  </Button>
+                )}
+
+                {job.isPublished && (
+                  <Button variant="ghost" disabled className="flex-1 btn-outline">
+                    Опубликовано
+                  </Button>
+                )}
+
+                {/* Download Button */}
+                {job.status === 'completed' && (
+                  <Button
+                    variant="outline"
+                    className="flex-1 btn-solid"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = API_URL + job.resultUrl;
+                      link.download = `image-${job.id}.png`;
+                      link.click();
+                    }}
+                  >
+                    <DownloadCloud className="mr-2 size-4" />
+                    Скачать
+                  </Button>
+                )}
               </div>
-            ))}
-
-          </div>
-        </TabsContent>
-
-        <TabsContent value="gallery">
-          {isGalleryLoading && <ExploreLoader />}
-          {galleryItems?.length === 0 && (
-            <div className="state-center">
-              <LibraryEmpty />
-            </div>
-          )}
-          <div className="grid-4 gap-4">
-            {galleryItems?.map((item: any) => (
-              <div className="flex flex-col" key={item.id}>
-                <Link href={`${API_URL}${item.imageUrl}`} className="relative group rounded-lg overflow-hidden hover:scale-102 magic-transition">
-                  <PublicationImage
-                    src={`${API_URL}${item.imageUrl}`}
-                    alt={item.prompt}
-                    className="object-cover w-full aspect-square"
-                  />
-                </Link>
-                <Button className="btn-outline w-full mt-2" onClick={() => { handlePublishGallery(item.id) }}>
-                  Upload to reel
-                </Button>
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </section>
   );
 };

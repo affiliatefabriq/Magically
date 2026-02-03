@@ -121,7 +121,7 @@ export const Models = () => {
                 >
                   <div className="relative aspect-square bg-muted overflow-hidden">
                     <PublicationImage
-                      src={`${API_URL}${model.imagePaths[0]}`}
+                      src={model.imagePaths[0]}
                       alt={model.name}
                       className="rounded-none! object-cover w-full h-full group-hover:scale-102 magic-transition"
                     />

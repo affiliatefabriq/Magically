@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MagicButton } from "../ui/magic/magic-button";
+import { MagicButton } from "@/components/ui/magic/magic-button";
 
 export const Bottombar = () => {
   const locale = useLocale();

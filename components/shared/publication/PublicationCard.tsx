@@ -20,6 +20,7 @@ import { PublicationActions } from "./PublicationActions";
 import { PublicationImage } from "./PublicationImage";
 import { SubscribeButton } from "./SubscribeButton";
 import { VideoRender } from "./VideoRender";
+import { PublicationDialog } from "./PublicationDialog";
 
 type PublicationCardProps = {
   publication: Publication;
@@ -80,7 +81,7 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                   className="rounded-xl object-cover aspect-square w-full"
                 />
               )}
-              {publication.imageUrl && <PublicationImage src={`${API_URL}${publication.imageUrl}`} alt="publication" />}
+              {publication.imageUrl && <PublicationImage src={publication.imageUrl} alt="publication" />}
               <div className="flex items-center justify-start gap-4 mt-2">
                 {userId ? (
                   <LikeButton {...publication} />
@@ -107,15 +108,17 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
           </div>
           <Separator className="mt-4" />
         </div>
-        <Link href={`/publications/${publication.id}`} key={publication.id} className="hidden md:flex">
-          {publication.videoUrl && (
-            <VideoRender
-              src={`${API_URL}${publication.videoUrl}`}
-              className="rounded-xl object-cover aspect-square w-full"
-            />
-          )}
-          {publication.imageUrl && <PublicationImage src={`${API_URL}${publication.imageUrl}`} alt="publication" />}
-        </Link>
+        <PublicationDialog publication={publication}>
+          {/* <Link href={`/publications/${publication.id}`} key={publication.id} className="hidden md:flex"> */}
+            {publication.videoUrl && (
+              <VideoRender
+                src={`${API_URL}${publication.videoUrl}`}
+                className="rounded-xl object-cover aspect-square w-full"
+              />
+            )}
+            {publication.imageUrl && <PublicationImage src={publication.imageUrl} alt="publication" />}
+          {/* </Link> */}
+        </PublicationDialog>
         <div
           className="absolute hidden md:flex bottom-0 left-0 right-0 bg-white/20 dark:bg-black/20 
              text-white px-4 py-6 text-xs rounded-b-lg rounded-t-3xl opacity-0 backdrop-blur-3xl 
@@ -179,7 +182,9 @@ export const PublicationCardSimplified = ({ publication, id }: PublicationCardPr
               className="object-cover aspect-square w-full"
             />
           ) : (
-            <PublicationImage src={`${API_URL}${publication.imageUrl}`} alt="publication" />
+            <PublicationDialog publication={publication}>
+              <PublicationImage src={publication.imageUrl!} alt="publication" />
+            </PublicationDialog>
           )}
         </Link>
       </div>

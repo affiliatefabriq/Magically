@@ -19,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useMyProfile } from "@/hooks/useProfile";
 import { API_URL, BASE_URL } from "@/lib/api";
+import { PublicationImage } from "@/components/shared/publication/PublicationImage";
 
 export const Profile = () => {
   const t = useTranslations("Pages.Profile");
@@ -146,12 +147,10 @@ export const Profile = () => {
         {user.publications.map((pub: any) => (
           <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border border-white dark:border-black">
             {pub.imageUrl && (
-              <Image
-                src={`${API_URL}${pub.imageUrl}`}
-                width={1024}
-                height={1024}
+              <PublicationImage
+                src={pub.imageUrl}
                 alt="pub"
-                className="rounded-none object-cover aspect-square"
+                className="rounded-none! object-cover aspect-square"
               />
             )}
             {pub.videoUrl && (

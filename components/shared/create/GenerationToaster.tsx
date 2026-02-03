@@ -56,12 +56,6 @@ export const GenerationToaster = () => {
               {showFinal === "success" && `${t("Success")}...`}
               {showFinal === "failed" && `${t("Fail")}...`}
             </span>
-
-            {job && (
-              <Link href={`/create/generation/${job.id}`} className="text-xs text-muted-foreground hover:underline">
-                {t("Open")}
-              </Link>
-            )}
           </div>
         </div>
       </motion.div>

@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation'
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
 export const BackButton = () => {

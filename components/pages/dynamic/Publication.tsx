@@ -19,7 +19,7 @@ import { useUser } from "@/hooks/useAuth";
 import { usePublication } from "@/hooks/usePublications";
 import { API_URL } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
-import { BackButton } from "@/components/shared/BackButton";
+import { BackButton } from "@/components/shared/layout/BackButton";
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
   const t = useTranslations("Components.PublicationActions");
@@ -54,7 +54,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
             className="rounded-xl object-cover aspect-square w-full"
           />
         ) : (
-          <PublicationImage src={`${API_URL}${publication.imageUrl}`} alt="publication" />
+          <PublicationImage src={publication.imageUrl} alt="publication" />
         )}
 
         <div className="flex flex-col items-start justify-center gap-2 px-2">

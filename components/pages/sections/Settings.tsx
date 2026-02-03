@@ -8,7 +8,7 @@ import { LanguageSwitcher } from "@/components/functions/LanguageSwitcher";
 import { ThemeSwitcher } from "@/components/functions/ThemeSwitcher";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/useAuth";
-import { BackButton } from "@/components/shared/BackButton";
+import { BackButton } from "@/components/shared/layout/BackButton";
 
 export const Settings = () => {
   const t = useTranslations("Pages.Settings");

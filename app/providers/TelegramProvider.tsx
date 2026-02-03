@@ -18,6 +18,15 @@ export const TelegramProvider = ({ children }: RootLayoutProps) => {
   useEffect(() => {
     const tryInit = () => {
       const tg = window?.Telegram?.WebApp;
+      if (tg) {
+        tg.ready();
+        tg.expand();
+        if (tg.isVersionAtLeast('7.7')) {
+          tg.disableVerticalSwipes();
+        }
+        tg.enableClosingConfirmation();
+      };
+
       if (!tg) return false;
 
       tg.ready();

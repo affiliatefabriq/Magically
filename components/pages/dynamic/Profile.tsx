@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -11,6 +10,7 @@ import { UserProfileLoader } from "@/components/states/loaders/Loaders";
 import { Separator } from "@/components/ui/separator";
 import { useProfile } from "@/hooks/useProfile";
 import { API_URL } from "@/lib/api";
+import { PublicationImage } from "@/components/shared/publication/PublicationImage";
 
 export const Profile = ({ username }: { username: string }) => {
   const t = useTranslations("Pages.Profile");
@@ -65,12 +65,10 @@ export const Profile = ({ username }: { username: string }) => {
         {user.publications.map((pub: any) => (
           <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border border-white dark:border-black">
             {pub.imageUrl && (
-              <Image
-                src={`${API_URL}${pub.imageUrl}`}
-                width={1024}
-                height={1024}
+              <PublicationImage
+                src={pub.imageUrl}
                 alt="pub"
-                className="object-cover aspect-square"
+                className="rounded-none! object-cover aspect-square"
               />
             )}
             {pub.videoUrl && <video src={`${API_URL}${pub.videoUrl}`} className="object-cover aspect-square" />}

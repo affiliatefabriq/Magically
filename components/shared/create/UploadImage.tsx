@@ -6,7 +6,7 @@ import { Upload, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
-import { PublicationImage } from "../publication/PublicationImage";
+import { ModelImage, PublicationImage } from "../publication/PublicationImage";
 
 interface UploadImageProps {
   imageAmount?: number;
@@ -43,7 +43,7 @@ export const UploadImage: React.FC<UploadImageProps> = ({ imageAmount = 10, clas
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {images.map((file, i) => (
           <div key={i} className="relative aspect-square rounded-xl overflow-hidden">
-            <PublicationImage src={URL.createObjectURL(file)} alt={`upload-${i}`} className="object-cover" />
+            <ModelImage src={URL.createObjectURL(file)} alt={`upload-${i}`} className="object-cover" />
             <button
               type="button"
               className="absolute top-2 left-2 bg-black/50 backdrop-blur-3xl p-1 rounded-full text-white hover:bg-black cursor-pointer magic-transition"

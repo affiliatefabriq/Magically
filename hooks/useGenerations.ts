@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import api from "@/lib/api";
 
@@ -33,5 +34,21 @@ export const useGenerationJob = (id: string) => {
     },
     enabled: !!id,
     refetchInterval: (query) => (query.state.data?.status === "pending" ? 2000 : false),
+  });
+};
+
+export const usePublishJob = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (jobId: string) => {
+      const { data } = await api.post(`/job/${jobId}/publish`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["generationHistory"] });
+      queryClient.invalidateQueries({ queryKey: ["publications"] });
+      toast.success("Опубликовано в ленту!");
+    },
+    onError: (err: any) => toast.error(err.response?.data?.message || "Failed to publish")
   });
 };

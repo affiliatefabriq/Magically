@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/shared/AppSidebar";
-import { Bottombar } from "@/components/shared/Bottombar";
+import { AppSidebar } from "@/components/shared/layout/AppSidebar";
+import { Bottombar } from "@/components/shared/layout/Bottombar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { RootLayoutProps } from "@/types";
 
