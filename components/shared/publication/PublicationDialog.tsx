@@ -1,11 +1,10 @@
 "use client";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Publication } from "@/types";
 import { PublicationImage } from "./PublicationImage";
 import { UserAvatar } from "../user/UserAvatar";
 import { CommentSection } from "./CommentSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { API_URL } from "@/lib/api";
 import { X, Maximize2 } from "lucide-react";
 import { useState } from "react";
 
@@ -21,7 +20,8 @@ export const PublicationDialog = ({ publication, children }: { publication: Publ
                     {children}
                 </div>
             </DialogTrigger>
-            <DialogContent className="max-w-6xl w-full h-full max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col bg-background">
+            <DialogContent className="w-full h-full max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col bg-background">
+                <DialogTitle className="sr-only"></DialogTitle>
                 <div className="relative flex-1 bg-black flex items-center justify-center">
                     <div className={`relative w-full h-full ${isFullScreen ? 'fixed inset-0 z-100 bg-black' : ''}`}>
                         {isFullScreen && (
@@ -44,16 +44,19 @@ export const PublicationDialog = ({ publication, children }: { publication: Publ
                     </div>
                 </div>
 
-                <div className="w-full md:w-100 flex flex-col h-full border-l">
-                    <div className="p-4 border-b flex items-center gap-3">
+                <div className="relative w-full flex flex-col h-full border-l overflow-hidden">
+                    <div className="p-4 border-b flex items-center gap-3 shrink-0">
                         <UserAvatar {...publication.author} size="sm" />
                         <span className="font-semibold text-sm">{publication.author.username}</span>
                     </div>
-
-                    <ScrollArea className="flex-1 p-4">
-                        <p className="text-sm mb-4">{publication.content}</p>
-                        <CommentSection publicationId={publication.id} />
-                    </ScrollArea>
+                    <div className="flex-1 overflow-hidden w-full">
+                        <ScrollArea className="h-full w-full">
+                            <div className="">
+                                <p className="text-sm mb-4">{publication.content}</p>
+                                <CommentSection publicationId={publication.id} />
+                            </div>
+                        </ScrollArea>
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>

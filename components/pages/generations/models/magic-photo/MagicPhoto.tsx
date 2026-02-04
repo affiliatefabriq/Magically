@@ -44,6 +44,7 @@ const formSchema = z.object({
   modelId: z.string().min(1),
   aspect_ratio: z.string(),
   publish: z.boolean(),
+  quality: z.enum(["1K", "2K"]).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -67,6 +68,7 @@ export const MagicPhoto = () => {
       modelId: "",
       aspect_ratio: "1:1",
       publish: false,
+      quality: "1K",
     },
   });
 
@@ -207,6 +209,28 @@ export const MagicPhoto = () => {
                         <SelectItem value="9:16">{t("Aspect.Portrait")}</SelectItem>
                         <SelectItem value="4:3">{t("Aspect.Standard")}</SelectItem>
                         <SelectItem value="3:4">{t("Aspect.Tall")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="quality"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Качество волшебного фото</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Quality" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1K">1K (1024px)</SelectItem>
+                        <SelectItem value="2K">2K (2048px)</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

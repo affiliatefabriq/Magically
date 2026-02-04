@@ -39,7 +39,7 @@ import { AuroraText } from "@/components/ui/magic/aurora-text";
 import { MagicButton } from "@/components/ui/magic/magic-button";
 import { NavUser } from "@/components/shared/user/NavUser";
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   const t = useTranslations("Components.Sidebar");
   const locale = useLocale();
   const pathname = usePathname();
@@ -283,4 +283,4 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   );
-}
+};

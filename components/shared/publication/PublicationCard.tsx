@@ -109,7 +109,7 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
           <Separator className="mt-4" />
         </div>
         <PublicationDialog publication={publication}>
-          {/* <Link href={`/publications/${publication.id}`} key={publication.id} className="hidden md:flex"> */}
+          <div key={publication.id} className="hidden md:flex">
             {publication.videoUrl && (
               <VideoRender
                 src={`${API_URL}${publication.videoUrl}`}
@@ -117,7 +117,7 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
               />
             )}
             {publication.imageUrl && <PublicationImage src={publication.imageUrl} alt="publication" />}
-          {/* </Link> */}
+          </div>
         </PublicationDialog>
         <div
           className="absolute hidden md:flex bottom-0 left-0 right-0 bg-white/20 dark:bg-black/20 
@@ -138,10 +138,14 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                 </AuthRequiredPopover>
               )}
               <motion.div whileTap={{ scale: 0.9 }}>
-                <div className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors">
+                <Link
+                  href={`/publications/${publication.id}`}
+                  key={publication.id}
+                  className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors"
+                >
                   <MessageCircle className="size-5 stroke-1" />
                   <span>{publication.commentCount}</span>
-                </div>
+                </Link>
               </motion.div>
               {publication.author.id === userId ? (
                 <PublicationActions publicationId={publication.id} initialContent={publication.content} />
