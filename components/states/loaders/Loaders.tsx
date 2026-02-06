@@ -21,13 +21,23 @@ export const PublicationLoader = () => {
 };
 
 export const SearchLoader = () => {
-  return Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-16 w-full mb-2" />);
+  return Array.from({ length: 24 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-16 w-full mb-2" />);
+};
+
+export const SearchPublicationLoader = () => {
+  return (
+    <div className="grid grid-cols-3 gap-2 w-full">
+      {Array.from({ length: 24 }).map((_, i) => (
+        <Skeleton key={i} className="w-full h-36 sm:h-96" />
+      ))}
+    </div>
+  );
 };
 
 export const ListLoader = () => {
   return (
     <div className="flex flex-col space-y-2 container mx-auto max-w-6xl mt-4">
-      {Array.from({ length: 8 }).map((_, i) => (
+      {Array.from({ length: 24 }).map((_, i) => (
         <div key={i} className="flex items-center justify-between px-4 py-2 rounded-lg">
           <div className="flex items-center gap-2">
             <Skeleton className="w-10 h-10 rounded-full" />
@@ -44,7 +54,7 @@ export const ListLoader = () => {
 };
 
 export const LargeListLoader = () => {
-  return Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-48 w-full mb-4" />);
+  return Array.from({ length: 24 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-48 w-full mb-4" />);
 };
 
 export const JobLoader = () => {

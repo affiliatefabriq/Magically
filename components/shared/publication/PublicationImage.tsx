@@ -9,17 +9,18 @@ type PublicationImageProps = {
   src: string;
   alt: string;
   className?: string;
+  onClick?: () => void;
 };
 
-export const PublicationImage = ({ src, alt, className }: PublicationImageProps) => {
+export const PublicationImage = ({ src, alt, className, onClick }: PublicationImageProps) => {
   const t = useTranslations("Components.Publication");
   const [error, setError] = useState(false);
 
   if (error || !src) {
     return (
       <div className="flex flex-col items-center justify-center w-full gap-2 text-muted-foreground aspect-square rounded-xl theme-2">
-        <ImageIcon className="size-12" />
-        <span>{t("noImage")}</span>
+        <ImageIcon className="size-6 sm:size-12" />
+        <span className="text-xs sm:text-base">{t("noImage")}</span>
       </div>
     );
   }
@@ -50,6 +51,7 @@ export const PublicationImage = ({ src, alt, className }: PublicationImageProps)
       alt={alt}
       className={`rounded-xl object-cover aspect-square w-full ${className}`}
       onError={() => setError(true)}
+      onClick={onClick}
     />
   );
 };

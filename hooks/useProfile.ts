@@ -35,14 +35,20 @@ const getUserFollowers = async (username: string) => {
   return data.data;
 };
 
-const subscribe = async (userId: string) => {
-  const { data } = await api.post(`/users/${userId}/subscribe`);
-  return data;
-};
-
-const unsubscribe = async (userId: string) => {
-  const { data } = await api.delete(`/users/${userId}/unsubscribe`);
-  return data;
+const getFollow = async ({
+  userId,
+  follow,
+}: {
+  userId: string;
+  follow: boolean;
+}) => {
+  if (follow) {
+    const { data } = await api.post(`/users/${userId}/subscribe`);
+    return data;
+  } else {
+    const { data } = await api.delete(`/users/${userId}/unsubscribe`);
+    return data;
+  }
 };
 
 const updateProfile = async (formData: { fullname?: string; bio?: string }) => {
@@ -107,27 +113,9 @@ export const useUserFollowers = (username: string) => {
   });
 };
 
-export const useSubscribe = () => {
-  const queryClient = useQueryClient();
+export const useFollow = () => {
   return useMutation({
-    mutationFn: subscribe,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.search.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
-    },
-  });
-};
-
-export const useUnsubscribe = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: unsubscribe,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.search.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
-    },
+    mutationFn: getFollow,
   });
 };
 

@@ -10,9 +10,11 @@ type Props = {
     imageUrl?: string | null;
     alt?: string;
     error?: string;
+    onClick?: () => void;
+    className?: string;
 };
 
-export function JobImage({ status, imageUrl, alt, error }: Props) {
+export function JobImage({ status, imageUrl, alt, error, onClick, className }: Props) {
     const [imageError, setImageError] = useState(false);
 
     console.log("JobImage received:", { status, imageUrl, alt });
@@ -37,7 +39,8 @@ export function JobImage({ status, imageUrl, alt, error }: Props) {
             <PublicationImage
                 src={finalImageUrl!}
                 alt={alt || "result"}
-                className="rounded-xl object-cover"
+                className={`${className} rounded-xl object-cover`}
+                onClick={onClick}
             />
         );
     }

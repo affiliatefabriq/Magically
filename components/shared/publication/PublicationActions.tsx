@@ -74,7 +74,7 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
       </DropdownMenu>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-7xl">
           <DialogHeader>
             <DialogTitle className="mt-4">{t("title")}</DialogTitle>
           </DialogHeader>

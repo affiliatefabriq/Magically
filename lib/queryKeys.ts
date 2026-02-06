@@ -57,4 +57,4 @@ export const queryKeys = {
     all: ["higgsfield"] as const,
     motions: () => [...queryKeys.higgsfield.all, "motions"] as const,
   },
-} as const;
+} as const satisfies Record<string, any>;

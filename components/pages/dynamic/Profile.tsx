@@ -50,10 +50,13 @@ export const Profile = ({ username }: { username: string }) => {
           <h3 className="font-semibold text-sm">{t("publications")}</h3>
           <p className="text-xs">{user.publicationsCount}</p>
         </div>
-        <Link href={`/profile/${user.username}/interested`} className="text-center">
+        <div
+          // href={`/profile/${user.username}/interested`}
+          className="text-center"
+        >
           <h3 className="font-semibold text-sm">{t("interested")}</h3>
           <p className="text-xs">{user.followersCount === undefined ? 0 : user.followersCount + user.followingCount}</p>
-        </Link>
+        </div>
       </div>
       <Separator className="bg-muted my-4" />
       {user.publications.length === 0 && (

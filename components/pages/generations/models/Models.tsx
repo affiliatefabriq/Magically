@@ -116,7 +116,7 @@ export const Models = () => {
               >
                 {/* Image Section */}
                 <Link
-                  href={`/create/models/${model.id}`}
+                  href={`/models/${model.id}`}
                   className="block"
                 >
                   <div className="relative aspect-square bg-muted overflow-hidden">
@@ -142,7 +142,7 @@ export const Models = () => {
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start gap-2">
                     <Link
-                      href={`/create/models/${model.id}`}
+                      href={`/models/${model.id}`}
                       className="flex-1 min-w-0"
                     >
                       <CardTitle className="text-base sm:text-lg truncate hover:text-primary transition-colors">

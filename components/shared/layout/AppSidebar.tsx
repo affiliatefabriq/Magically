@@ -11,13 +11,13 @@ import {
   Folder,
   Globe,
   Loader,
-  Search,
   Sparkles,
   TriangleAlert,
   UserRound,
   Video,
   Wand,
-  Coins
+  Coins,
+  Bot
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -57,9 +57,9 @@ export const AppSidebar = () => {
     },
     {
       id: 2,
-      title: t("Search"),
-      url: "/search",
-      icon: Search,
+      title: t("Models"),
+      url: "/models",
+      icon: Bot,
     },
     {
       id: 3,

@@ -1,27 +1,56 @@
 "use client";
 
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useFollow } from "@/hooks/useProfile";
 import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { useSubscribe, useUnsubscribe } from "@/hooks/useProfile";
-import { UserAttributes } from "@/types";
-
-export const FollowButton = (user: UserAttributes) => {
+export const FollowButton = ({
+  id,
+  isFollowing: initialFollowing,
+}: {
+  id: string;
+  isFollowing: boolean;
+}) => {
   const t = useTranslations("Components.FollowButton");
-  const subscribeMutation = useSubscribe();
-  const unsubscribeMutation = useUnsubscribe();
+  const [isFollowing, setIsFollowing] = useState(initialFollowing);
+  const followMutation = useFollow();
 
-  const handleFollowToggle = (user: UserAttributes) => {
-    user.isFollowing ? unsubscribeMutation.mutate(user.id) : subscribeMutation.mutate(user.id);
+  const handleClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (followMutation.isPending) return;
+
+    const next = !isFollowing;
+
+    setIsFollowing(next);
+
+    try {
+      await followMutation.mutateAsync({
+        userId: id,
+        follow: next,
+      });
+    } catch (err) {
+      setIsFollowing(!next);
+      console.error("follow error", err);
+    }
   };
 
   return (
     <Button
-      className={user.isFollowing ? "btn-outline" : "btn-solid"}
-      onClick={() => handleFollowToggle(user)}
-      disabled={subscribeMutation.isPending || unsubscribeMutation.isPending}
+      onClick={handleClick}
+      disabled={followMutation.isPending}
+      className={`${isFollowing ? "btn-outline" : "btn-solid"} min-w-24`}
     >
-      {user.isFollowing ? t("Unfollow") : t("Follow")}
+      {followMutation.isPending ? (
+        <Loader2 className="size-4 animate-spin" />
+      ) : isFollowing ? (
+        t("Unfollow")
+      ) : (
+        t("Follow")
+      )}
     </Button>
   );
 };

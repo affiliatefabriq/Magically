@@ -77,6 +77,7 @@
       "Register": "Регистрация",
       "InDevelopment": "В разработке",
       "MagicPhoto": "Волшебное фото",
+      "Models": "Модели",
       "Effects": {
         "VideoEffects": "Видеоэффекты",
         "PhotoEffects": "Фотоэффекты",
@@ -183,6 +184,9 @@
     }
   },
   "Pages": {
+    "Explore": {
+      "Suggested": "Рекомендовано для вас"
+    },
     "Pay": {
       "AmountLabel": "Сумма пополнения",
       "Button": {
@@ -216,7 +220,6 @@
         "BackToHome": "Вернуться на главную"
       }
     },
-    "Explore": {},
     "Search": {
       "title": "Поиск",
       "search": "Найти пользователей и публикации...",
@@ -233,7 +236,16 @@
       "Jobs": "История",
       "Transactions": "Транзакции",
       "Models": "Модели",
-      "Flux": "Новая модель"
+      "Flux": "Новая модель",
+      "collapse": "Развернуть",
+      "expand": "Свернуть",
+      "noPrompt": "Нет описания",
+      "copied": "Скопировано",
+      "share": "Поделиться",
+      "downloaded": "Скачано",
+      "download": "Скачать",
+      "toReel": "В ленту!",
+      "published": "Опубликовано"
     },
     "Models": {
       "title": "Мои модели",
@@ -295,6 +307,7 @@
     },
     "Profile": {
       "title": "Профиль",
+      "history": "История расходов",
       "publications": "Публикации",
       "interested": "Интересуются",
       "followers": "Подписчики",

@@ -1,12 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { queryKeys } from "@/lib/queryKeys";
 import { UserAttributes } from "@/types";
 
 // --- API Functions ---
-const searchAll = async (params: { query?: string; type?: string; sortBy?: string; hashtag?: string }) => {
-  const { data } = await api.get("/search", { params });
+const searchPublications = async (params: {
+  query?: string;
+  sortBy?: string;
+  hashtag?: string;
+  page?: number;
+  limit?: number;
+}) => {
+  const { data } = await api.get("/publications", { params });
   return data.data;
 };
 
@@ -18,11 +23,18 @@ const getRecommendedUsers = async (limit: number = 10): Promise<UserAttributes[]
 };
 
 // --- Hooks ---
-export const useSearch = (params: { query?: string; type?: string; sortBy?: string; hashtag?: string }) => {
-  return useQuery({
+export const useSearchPublications = (params: {
+  query?: string;
+  sortBy?: string;
+  hashtag?: string;
+}) => {
+  return useInfiniteQuery({
     queryKey: queryKeys.search.query(params),
-    queryFn: () => searchAll(params),
-    enabled: !!params.query || !!params.hashtag,
+    queryFn: ({ pageParam = 1 }) =>
+      searchPublications({ ...params, page: pageParam, limit: 10 }),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    enabled: true,
+    initialPageParam: 1,
   });
 };
 
@@ -31,6 +43,6 @@ export const useRecommendedUsers = (enabled: boolean = true, limit: number = 10)
     queryKey: queryKeys.recommendations.users(limit),
     queryFn: () => getRecommendedUsers(limit),
     enabled,
-    staleTime: 5 * 60 * 1000, // 5 минут
+    staleTime: 5 * 60 * 1000,
   });
 };

@@ -29,8 +29,8 @@ export const MagicButton = ({ icon: Icon, className, title, btn, ...props }: any
     <div className={cn("special-btn", className)}>
       <button type="button" {...props} className={btn}>
         <div className="flex items-center justify-center w-full h-full">
-          <Icon className="size-5" />
-          {title && <p className="pl-2">{title}</p>}
+          <Icon className="size-5 mr-px" />
+          {title && <p className="pl-1">{title}</p>}
 
           {shooting.map((s, i) => (
             <div

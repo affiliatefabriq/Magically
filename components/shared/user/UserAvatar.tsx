@@ -6,9 +6,10 @@ type UserAvatarProps = {
   fullname: string;
   avatar?: string | null;
   size?: "sm" | "md" | "lg" | "xl";
+  className?: string;
 };
 
-export const UserAvatar = ({ username, fullname, avatar, size = "md" }: UserAvatarProps) => {
+export const UserAvatar = ({ username, fullname, avatar, size = "md", className }: UserAvatarProps) => {
   return (
     <Avatar
       className={`
@@ -17,6 +18,7 @@ export const UserAvatar = ({ username, fullname, avatar, size = "md" }: UserAvat
         ${size === "md" && "size-12"}
         ${size === "lg" && "size-16"}
         ${size === "xl" && "size-24"}
+        ${className}
       `}
     >
       <AvatarImage

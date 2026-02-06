@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { BrainCircuit, Cog, ForwardIcon, Pencil } from "lucide-react";
+import { BrainCircuit, Cog, ForwardIcon, Mail, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { EditProfileDialog } from "@/components/shared/user/EditProfileDialog";
@@ -69,6 +69,9 @@ export const Profile = () => {
             <UserAvatar {...user} size="xl" />
             <span className="text-sm font-semibold mt-4">{user.fullname}</span>
             <span className="hidden md:flex text-neutral-400 text-sm">@{user.username}</span>
+            <div className="flex items-center gap-1 text-sm clear-start text-neutral-400 mt-1 w-16">
+              <span>{user.email}</span>
+            </div>
           </div>
           <div className="flex md:flex-row flex-col items-start md:items-center justify-between mt-0 md:mt-4 px-0 gap-2">
             <div className="flex items-center justify-start gap-2">
@@ -98,30 +101,13 @@ export const Profile = () => {
           </div>
         </div>
         <p className="text-sm text-muted-foreground wrap-break-word mt-2">{user.bio}</p>
-        {/* <div className="flex items-center gap-2 text-muted-foreground mt-4">
-          <p className="text-sm">{t("tokens")}</p>
-          <Link href="/transactions" className="text-sm link-text cursor-pointer">
-            ✦ {user.tokens}
-          </Link>
-        </div>
-        <div className="flex flex-row items-center gap-3 text-muted-foreground">
-          <div className="flex text-sm w-auto">{t("activity")}</div>
-          <div className="flex flex-1 items-center w-full mt-1">
-            <Progress value={user.dailyActions.count * 10} className="w-full max-w-18.75 lg:max-w-37.5" />
-            <span className="px-2 w-16 text-sm text-muted-foreground text-center">{user.dailyActions.count} / 10</span>
-          </div>
-        </div> */}
       </div>
       <div className="flex flex-wrap items-center justify-start gap-2">
         <Button className="btn-outline" onClick={() => router.push('/transactions')}>
-          История расходов | ✦ {user.tokens}
+          {t("history")} | ✦ {user.tokens}
         </Button>
         <Button className="btn-outline">
           <span className="px-2 text-sm">{t("activity")} {user.dailyActions.count} / 10</span>
-        </Button>
-        <Button className="btn-solid" onClick={() => router.push('/create/models')}>
-          <BrainCircuit />
-          К моделям
         </Button>
       </div>
 
@@ -132,10 +118,13 @@ export const Profile = () => {
           <h3 className="font-semibold text-sm">{t("publications")}</h3>
           <p className="text-xs">{user.publicationsCount}</p>
         </div>
-        <Link href="/profile/interested" className="text-center">
+        <div
+          // href="/profile/interested"
+          className="text-center"
+        >
           <h3 className="font-semibold text-sm">{t("interested")}</h3>
           <p className="text-xs">{user.followersCount === undefined ? 0 : user.followersCount + user.followingCount}</p>
-        </Link>
+        </div>
       </div>
       <Separator className="bg-muted my-4" />
       {user.publications.length === 0 && (

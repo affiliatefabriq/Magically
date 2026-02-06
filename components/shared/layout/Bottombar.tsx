@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Brush, Compass, Folder, Loader, Search, Sparkles, TriangleAlert, UserRound, Video, Wand } from "lucide-react";
+
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bot, Brush, Compass, Folder, Loader, Search, Sparkles, TriangleAlert, UserRound, Video, Wand } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import {
@@ -19,39 +20,41 @@ import { MagicButton } from "@/components/ui/magic/magic-button";
 export const Bottombar = () => {
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("Components.Sidebar");
 
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [open, setOpen] = useState(false);
 
   const items = [
     {
       id: 1,
-      title: "Explore",
+      title: t("Explore"),
       url: "/",
       icon: Compass,
     },
     {
       id: 2,
-      title: "Search",
-      url: "/search",
-      icon: Search,
+      title: t("Models"),
+      url: "/models",
+      icon: Bot,
     },
     {
       id: 3,
-      title: "Create",
+      title: t("Create"),
       url: "/create",
       icon: Sparkles,
     },
     {
       id: 4,
-      title: "Library",
+      title: t("Library"),
       url: "/library",
       icon: Folder,
     },
     {
       id: 5,
-      title: "Profile",
+      title: t("Profile"),
       url: "/profile",
       icon: UserRound,
     },
@@ -75,22 +78,29 @@ export const Bottombar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos]);
 
+  useEffect(() => {
+    const handleRouteChange = () => setOpen(false);
+    return () => {
+      handleRouteChange();
+    };
+  }, []);
+
   const bottomBarStyle = {
     transform: isBottomBarVisible ? "translateY(0)" : "translateY(115%)",
-    transition: "transform 0.3s ease-in-out",
+    transition: "transform 0.25s ease-in-out",
   };
 
   return (
     <nav
       style={bottomBarStyle}
-      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-2 z-10 w-full h-16 px-2"
+      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-0 z-10 w-full h-18 px-2"
     >
-      <div className="flex items-center justify-center gap-4 rounded-2xl border p-3 backdrop-blur-xl mx-auto bg-white/50 dark:bg-black/20">
+      <div className="flex items-center justify-center gap-3 rounded-2xl border p-3 backdrop-blur-xl mx-auto bg-white/50 dark:bg-black/20">
         {items.map((item) =>
           item.id === 3 ? (
-            <DropdownMenu key={item.id}>
+            <DropdownMenu key={item.id} open={open} onOpenChange={setOpen} modal={false}>
               <DropdownMenuTrigger asChild>
-                <MagicButton icon={item.icon} className="w-9 h-9 text-white" btn="rounded-lg" />
+                <MagicButton icon={item.icon} className="size-9 text-white" btn="rounded-lg" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="relative p-4 mx-auto rounded-xl overflow-hidden" align="center">
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>

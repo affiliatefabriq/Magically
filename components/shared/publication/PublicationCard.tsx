@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Dot, Heart, MessageCircle } from "lucide-react";
+import { Check, Dot, Download, Heart, MessageCircle, Share2, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,10 @@ import { API_URL } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { Publication } from "@/types";
 import { UserAvatar } from "../user/UserAvatar";
-import { UserProfile } from "../user/UserProfile";
 import { AuthRequiredPopover } from "./AuthRequiredPopover";
 import { LikeButton } from "./LikeButton";
 import { PublicationActions } from "./PublicationActions";
 import { PublicationImage } from "./PublicationImage";
-import { SubscribeButton } from "./SubscribeButton";
 import { VideoRender } from "./VideoRender";
 import { PublicationDialog } from "./PublicationDialog";
 
@@ -30,22 +28,105 @@ type PublicationCardProps = {
 
 export const PublicationCard = ({ publication, userId }: PublicationCardProps) => {
   const t = useTranslations("Components.Publication");
+
   const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
+  const [isShared, setIsShared] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/publications/${publication.id}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ url: shareUrl });
+        setIsShared(true);
+        setTimeout(() => setIsShared(false), 2000);
+      } catch (err) {
+      }
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      setIsShared(true);
+      setTimeout(() => setIsShared(false), 2000);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!publication) return;
+
+    try {
+      const fileUrl = `${API_URL}${publication.imageUrl || publication.videoUrl}`;
+      const res = await fetch(fileUrl, { credentials: "include" });
+
+      if (!res.ok) throw new Error("Download failed");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `publication-${publication.id}.${publication.videoUrl ? "mp4" : "jpg"}`;
+      document.body.appendChild(a);
+      a.click();
+
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      setIsDownloaded(true);
+      setTimeout(() => setIsDownloaded(false), 2000);
+    } catch (e) {
+      console.error("Download error", e);
+    }
+  };
+
+  const goFullScreen = () => {
+    const elem = document.querySelector(".publication-fullscreen-target-mobile") as HTMLElement;
+    if (!elem) return;
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if ((elem as any).webkitRequestFullscreen) {
+      (elem as any).webkitRequestFullscreen();
+    } else if ((elem as any).msRequestFullscreen) {
+      (elem as any).msRequestFullscreen();
+    }
+  };
+
+  const exitFullScreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if ((document as any).webkitExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    } else if ((document as any).msExitFullscreen) {
+      (document as any).msExitFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const onChange = () => {
+      setIsNativeFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
 
   return (
     <div className="flex flex-col items-start justify-center gap-2">
       <div className="relative w-full group">
         <div className="flex flex-col md:hidden">
-          <div className="flex md:hidden flex-row gap-2">
-            <UserAvatar {...publication.author} size="sm" />
-            {/* {publication.author.id === userId ? (
-              <PublicationActions publicationId={publication.id} initialContent={publication.content} />
-              ) : (
-                ""
-                )} */}
+          <div className="flex items-start md:hidden flex-row gap-2">
+            <Link href={`/profile/${publication.author.username}`} className="mt-2">
+              <UserAvatar {...publication.author} size="sm" />
+            </Link>
             <div key={publication.id}>
               <div className="flex justify-start items-center">
-                <p className="text-base font-semibold">{publication.author.username}</p>
+                <Link
+                  href={`/profile/${publication.author.username}`}
+                  className="text-base font-semibold"
+                >
+                  {publication.author.username}
+                </Link>
                 <Dot />
                 <div className="text-sm secondary-text">{formatDate(publication.createdAt)}</div>
               </div>
@@ -81,7 +162,24 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                   className="rounded-xl object-cover aspect-square w-full"
                 />
               )}
-              {publication.imageUrl && <PublicationImage src={publication.imageUrl} alt="publication" />}
+              {publication.imageUrl && (
+                <div className="relative group">
+                  <PublicationImage
+                    src={publication.imageUrl}
+                    alt="publication"
+                    onClick={goFullScreen}
+                    className="publication-fullscreen-target-mobile object-contain! cursor-pointer"
+                  />
+                  {isNativeFullscreen && (
+                    <button
+                      onClick={exitFullScreen}
+                      className="top-6 right-6 z-10000 text-white bg-black/60 hover:bg-black/80 p-2 rounded-full"
+                    >
+                      <X className="size-6" />
+                    </button>
+                  )}
+                </div>
+              )}
               <div className="flex items-center justify-start gap-4 mt-2">
                 {userId ? (
                   <LikeButton {...publication} />
@@ -103,10 +201,25 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                     <span>{publication.commentCount}</span>
                   </Link>
                 </motion.div>
+                <button
+                  onClick={handleShare}
+                  className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
+                >
+                  {isShared ? <Check className="size-5 stroke-1" /> : <Share2 className="size-5 stroke-1" />}
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="flex items-center justify-center p-0 gap-1 hover:text-green-500 transition-colors"
+                >
+                  {isDownloaded ? <Check className="size-5 stroke-1" /> : <Download className="size-5 stroke-1" />}
+                </button>
+                {userId === publication.author.id && (
+                  <PublicationActions publicationId={publication.id} initialContent={publication.content} />
+                )}
               </div>
             </div>
           </div>
-          <Separator className="mt-4" />
+          <Separator className="flex sm:hidden mt-4" />
         </div>
         <PublicationDialog publication={publication}>
           <div key={publication.id} className="hidden md:flex">
@@ -119,51 +232,6 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
             {publication.imageUrl && <PublicationImage src={publication.imageUrl} alt="publication" />}
           </div>
         </PublicationDialog>
-        <div
-          className="absolute hidden md:flex bottom-0 left-0 right-0 bg-white/20 dark:bg-black/20 
-             text-white px-4 py-6 text-xs rounded-b-lg rounded-t-3xl opacity-0 backdrop-blur-3xl 
-             translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition duration-200 ease-in"
-        >
-          <div className="flex flex-col items-start justify-center gap-4 px-4">
-            <UserProfile {...publication.author} />
-            <div className="flex items-center justify-start gap-4 mt-2">
-              {userId ? (
-                <LikeButton {...publication} />
-              ) : (
-                <AuthRequiredPopover>
-                  <button className="flex items-center justify-center bg-none hover:bg-transparent p-0 magic-transition gap-1">
-                    <Heart className="size-5 stroke-1" />
-                    <span>{publication.likeCount}</span>
-                  </button>
-                </AuthRequiredPopover>
-              )}
-              <motion.div whileTap={{ scale: 0.9 }}>
-                <Link
-                  href={`/publications/${publication.id}`}
-                  key={publication.id}
-                  className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors"
-                >
-                  <MessageCircle className="size-5 stroke-1" />
-                  <span>{publication.commentCount}</span>
-                </Link>
-              </motion.div>
-              {publication.author.id === userId ? (
-                <PublicationActions publicationId={publication.id} initialContent={publication.content} />
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-          {userId !== publication.author.id &&
-            (userId ? (
-              <SubscribeButton publication={publication} style="glass" />
-            ) : (
-              <AuthRequiredPopover>
-                <Button className="btn-glass">Subscribe</Button>
-              </AuthRequiredPopover>
-            ))}
-        </div>
-        <div className="flex md:hidden flex-col items-start justify-center gap-2 px-2"></div>
       </div>
     </div>
   );
@@ -186,9 +254,11 @@ export const PublicationCardSimplified = ({ publication, id }: PublicationCardPr
               className="object-cover aspect-square w-full"
             />
           ) : (
-            <PublicationDialog publication={publication}>
-              <PublicationImage src={publication.imageUrl!} alt="publication" />
-            </PublicationDialog>
+            <PublicationImage
+              src={publication.imageUrl!}
+              alt="publication"
+              className="rounded-none!"
+            />
           )}
         </Link>
       </div>

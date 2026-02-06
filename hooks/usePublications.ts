@@ -63,25 +63,35 @@ export const usePublication = (id: string) => {
 
 export const useLikePublication = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: likePublication,
-    onSuccess: (data, publicationId) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.detail(publicationId) });
+
+    onSuccess: (_data, publicationId) => {
+      queryClient.invalidateQueries({ queryKey: ["publications"] });
+      queryClient.invalidateQueries({ queryKey: ["publication", publicationId] });
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
 
+
 export const useUnlikePublication = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: unlikePublication,
-    onSuccess: (data, publicationId) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.detail(publicationId) });
+
+    onSuccess: (_data, publicationId) => {
+      queryClient.invalidateQueries({ queryKey: ["publications"] });
+      queryClient.invalidateQueries({ queryKey: ["publication", publicationId] });
+      queryClient.invalidateQueries({ queryKey: ["feed"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 };
+
 
 export const useUpdatePublication = () => {
   const queryClient = useQueryClient();

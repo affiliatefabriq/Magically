@@ -163,6 +163,7 @@
       "Login": "Log In",
       "Logo": "Magical",
       "MagicPhoto": "Magic photo",
+      "Models": "Models",
       "Profile": "Profile",
       "Register": "Register",
       "Search": "Search",
@@ -184,6 +185,9 @@
     }
   },
   "Pages": {
+    "Explore": {
+      "Suggested": "Suggested for you"
+    },
     "Effects": {
       "PhotoEditor": {
         "AntiBlur": "Anti blur",
@@ -288,7 +292,16 @@
       "Jobs": "Generations",
       "Models": "Models",
       "Transactions": "Transactions",
-      "title": "Library"
+      "title": "Library",
+      "collapse": "Collapse",
+      "expand": "Expand",
+      "noPrompt": "No prompt",
+      "copied": "Copied",
+      "share": "Share",
+      "downloaded": "Downloaded",
+      "download": "Download",
+      "toReel": "To reel",
+      "published": "Published"
     },
     "MagicPhoto": {
       "Aspect": {
@@ -383,6 +396,7 @@
     },
     "Profile": {
       "activity": "Activity",
+      "history": "Expense history",
       "edit": "Manage",
       "followers": "Followers",
       "following": "Followings",

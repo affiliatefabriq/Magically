@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAIModel } from "@/hooks/useAi";
 import { API_URL } from "@/lib/api";
+import { BackButton } from "@/components/shared/layout/BackButton";
 
 export const ModelDetails = ({ modelId }: { modelId: string }) => {
   const router = useRouter();
@@ -31,9 +32,7 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
       <div className="section-padding flex flex-col items-center gap-4 mt-20">
         <AlertCircle className="size-10 text-red-500" />
         <h2 className="text-xl font-bold">Model not found</h2>
-        <Link href="/create/models">
-          <Button variant="outline">{t("back")}</Button>
-        </Link>
+        <BackButton />
       </div>
     );
 
@@ -46,7 +45,7 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
       <div className="mb-6 flex-1">
         <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
           <Link
-            href="/create/models"
+            href="/models"
             className="flex items-center justify-start h-full ml-2 link-text"
           >
             <ChevronLeft className="size-4" />
