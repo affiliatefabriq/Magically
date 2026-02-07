@@ -159,7 +159,6 @@ export const ModelsEmpty = () => {
       <CreateModelDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        type="flux"
         redirectToGenerate
       />
     </>
