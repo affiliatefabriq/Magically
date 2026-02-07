@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -29,6 +30,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateAIModel, useUpdateAIModel } from "@/hooks/useAi";
+import { API_URL } from "@/lib/api";
+import { PublicationImage } from "../publication/PublicationImage";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -43,7 +46,6 @@ interface CreateModelDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   modelToEdit?: any;
-  type: "ttapi" | "flux";
   redirectToGenerate?: boolean;
 }
 
@@ -51,7 +53,6 @@ export const CreateModelDialog = ({
   open,
   onOpenChange,
   modelToEdit,
-  type,
   redirectToGenerate = false,
 }: CreateModelDialogProps) => {
   const t = useTranslations("Pages.Models.Dialog");
@@ -62,6 +63,9 @@ export const CreateModelDialog = ({
   const updateFluxModel = useUpdateAIModel();
 
   const isEditing = !!modelToEdit;
+
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -75,6 +79,7 @@ export const CreateModelDialog = ({
 
   useEffect(() => {
     if (open) {
+      setImagesToDelete([]);
       if (modelToEdit) {
         form.reset({
           name: modelToEdit.name,
@@ -82,6 +87,7 @@ export const CreateModelDialog = ({
           instruction: modelToEdit.instruction || "",
           images: [],
         });
+        setExistingImages(modelToEdit.imagePaths || []);
       } else {
         form.reset({
           name: "",
@@ -89,12 +95,20 @@ export const CreateModelDialog = ({
           instruction: "",
           images: [],
         });
+        setExistingImages([]);
       }
     }
   }, [open, modelToEdit, form]);
 
+  const handleDeleteExisting = (path: string) => {
+    setExistingImages((prev) => prev.filter((p) => p !== path));
+    setImagesToDelete((prev) => [...prev, path]);
+  };
+
   const onSubmit = async (values: FormValues) => {
-    if (!isEditing && (!values.images || values.images.length === 0)) {
+    const totalImages = existingImages.length + (values.images?.length || 0);
+
+    if (totalImages === 0) {
       toast.error(tAlerts("minImage"));
       return;
     }
@@ -105,6 +119,7 @@ export const CreateModelDialog = ({
       formData.append("description", values.description || "");
       formData.append("instruction", values.instruction || "");
 
+      // Новые файлы
       if (values.images && values.images.length > 0) {
         values.images.forEach((file) => {
           formData.append("modelImages", file);
@@ -114,19 +129,21 @@ export const CreateModelDialog = ({
       let createdModelId: string | undefined;
 
       if (isEditing && modelToEdit) {
+        if (imagesToDelete.length > 0) {
+          formData.append("imagesToDelete", JSON.stringify(imagesToDelete));
+        }
+
         await updateFluxModel.mutateAsync({ id: modelToEdit.id, formData });
         toast.success(tAlerts("updated"));
         createdModelId = modelToEdit.id;
       } else {
         const response = await createFluxModel.mutateAsync(formData);
         toast.success(tAlerts("created"));
-        // Получаем ID созданной модели из ответа
         createdModelId = response?.data?.id;
       }
 
       onOpenChange(false);
 
-      // Редирект на страницу генерации с выбранной моделью
       if (redirectToGenerate && createdModelId) {
         router.push(`/create/magic-photo?modelId=${createdModelId}`);
       }
@@ -193,12 +210,38 @@ export const CreateModelDialog = ({
               )}
             />
 
+            {isEditing && existingImages.length > 0 && (
+              <div className="space-y-2">
+                <FormLabel>{t("existing")} ({existingImages.length})</FormLabel>
+                <div className="grid grid-cols-4 gap-2">
+                  {existingImages.map((path, idx) => (
+                    <div key={idx} className="relative aspect-square rounded-md overflow-hidden group">
+                      <PublicationImage
+                        src={`${API_URL}${path}`}
+                        alt="existing"
+                        className="object-cover "
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteExisting(path)}
+                        className="absolute top-1 right-1 bg-red-500/80 p-1 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="size-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <FormField
               control={form.control}
               name="images"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("photosLabel")}</FormLabel>
+                  <FormLabel>
+                    {isEditing ? t("addPhotosLabel") : t("photosLabel")}
+                  </FormLabel>
                   <FormControl>
                     <UploadImage
                       imageAmount={8}

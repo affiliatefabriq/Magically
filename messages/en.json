@@ -283,8 +283,10 @@
         "instrPlaceholder": "For example: Always generate in black and white style...",
         "nameLabel": "Model name",
         "namePlaceholder": "For example: Cyberpunk style",
-        "photosLabel": "Photos (up to 8)",
-        "saveBtn": "Save changes"
+        "photosLabel": "2-3 Photos (up to 8)",
+        "addPhotosLabel": "Add photos (up to 8)",
+        "saveBtn": "Save changes",
+        "existing": "Existing photos"
       },
       "back": "Back to models",
       "create": "New model",
@@ -294,7 +296,9 @@
       "emptyTitle": "No models found",
       "generate": "Generate photo",
       "title": "Models",
-      "trainingData": "Training data"
+      "trainingData": "Training data",
+      "edit": "Edit",
+      "delete": "Delete"
     },
     "Pay": {
       "AmountLabel": "Amount",

@@ -86,16 +86,18 @@ export const AppSidebar = () => {
       <SidebarContent className="theme border-none px-2">
         <SidebarGroup>
           <SidebarGroupLabel className="flex items-center gap-2 my-6">
-            <Image
-              src="/assets/logo.jpg"
-              alt="logo"
-              width={36}
-              height={36}
-              className="border border-violet-500 rounded-lg"
-            />
-            <h1 className="text-xl font-bold">
-              <AuroraText>{t("Logo")}</AuroraText>
-            </h1>
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/assets/logo.jpg"
+                alt="logo"
+                width={36}
+                height={36}
+                className="border border-violet-500 rounded-lg"
+              />
+              <h1 className="text-xl font-bold">
+                <AuroraText>{t("Logo")}</AuroraText>
+              </h1>
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent className="font-medium">
             <SidebarMenu className="mt-2">

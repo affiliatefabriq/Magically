@@ -43,15 +43,7 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
   return (
     <section className="section-padding container mx-auto max-w-5xl min-h-screen flex flex-col">
       <div className="mb-6 flex-1">
-        <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
-          <Link
-            href="/models"
-            className="flex items-center justify-start h-full ml-2 link-text"
-          >
-            <ChevronLeft className="size-4" />
-            <span>{t("back")}</span>
-          </Link>
-        </div>
+        <BackButton />
 
         <div className="flex flex-col gap-1 mt-12 md:mt-4">
           <h1 className="title-text text-3xl">{model.name}</h1>

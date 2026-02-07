@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
 
 import {
   Bot,
@@ -29,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { MagicButton } from "@/components/ui/magic/magic-button";
+import Image from "next/image";
 
 export const Bottombar = () => {
   const locale = useLocale();
@@ -49,7 +51,6 @@ export const Bottombar = () => {
     { id: 5, title: t("Profile"), url: "/profile", icon: UserRound },
   ];
 
-  // ---------- hide on scroll ----------
   useEffect(() => {
     const handleScroll = () => {
       const current = window.scrollY;
@@ -68,12 +69,10 @@ export const Bottombar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos]);
 
-  // ---------- close on route change ----------
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
-  // ---------- navigate helper ----------
   const go = (url: string) => {
     setOpen(false);
     router.push(url);
@@ -99,8 +98,6 @@ export const Bottombar = () => {
               <DropdownMenuContent className="relative p-4 mx-auto rounded-xl overflow-hidden" align="center">
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-
-                {/* magic photo */}
                 <DropdownMenuItem
                   onClick={() => go("/create/magic-photo")}
                   className="mt-2 py-3 rounded-xl cursor-pointer"
@@ -110,8 +107,6 @@ export const Bottombar = () => {
                     {t("MagicPhoto")}
                   </div>
                 </DropdownMenuItem>
-
-                {/* dev items */}
                 {[
                   { icon: Brush, label: t("Effects.PhotoEditor") },
                   { icon: Loader, label: t("Effects.PhotoEffects") },
@@ -121,15 +116,14 @@ export const Bottombar = () => {
                     key={i}
                     className="mt-2 py-3 rounded-xl cursor-not-allowed"
                   >
-                    <div className="flex items-center justify-between w-full relative">
+                    <div className="flex items-start justify-between w-full relative">
 
-                      <div className="flex items-center gap-2 blur-[1px] opacity-70">
+                      <div className="flex items-center gap-2 blur-[2px] opacity-70">
                         <x.icon className="size-4" />
                         <span className="font-semibold">{x.label}</span>
                       </div>
 
-                      {/* оставить как есть */}
-                      <div className="absolute right-0 flex items-center gap-1 text-xs font-bold text-yellow-300">
+                      <div className="absolute right-0 left-6 flex items-start justify-start gap-1 text-xs font-bold text-yellow-300">
                         <TriangleAlert className="size-4 text-yellow-300" />
                         {t("InDevelopment")}
                       </div>
@@ -143,9 +137,15 @@ export const Bottombar = () => {
             <Link
               href={item.url}
               key={item.id}
-              className={`relative flex flex-col items-center gap-4 rounded-lg p-2 font-semibold ${pathname === item.url ? "btn-magic" : ""}`}
+              className={`relative flex flex-col items-center gap-4 font-semibold`}
             >
-              <span className="flex justify-center items-center size-5">{locale === "ru" ? "В" : "M"}</span>
+              <Image
+                src="/assets/logo.jpg"
+                alt="logo"
+                width={28}
+                height={28}
+                className="rounded-lg"
+              />
             </Link>
           ) : (
             <Link

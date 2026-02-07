@@ -82,7 +82,6 @@ export const Models = () => {
           <div>
             <h1 className="title-text text-2xl sm:text-3xl">{t("title")}</h1>
           </div>
-
           <div className="flex sm:flex-row flex-col gap-2 w-auto">
             <Link href="/create/magic-photo" className="w-auto order-1 sm:order-2">
               <Button
@@ -169,7 +168,7 @@ export const Models = () => {
                             handleEdit(model);
                           }}
                         >
-                          <Pencil className="mr-2 size-4" /> Edit
+                          <Pencil className="mr-2 size-4" /> {t("edit")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={(e) => {
@@ -178,7 +177,7 @@ export const Models = () => {
                           }}
                           className="text-red-500 focus:text-red-500"
                         >
-                          <Trash className="text-red-500 mr-2 size-4" /> Delete
+                          <Trash className="text-red-500 mr-2 size-4" /> {t("delete")}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -218,7 +217,6 @@ export const Models = () => {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         modelToEdit={modelToEdit}
-        type="flux"
       />
     </section>
   );

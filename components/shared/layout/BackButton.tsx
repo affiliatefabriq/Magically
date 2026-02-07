@@ -13,7 +13,7 @@ export const BackButton = () => {
         <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="fixed md:hidden h-12 flex justify-start backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10 link-text"
+            className="fixed md:hidden h-12 rounded-none flex justify-start bg-background w-full top-0 left-0 right-0 text-sm z-10 link-text"
         >
             <ChevronLeft className="size-4 " />
             <span>{t("back")}</span>

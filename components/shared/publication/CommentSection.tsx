@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import * as React from "react";
+import Link from "next/link";
+
+import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { enUS, ru } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,14 +28,13 @@ import { cn } from "@/lib/utils";
 import { Comment } from "@/types";
 import { UserAvatar } from "../user/UserAvatar";
 
-// CommentCard component
-function CommentCard({ className, ...props }: React.ComponentProps<"div">) {
+const CommentCard = ({ className, ...props }: React.ComponentProps<"div">) => {
   return <div className={cn("bg-transparent flex flex-col", className)} {...props} />;
-}
+};
 
-function CommentCardContent({ className, ...props }: React.ComponentProps<"div">) {
+const CommentCardContent = ({ className, ...props }: React.ComponentProps<"div">) => {
   return <div className={cn("", className)} {...props} />;
-}
+};
 
 export const CommentSection = ({ publicationId }: { publicationId: string }) => {
   const { data: user } = useUser();
@@ -82,7 +83,6 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
     }));
   };
 
-  // Flatten all nested replies into single array
   const flattenReplies = (replies: Comment[]): Comment[] => {
     const flattened: Comment[] = [];
 
@@ -102,7 +102,12 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
       <CommentCard key={comment.id} className={isReply ? "ml-12" : ""}>
         <CommentCardContent className="px-2 py-2">
           <div className="flex items-start gap-3">
-            <UserAvatar {...comment.author} size="sm" />
+            <Link
+              href={`/profile/${comment.author.username}`}
+              className="relative z-10 bg-background rounded-full mt-2"
+            >
+              <UserAvatar {...comment.author} size="sm" />
+            </Link>
             <div className="flex flex-col justify-start items-start flex-1 min-w-0">
               <div className="flex items-center">
                 <span className="font-semibold text-sm truncate">@{comment.author?.username}</span>
