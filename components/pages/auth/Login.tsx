@@ -129,7 +129,7 @@ export const Login = () => {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-2 text-muted-foreground">{t("OrContinueWith")}</span>
             </div>
           </div>
           <div className="flex items-center justify-center flex-1 grow flex-wrap gap-2 w-full h-full">
@@ -154,7 +154,7 @@ export const Login = () => {
                 height={18}
                 className="invert dark:invert-0"
               />
-              Continue with Google
+              {t("GoogleLogin")}
             </Button>
           </div>
         </form>

@@ -1,69 +1,4 @@
 {
-  "Auth": {
-    "ForgotPassword": {
-      "BackToLogin": "Back to login",
-      "Button": {
-        "Send": "Send",
-        "Sending": "Sending..."
-      },
-      "Email": "Enter your email",
-      "Subtitle": "Let's recover you password.",
-      "Title": "Forgot password?"
-    },
-    "Login": {
-      "BackToHomePage": "Back to home page",
-      "Button": {
-        "Send": "Send",
-        "Sending": "Sending..."
-      },
-      "ForgotPassword": "Forgot Password?",
-      "Messages": {
-        "Failure": "Couldn't login. Invalid credentials.",
-        "Success": "Successfully logged in!"
-      },
-      "Password": "Enter the password",
-      "Register": "No account? Register",
-      "Title": "Login",
-      "UsernameOrEmail": "Enter username or email"
-    },
-    "Register": {
-      "BackToHomePage": "Back to home page",
-      "Bio": "Bio",
-      "Button": {
-        "Send": "Send",
-        "SendOTP": "Send OTP",
-        "Sending": "Sending...",
-        "Verify": "Verify",
-        "Verifying": "Verifying..."
-      },
-      "Email": "Email",
-      "EnterOTP": "Enter the OTP sent to",
-      "Fullname": "Full name",
-      "Login": "Already have account? Login",
-      "Messages": {
-        "Failure": "Couldn't register. Fill all fields.",
-        "Success": "Successfully registered!"
-      },
-      "OTP": "One-Time Password",
-      "Password": "Enter the password",
-      "Steps": {
-        "1": "Step 1",
-        "2": "Step 2",
-        "3": "Step 3"
-      },
-      "Title": "Register",
-      "Username": "Username"
-    },
-    "ResetPassword": {
-      "Button": {
-        "Send": "Save",
-        "Sending": "Saving..."
-      },
-      "ConfirmPassword": "Confirm password",
-      "NewPassword": "New password",
-      "Title": "Reset password"
-    }
-  },
   "Components": {
     "AuthRequired": {
       "login": "Log in",
@@ -352,13 +287,13 @@
         "saveBtn": "Save changes"
       },
       "back": "Back to models",
-      "create": "Create Model",
+      "create": "New model",
       "createFirst": "Create your first model",
-      "createMagic": "Create Magic Photo",
+      "createMagic": "Magic Photo",
       "emptyDesc": "Create your first model to start making magic.",
       "emptyTitle": "No models found",
       "generate": "Generate photo",
-      "title": "My Models",
+      "title": "Models",
       "trainingData": "Training data"
     },
     "Pay": {
@@ -504,6 +439,73 @@
         "description": "Unknown error while search. Try to refresh your browser or login again.",
         "title": "Error searching content"
       }
+    }
+  },
+  "Auth": {
+    "ForgotPassword": {
+      "BackToLogin": "Back to login",
+      "Button": {
+        "Send": "Send",
+        "Sending": "Sending..."
+      },
+      "Email": "Enter your email",
+      "Subtitle": "Let's recover you password.",
+      "Title": "Forgot password?"
+    },
+    "Login": {
+      "BackToHomePage": "Back to home page",
+      "Button": {
+        "Send": "Send",
+        "Sending": "Sending..."
+      },
+      "ForgotPassword": "Forgot Password?",
+      "Messages": {
+        "Failure": "Couldn't login. Invalid credentials.",
+        "Success": "Successfully logged in!"
+      },
+      "Password": "Enter the password",
+      "Register": "No account? Register",
+      "Title": "Login",
+      "UsernameOrEmail": "Enter username or email",
+      "OrContinueWith": "Or continue with",
+      "GoogleLogin": "Login with Google"
+    },
+    "Register": {
+      "BackToHomePage": "Back to home page",
+      "Bio": "Bio",
+      "Button": {
+        "Send": "Send",
+        "SendOTP": "Send OTP",
+        "Sending": "Sending...",
+        "Verify": "Verify",
+        "Verifying": "Verifying..."
+      },
+      "Email": "Email",
+      "EnterOTP": "Enter the OTP sent to",
+      "Fullname": "Full name",
+      "Login": "Already have account? Login",
+      "Messages": {
+        "Failure": "Couldn't register. Fill all fields.",
+        "Success": "Successfully registered!"
+      },
+      "OTP": "One-Time Password",
+      "Password": "Enter the password",
+      "Steps": {
+        "1": "Step 1",
+        "2": "Step 2",
+        "3": "Step 3"
+      },
+      "Title": "Register",
+      "Username": "Username"
+    },
+    "ResetPassword": {
+      "Button": {
+        "Send": "Save",
+        "Sending": "Saving..."
+      },
+      "ConfirmPassword": "Confirm password",
+      "NewPassword": "New password",
+      "Title": "Reset password"
     }
   }
 }

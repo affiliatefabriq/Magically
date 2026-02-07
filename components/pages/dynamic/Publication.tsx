@@ -20,6 +20,7 @@ import { API_URL } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { BackButton } from "@/components/shared/layout/BackButton";
 import { FollowButton } from "@/components/shared/user/FollowButton";
+import { FullscreenImageViewer } from "@/components/ui/fullscreen-image";
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
   const t = useTranslations("Components.PublicationActions");
@@ -27,7 +28,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
   const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
   const [isShared, setIsShared] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
-  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const { data: user } = useUser();
   const { data: publication, isLoading, isError } = usePublication(publicationId);
@@ -78,37 +79,6 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
     }
   };
 
-  const goFullScreen = () => {
-    const elem = document.querySelector(".publication-dynamic-fullscreen-target") as HTMLElement;
-    if (!elem) return;
-
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if ((elem as any).webkitRequestFullscreen) {
-      (elem as any).webkitRequestFullscreen();
-    } else if ((elem as any).msRequestFullscreen) {
-      (elem as any).msRequestFullscreen();
-    }
-  };
-
-  const exitFullScreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if ((document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    } else if ((document as any).msExitFullscreen) {
-      (document as any).msExitFullscreen();
-    }
-  };
-
-  useEffect(() => {
-    const onChange = () => {
-      setIsNativeFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", onChange);
-    return () => document.removeEventListener("fullscreenchange", onChange);
-  }, []);
-
   if (isError)
     return (
       <div className="state-center section-padding">
@@ -135,22 +105,19 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
           />
         )}
         {publication.imageUrl && (
-          <div className="relative group">
+          <>
             <PublicationImage
               src={publication.imageUrl}
               alt="publication"
-              onClick={goFullScreen}
-              className="publication-dynamic-fullscreen-target object-contain! cursor-pointer"
+              onClick={() => setFullscreenImage(publication.imageUrl)}
+              className="cursor-pointer object-contain"
             />
-            {isNativeFullscreen && (
-              <button
-                onClick={exitFullScreen}
-                className="top-6 right-6 z-10000 text-white bg-black/60 hover:bg-black/80 p-2 rounded-full"
-              >
-                <X className="size-6" />
-              </button>
-            )}
-          </div>
+
+            <FullscreenImageViewer
+              src={fullscreenImage}
+              onClose={() => setFullscreenImage(null)}
+            />
+          </>
         )}
 
         <div className="flex flex-col items-start justify-center gap-2 px-2 w-full">

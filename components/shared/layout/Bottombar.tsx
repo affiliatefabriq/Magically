@@ -1,10 +1,22 @@
 "use client";
 
-import Link from "next/link";
-
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Bot, Brush, Compass, Folder, Loader, Search, Sparkles, TriangleAlert, UserRound, Video, Wand } from "lucide-react";
+import Link from "next/link";
+
+import {
+  Bot,
+  Brush,
+  Compass,
+  Folder,
+  Loader,
+  Sparkles,
+  TriangleAlert,
+  UserRound,
+  Video,
+  Wand,
+} from "lucide-react";
+
 import { useLocale, useTranslations } from "next-intl";
 
 import {
@@ -15,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { MagicButton } from "@/components/ui/magic/magic-button";
 
 export const Bottombar = () => {
@@ -27,67 +40,48 @@ export const Bottombar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [open, setOpen] = useState(false);
 
+  // ---------- items ----------
   const items = [
-    {
-      id: 1,
-      title: t("Explore"),
-      url: "/",
-      icon: Compass,
-    },
-    {
-      id: 2,
-      title: t("Models"),
-      url: "/models",
-      icon: Bot,
-    },
-    {
-      id: 3,
-      title: t("Create"),
-      url: "/create",
-      icon: Sparkles,
-    },
-    {
-      id: 4,
-      title: t("Library"),
-      url: "/library",
-      icon: Folder,
-    },
-    {
-      id: 5,
-      title: t("Profile"),
-      url: "/profile",
-      icon: UserRound,
-    },
+    { id: 1, title: t("Explore"), url: "/", icon: Compass },
+    { id: 2, title: t("Models"), url: "/models", icon: Bot },
+    { id: 3, title: t("Create"), url: "/create", icon: Sparkles },
+    { id: 4, title: t("Library"), url: "/library", icon: Folder },
+    { id: 5, title: t("Profile"), url: "/profile", icon: UserRound },
   ];
 
+  // ---------- hide on scroll ----------
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
+      const current = window.scrollY;
 
-      if (currentScrollPos > prevScrollPos && currentScrollPos > 100) {
+      if (current > prevScrollPos && current > 80) {
         setIsBottomBarVisible(false);
+        setOpen(false);
       } else {
         setIsBottomBarVisible(true);
       }
 
-      setPrevScrollPos(currentScrollPos);
+      setPrevScrollPos(current);
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos]);
 
+  // ---------- close on route change ----------
   useEffect(() => {
-    const handleRouteChange = () => setOpen(false);
-    return () => {
-      handleRouteChange();
-    };
-  }, []);
+    setOpen(false);
+  }, [pathname]);
+
+  // ---------- navigate helper ----------
+  const go = (url: string) => {
+    setOpen(false);
+    router.push(url);
+  };
 
   const bottomBarStyle = {
-    transform: isBottomBarVisible ? "translateY(0)" : "translateY(115%)",
-    transition: "transform 0.25s ease-in-out",
+    transform: isBottomBarVisible ? "translateY(0)" : "translateY(120%)",
+    transition: "transform .35s cubic-bezier(.4,0,.2,1)",
   };
 
   return (
@@ -105,48 +99,44 @@ export const Bottombar = () => {
               <DropdownMenuContent className="relative p-4 mx-auto rounded-xl overflow-hidden" align="center">
                 <DropdownMenuLabel>{t("Create")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/create/magic-photo" className="flex items-center justify-start gap-2">
+
+                {/* magic photo */}
+                <DropdownMenuItem
+                  onClick={() => go("/create/magic-photo")}
+                  className="mt-2 py-3 rounded-xl cursor-pointer"
+                >
+                  <div className="flex items-center gap-3 font-semibold">
                     <Wand className="size-4" />
-                    <span className="font-semibold z-20">{t("MagicPhoto")}</span>
-                  </Link>
+                    {t("MagicPhoto")}
+                  </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/" className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
-                    <div className="flex items-center relative gap-1 blur-xs">
-                      <Brush />
-                      <span className="font-semibold">{t("Effects.PhotoEditor")}</span>
+
+                {/* dev items */}
+                {[
+                  { icon: Brush, label: t("Effects.PhotoEditor") },
+                  { icon: Loader, label: t("Effects.PhotoEffects") },
+                  { icon: Video, label: t("Effects.VideoEffects") },
+                ].map((x, i) => (
+                  <DropdownMenuItem
+                    key={i}
+                    className="mt-2 py-3 rounded-xl cursor-not-allowed"
+                  >
+                    <div className="flex items-center justify-between w-full relative">
+
+                      <div className="flex items-center gap-2 blur-[1px] opacity-70">
+                        <x.icon className="size-4" />
+                        <span className="font-semibold">{x.label}</span>
+                      </div>
+
+                      {/* оставить как есть */}
+                      <div className="absolute right-0 flex items-center gap-1 text-xs font-bold text-yellow-300">
+                        <TriangleAlert className="size-4 text-yellow-300" />
+                        {t("InDevelopment")}
+                      </div>
+
                     </div>
-                    <div className="absolute flex items-center gap-2 text-xs font-bold text-yellow-200">
-                      <TriangleAlert className="size-4 text-yellow-200" />
-                      {t("InDevelopment")}
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/" className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
-                    <div className="flex items-center relative gap-1 blur-xs">
-                      <Loader />
-                      <span className="font-semibold">{t("Effects.PhotoEffects")}</span>
-                    </div>
-                    <div className="absolute flex items-center gap-2 text-xs font-bold text-yellow-200">
-                      <TriangleAlert className="size-4 text-yellow-200" />
-                      {t("InDevelopment")}
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="mt-2 py-2">
-                  <Link href="/" className="btn-magic-secondary flex items-center justify-start relative cursor-not-allowed">
-                    <div className="flex items-center relative gap-1 blur-xs">
-                      <Video />
-                      <span className="font-semibold">{t("Effects.VideoEffects")}</span>
-                    </div>
-                    <div className="absolute flex items-center gap-2 text-xs font-bold text-yellow-200">
-                      <TriangleAlert className="size-4 text-yellow-200" />
-                      {t("InDevelopment")}
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : item.id === 1 ? (

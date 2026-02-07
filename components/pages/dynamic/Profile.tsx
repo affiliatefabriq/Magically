@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { useProfile } from "@/hooks/useProfile";
 import { API_URL } from "@/lib/api";
 import { PublicationImage } from "@/components/shared/publication/PublicationImage";
+import { FollowButton } from "@/components/shared/user/FollowButton";
 
 export const Profile = ({ username }: { username: string }) => {
   const t = useTranslations("Pages.Profile");
@@ -42,7 +43,8 @@ export const Profile = ({ username }: { username: string }) => {
         <div className="flex items-center justify-between">
           <UserProfile {...user} />
         </div>
-        <p className="text-sm text-muted-foreground wrap-break-word mt-6">{user.bio}</p>
+        <p className="text-sm text-muted-foreground wrap-break-word mt-6 mb-4">{user.bio}</p>
+        <FollowButton id={user.id} isFollowing={user.isFollowing ?? false} />
       </div>
       <Separator className="bg-muted my-4" />
       <div className="flex items-center justify-evenly gap-4 secondary-text">

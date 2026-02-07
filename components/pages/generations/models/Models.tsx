@@ -75,32 +75,34 @@ export const Models = () => {
   }
 
   return (
-    <section className="section-padding container mx-auto max-w-7xl min-h-screen px-4 sm:px-6">
+    <section className="section-padding container mx-auto max-w-7xl min-h-screen">
       {/* Header Section */}
       <div className="flex flex-col space-y-4 mt-4 mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-row items-start justify-between gap-4">
           <div>
             <h1 className="title-text text-2xl sm:text-3xl">{t("title")}</h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Button
-              onClick={handleCreate}
-              variant="outline"
-              className="w-full sm:w-auto gap-2 order-2 sm:order-1 btn-outline"
-            >
-              <Plus className="size-4" /> {t("create")}
-            </Button>
-            <Link href="/create/magic-photo" className="w-full sm:w-auto order-1 sm:order-2">
-              <Button className="w-full gap-2 btn-solid">
+          <div className="flex sm:flex-row flex-col gap-2 w-auto">
+            <Link href="/create/magic-photo" className="w-auto order-1 sm:order-2">
+              <Button
+                className="w-full gap-2 btn-solid"
+                size="sm"
+              >
                 <Sparkles className="size-4" /> {t("createMagic")}
               </Button>
             </Link>
+            <Button
+              onClick={handleCreate}
+              variant="outline"
+              size="sm"
+              className="w-auto gap-2 order-2 sm:order-1 btn-outline"
+            >
+              <Plus className="size-4" /> {t("create")}
+            </Button>
           </div>
         </div>
       </div>
-
-      <Separator className="my-6" />
 
       {/* Content Section */}
       {!models || models.length === 0 ? (

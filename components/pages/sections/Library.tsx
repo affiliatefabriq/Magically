@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatDate } from "@/lib/utils";
+import { FullscreenImageViewer } from "@/components/ui/fullscreen-image";
 
 export const Library = () => {
   const t = useTranslations("Pages.Library");
@@ -26,7 +27,7 @@ export const Library = () => {
   const [expandedPromptsMap, setExpandedPromptsMap] = useState<Record<string, boolean>>({});
   const [downloadedMap, setDownloadedMap] = useState<Record<string, boolean>>({});
   const [sharedMap, setSharedMap] = useState<Record<string, boolean>>({});
-  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const handleShare = async (jobId: string, resultUrl: string) => {
     const shareUrl = `${API_URL}${resultUrl}`;
@@ -75,37 +76,6 @@ export const Library = () => {
     }
   };
 
-  const goFullScreen = () => {
-    const elem = document.querySelector(".publication-gallery-fullscreen-target") as HTMLElement;
-    if (!elem) return;
-
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if ((elem as any).webkitRequestFullscreen) {
-      (elem as any).webkitRequestFullscreen();
-    } else if ((elem as any).msRequestFullscreen) {
-      (elem as any).msRequestFullscreen();
-    }
-  };
-
-  const exitFullScreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if ((document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    } else if ((document as any).msExitFullscreen) {
-      (document as any).msExitFullscreen();
-    }
-  };
-
-  useEffect(() => {
-    const onChange = () => {
-      setIsNativeFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", onChange);
-    return () => document.removeEventListener("fullscreenchange", onChange);
-  }, []);
-
   return (
     <section className="container mx-auto section-padding pb-24">
       <h1 className="title-text mt-4 mb-6">{t("title")}</h1>
@@ -122,17 +92,13 @@ export const Library = () => {
                 imageUrl={job.resultUrl}
                 alt={job.meta?.prompt}
                 error={job.errorMessage}
-                onClick={goFullScreen}
+                onClick={() => setFullscreenImage(job.resultUrl)}
                 className="object-contain! cursor-pointer"
               />
-              {isNativeFullscreen && (
-                <button
-                  onClick={exitFullScreen}
-                  className="top-6 right-6 z-10000 text-white bg-black/60 hover:bg-black/80 p-2 rounded-full"
-                >
-                  <X className="size-6" />
-                </button>
-              )}
+              <FullscreenImageViewer
+                src={fullscreenImage}
+                onClose={() => setFullscreenImage(null)}
+              />
             </div>
             <CardContent className="p-4 space-y-3">
               <div className="flex items-start justify-between gap-2">

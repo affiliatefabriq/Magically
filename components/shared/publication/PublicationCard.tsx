@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { API_URL } from "@/lib/api";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { Publication } from "@/types";
 import { UserAvatar } from "../user/UserAvatar";
 import { AuthRequiredPopover } from "./AuthRequiredPopover";
@@ -19,20 +19,23 @@ import { PublicationActions } from "./PublicationActions";
 import { PublicationImage } from "./PublicationImage";
 import { VideoRender } from "./VideoRender";
 import { PublicationDialog } from "./PublicationDialog";
+import { FullscreenImageViewer } from "@/components/ui/fullscreen-image";
 
 type PublicationCardProps = {
   publication: Publication;
   userId?: string;
   id?: any;
+  isFirst?: boolean;
+  isLast?: boolean;
 };
 
-export const PublicationCard = ({ publication, userId }: PublicationCardProps) => {
+export const PublicationCard = ({ publication, userId, isFirst, isLast }: PublicationCardProps) => {
   const t = useTranslations("Components.Publication");
 
   const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
   const [isShared, setIsShared] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
-  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/publications/${publication.id}`;
@@ -79,46 +82,19 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
     }
   };
 
-  const goFullScreen = () => {
-    const elem = document.querySelector(".publication-fullscreen-target-mobile") as HTMLElement;
-    if (!elem) return;
-
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if ((elem as any).webkitRequestFullscreen) {
-      (elem as any).webkitRequestFullscreen();
-    } else if ((elem as any).msRequestFullscreen) {
-      (elem as any).msRequestFullscreen();
-    }
-  };
-
-  const exitFullScreen = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if ((document as any).webkitExitFullscreen) {
-      (document as any).webkitExitFullscreen();
-    } else if ((document as any).msExitFullscreen) {
-      (document as any).msExitFullscreen();
-    }
-  };
-
-  useEffect(() => {
-    const onChange = () => {
-      setIsNativeFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", onChange);
-    return () => document.removeEventListener("fullscreenchange", onChange);
-  }, []);
-
-
   return (
     <div className="flex flex-col items-start justify-center gap-2">
       <div className="relative w-full group">
         <div className="flex flex-col md:hidden">
           <div className="flex items-start md:hidden flex-row gap-2">
-            <Link href={`/profile/${publication.author.username}`} className="mt-2">
-              <UserAvatar {...publication.author} size="sm" />
-            </Link>
+            <div className="relative flex flex-col items-center w-10 shrink-0">
+              <Link
+                href={`/profile/${publication.author.username}`}
+                className="relative z-10 bg-background rounded-full mt-2"
+              >
+                <UserAvatar {...publication.author} size="sm" />
+              </Link>
+            </div>
             <div key={publication.id}>
               <div className="flex justify-start items-center">
                 <Link
@@ -163,23 +139,21 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
                 />
               )}
               {publication.imageUrl && (
-                <div className="relative group">
+                <>
                   <PublicationImage
                     src={publication.imageUrl}
                     alt="publication"
-                    onClick={goFullScreen}
-                    className="publication-fullscreen-target-mobile object-contain! cursor-pointer"
+                    onClick={() => setFullscreenImage(publication.imageUrl!)}
+                    className="cursor-pointer object-cover"
                   />
-                  {isNativeFullscreen && (
-                    <button
-                      onClick={exitFullScreen}
-                      className="top-6 right-6 z-10000 text-white bg-black/60 hover:bg-black/80 p-2 rounded-full"
-                    >
-                      <X className="size-6" />
-                    </button>
-                  )}
-                </div>
+
+                  <FullscreenImageViewer
+                    src={fullscreenImage}
+                    onClose={() => setFullscreenImage(null)}
+                  />
+                </>
               )}
+
               <div className="flex items-center justify-start gap-4 mt-2">
                 {userId ? (
                   <LikeButton {...publication} />
@@ -219,7 +193,6 @@ export const PublicationCard = ({ publication, userId }: PublicationCardProps) =
               </div>
             </div>
           </div>
-          <Separator className="flex sm:hidden mt-4" />
         </div>
         <PublicationDialog publication={publication}>
           <div key={publication.id} className="hidden md:flex">

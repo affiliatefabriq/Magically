@@ -18,7 +18,7 @@ export const Explore = () => {
   const t = useTranslations("Pages.Explore")
   const { theme } = useTheme();
   const [filters] = useState({ sortBy: "newest", hashtag: "" });
-  
+
   const { data: user } = useUser();
   const {
     data,
@@ -108,6 +108,7 @@ export const Explore = () => {
   }
 
   const mixedContent = insertRecommendations();
+  const onlyPublications = mixedContent.filter(i => i.type === "publication");
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
@@ -123,38 +124,48 @@ export const Explore = () => {
 
       {/* Scrollable content */}
       <div className="relative z-10 w-full h-full section-padding">
-        <div className="grid-4 mt-4 gap-6">
-          {mixedContent.map((item, index) => {
-            if (item.type === 'publication') {
-              return (
-                <PublicationCard
-                  key={`pub-${item.data.id}`}
-                  publication={item.data}
-                  userId={user?.id}
-                />
-              );
-            }
+        <div className="relative mt-4">
+          {/* GLOBAL THREAD LINE */}
+          <div className="absolute left-5 top-0 bottom-0 sm:w-0 w-px bg-border pointer-events-none" />
+          <div className="grid-4 gap-6 relative z-10">
+            {mixedContent.map((item, index) => {
+              if (item.type === 'publication') {
+                const pubIndex = onlyPublications.findIndex(p => p.data.id === item.data.id);
+                const isFirst = pubIndex === 0;
+                const isLast = pubIndex === onlyPublications.length - 1;
 
-            if (item.type === 'recommendations') {
-              return (
-                <div
-                  key={`rec-${index}`}
-                  className="col-span-full bg-linear-to-br from-card/30 to-card/10 backdrop-blur-sm rounded-2xl p-6 border border-border/50"
-                >
-                  <h3 className="text-lg font-bold mb-4">
-                    {t("Suggested")}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {item.data.map((user: any) => (
-                      <RecommendedUserCard key={user.id} user={user} />
-                    ))}
+                return (
+                  <PublicationCard
+                    key={`pub-${item.data.id}`}
+                    publication={item.data}
+                    userId={user?.id}
+                    isFirst={isFirst}
+                    isLast={isLast}
+                  />
+                );
+              };
+
+              if (item.type === 'recommendations') {
+                return (
+                  <div
+                    key={`rec-${index}`}
+                    className="col-span-full bg-linear-to-br from-card/30 to-card/10 backdrop-blur-sm rounded-2xl p-6 border border-border/50"
+                  >
+                    <h3 className="text-lg font-bold mb-4">
+                      {t("Suggested")}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {item.data.map((user: any) => (
+                        <RecommendedUserCard key={user.id} user={user} />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              );
-            }
+                );
+              }
 
-            return null;
-          })}
+              return null;
+            })}
+          </div>
         </div>
 
         {/* Empty state - только если нет публикаций вообще */}

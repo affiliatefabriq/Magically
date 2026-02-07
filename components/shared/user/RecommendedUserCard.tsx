@@ -17,12 +17,14 @@ interface RecommendedUserCardProps {
 export const RecommendedUserCard = ({ user }: RecommendedUserCardProps) => {
   return (
     <div className="flex flex-col lg:flex-row items-center gap-3 p-4 rounded-2xl theme-2 transition-colors">
-      <Avatar className="size-12 ring-2 ring-primary/10">
-        <AvatarImage src={API_URL! + user.avatar} alt={user.username} />
-        <AvatarFallback className="bg-linear-to-br from-primary/20 to-secondary/20">
-          {user.username?.charAt(0).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
+      <Link href={`/profile/${user.username}`} className="flex">
+        <Avatar className="size-12 ring-2 ring-primary/10">
+          <AvatarImage src={API_URL! + user.avatar} alt={user.username} />
+          <AvatarFallback className="bg-linear-to-br from-primary/20 to-secondary/20">
+            {user.username?.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </Link>
 
       <div className="flex flex-col flex-1 items-center justify-start lg:items-start min-w-0">
         <Link
