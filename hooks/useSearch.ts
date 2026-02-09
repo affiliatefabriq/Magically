@@ -1,7 +1,7 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import api from "@/lib/api";
-import { queryKeys } from "@/lib/queryKeys";
-import { UserAttributes } from "@/types";
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import api from '@/lib/api';
+import { queryKeys } from '@/lib/queryKeys';
+import { UserAttributes } from '@/types';
 
 // --- API Functions ---
 const searchPublications = async (params: {
@@ -11,12 +11,14 @@ const searchPublications = async (params: {
   page?: number;
   limit?: number;
 }) => {
-  const { data } = await api.get("/publications", { params });
+  const { data } = await api.get('/publications', { params });
   return data.data;
 };
 
-const getRecommendedUsers = async (limit: number = 10): Promise<UserAttributes[]> => {
-  const { data } = await api.get("/users/users/recommendations", {
+const getRecommendedUsers = async (
+  limit: number = 10,
+): Promise<UserAttributes[]> => {
+  const { data } = await api.get('/users/users/recommendations', {
     params: { limit },
   });
   return data.data;
@@ -38,7 +40,10 @@ export const useSearchPublications = (params: {
   });
 };
 
-export const useRecommendedUsers = (enabled: boolean = true, limit: number = 10) => {
+export const useRecommendedUsers = (
+  enabled: boolean = true,
+  limit: number = 10,
+) => {
   return useQuery({
     queryKey: queryKeys.recommendations.users(limit),
     queryFn: () => getRecommendedUsers(limit),

@@ -1,21 +1,29 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Link from "next/link";
+import * as React from 'react';
+import Link from 'next/link';
 
-import { useState } from "react";
-import { formatDistanceToNow } from "date-fns";
-import { enUS, ru } from "date-fns/locale";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Dot, Heart, MessageCircle, Send, Trash2, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { formatDistanceToNow } from 'date-fns';
+import { enUS, ru } from 'date-fns/locale';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  ChevronDown,
+  Dot,
+  Heart,
+  MessageCircle,
+  Send,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useUser } from "@/hooks/useAuth";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useUser } from '@/hooks/useAuth';
 import {
   useComments,
   useCreateComment,
@@ -23,35 +31,53 @@ import {
   useLikeComment,
   useReplyToComment,
   useUnlikeComment,
-} from "@/hooks/useComments";
-import { cn } from "@/lib/utils";
-import { Comment } from "@/types";
-import { UserAvatar } from "../user/UserAvatar";
+} from '@/hooks/useComments';
+import { cn } from '@/lib/utils';
+import { Comment } from '@/types';
+import { UserAvatar } from '../user/UserAvatar';
 
-const CommentCard = ({ className, ...props }: React.ComponentProps<"div">) => {
-  return <div className={cn("bg-transparent flex flex-col", className)} {...props} />;
+const CommentCard = ({ className, ...props }: React.ComponentProps<'div'>) => {
+  return (
+    <div className={cn('bg-transparent flex flex-col', className)} {...props} />
+  );
 };
 
-const CommentCardContent = ({ className, ...props }: React.ComponentProps<"div">) => {
-  return <div className={cn("", className)} {...props} />;
+const CommentCardContent = ({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) => {
+  return <div className={cn('', className)} {...props} />;
 };
 
-export const CommentSection = ({ publicationId }: { publicationId: string }) => {
+export const CommentSection = ({
+  publicationId,
+}: {
+  publicationId: string;
+}) => {
   const { data: user } = useUser();
   const { data: comments, isLoading } = useComments(publicationId);
-  const t = useTranslations("Components.CommentSection");
+  const t = useTranslations('Components.CommentSection');
   const createComment = useCreateComment();
   const replyToComment = useReplyToComment();
   const deleteComment = useDeleteComment();
   const likeComment = useLikeComment();
   const unlikeComment = useUnlikeComment();
 
-  const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null);
-  const [text, setText] = useState("");
-  const [showRepliesMap, setShowRepliesMap] = useState<Record<string, boolean>>({});
-  const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
+  const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(
+    null,
+  );
+  const [text, setText] = useState('');
+  const [showRepliesMap, setShowRepliesMap] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [expandedCommentsMap, setExpandedCommentsMap] = useState<
+    Record<string, boolean>
+  >({});
 
-  const locale = typeof window !== "undefined" ? localStorage.getItem("locale") || "en" : "en";
+  const locale =
+    typeof window !== 'undefined'
+      ? localStorage.getItem('locale') || 'en'
+      : 'en';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +90,7 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
       createComment.mutate({ publicationId, text });
     }
 
-    setText("");
+    setText('');
   };
 
   const handleLikeToggle = (comment: Comment) => {
@@ -97,9 +123,13 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
     return flattened;
   };
 
-  const renderSingleComment = (comment: Comment, isReply: boolean = false, parentAuthor: string | null = null) => {
+  const renderSingleComment = (
+    comment: Comment,
+    isReply: boolean = false,
+    parentAuthor: string | null = null,
+  ) => {
     return (
-      <CommentCard key={comment.id} className={isReply ? "ml-12" : ""}>
+      <CommentCard key={comment.id} className={isReply ? 'ml-12' : ''}>
         <CommentCardContent className="px-2 py-2">
           <div className="flex items-start gap-3">
             <Link
@@ -110,20 +140,30 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
             </Link>
             <div className="flex flex-col justify-start items-start flex-1 min-w-0">
               <div className="flex items-center">
-                <span className="font-semibold text-sm truncate">@{comment.author?.username}</span>
+                <span className="font-semibold text-sm truncate">
+                  @{comment.author?.username}
+                </span>
                 <Dot className="text-muted-foreground" />
                 <span className="text-xs text-muted-foreground truncate">
                   {formatDistanceToNow(new Date(comment.createdAt), {
                     addSuffix: true,
-                    locale: locale === "ru" ? ru : enUS,
+                    locale: locale === 'ru' ? ru : enUS,
                   })}
                 </span>
               </div>
               <p className="text-sm leading-relaxed wrap-break-word">
-                {parentAuthor && <span className="text-lime-500 font-medium mr-1">@{parentAuthor} </span>}
+                {parentAuthor && (
+                  <span className="text-lime-500 font-medium mr-1">
+                    @{parentAuthor}{' '}
+                  </span>
+                )}
                 {comment.text.length > 128 ? (
                   <>
-                    <span>{expandedCommentsMap[comment.id] ? comment.text : `${comment.text.slice(0, 128)}...`}</span>
+                    <span>
+                      {expandedCommentsMap[comment.id]
+                        ? comment.text
+                        : `${comment.text.slice(0, 128)}...`}
+                    </span>
                     <Button
                       variant="link"
                       size="sm"
@@ -135,7 +175,9 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                         }));
                       }}
                     >
-                      {expandedCommentsMap[comment.id] ? t("readLess") : t("readMore")}
+                      {expandedCommentsMap[comment.id]
+                        ? t('readLess')
+                        : t('readMore')}
                     </Button>
                   </>
                 ) : (
@@ -150,9 +192,11 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                   >
                     <Heart
                       className={`h-4 w-4 transition-colors 
-                        ${comment.isLiked ? "text-red-500 fill-red-500" : ""}`}
+                        ${comment.isLiked ? 'text-red-500 fill-red-500' : ''}`}
                     />
-                    <span className={`text-xs ${comment.isLiked ? "text-red-500 fill-red-500" : ""}`}>
+                    <span
+                      className={`text-xs ${comment.isLiked ? 'text-red-500 fill-red-500' : ''}`}
+                    >
                       {comment.likeCount}
                     </span>
                   </button>
@@ -169,7 +213,9 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                     className="flex items-center gap-1 text-muted-foreground hover:text-lime-500 transition-colors"
                   >
                     <MessageCircle className="h-4 w-4" />
-                    <span className="text-xs">{comment.replies?.length || 0}</span>
+                    <span className="text-xs">
+                      {comment.replies?.length || 0}
+                    </span>
                   </button>
                 </motion.div>
 
@@ -217,7 +263,7 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                 className="ml-12 flex items-center gap-2 text-sm text-lime-600 dark:text-lime-400 hover:underline font-medium py-1"
               >
                 <ChevronDown className="h-4 w-4" />
-                {t("showReplies")} ({allReplies.length})
+                {t('showReplies')} ({allReplies.length})
               </button>
             ) : (
               <>
@@ -226,9 +272,13 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
                   className="ml-12 flex items-center gap-2 text-sm text-lime-600 dark:text-lime-400 hover:underline font-medium mb-2 py-1"
                 >
                   <ChevronDown className="h-4 w-4 rotate-180" />
-                  {t("hideReplies")}
+                  {t('hideReplies')}
                 </button>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-1">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="space-y-1"
+                >
                   {allReplies.map((reply, index) => {
                     let parentAuthor = comment.author.username;
                     if (index > 0) {
@@ -250,9 +300,10 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
   return (
     <section className="flex flex-col h-full w-full">
       <div className="py-4 px-2 border-b">
-        <h3 className="text-lg font-semibold">{t("title")}</h3>
+        <h3 className="text-lg font-semibold">{t('title')}</h3>
         <p className="text-sm text-muted-foreground">
-          {comments?.length || 0} {comments?.length === 1 ? t("commentary") : t("commentaries")}
+          {comments?.length || 0}{' '}
+          {comments?.length === 1 ? t('commentary') : t('commentaries')}
         </p>
       </div>
 
@@ -276,7 +327,9 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
               ))}
             </div>
           ) : comments?.length ? (
-            <AnimatePresence>{comments.map((c: any) => renderComment(c))}</AnimatePresence>
+            <AnimatePresence>
+              {comments.map((c: any) => renderComment(c))}
+            </AnimatePresence>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -296,14 +349,15 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
           {replyTo && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
+              animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               className="mb-3 overflow-hidden"
             >
               <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg border">
                 <MessageCircle className="h-4 w-4 text-muted-foreground shrink-0" />
                 <span className="text-sm text-muted-foreground flex-1 truncate">
-                  {t("response.for")} <span className="font-medium">{replyTo.name}</span>
+                  {t('response.for')}{' '}
+                  <span className="font-medium">{replyTo.name}</span>
                 </span>
                 <Button
                   variant="ghost"
@@ -320,11 +374,11 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
 
         <div className="flex flex-row items-center gap-2">
           <Input
-            placeholder={replyTo ? t("response.write") : t("comment")}
+            placeholder={replyTo ? t('response.write') : t('comment')}
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+              if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 handleSubmit(e);
               }
@@ -335,7 +389,12 @@ export const CommentSection = ({ publicationId }: { publicationId: string }) => 
           <motion.div whileTap={{ scale: 0.95 }}>
             <Button
               onClick={handleSubmit}
-              disabled={!user || createComment.isPending || replyToComment.isPending || !text.trim()}
+              disabled={
+                !user ||
+                createComment.isPending ||
+                replyToComment.isPending ||
+                !text.trim()
+              }
               className="h-11 btn-login"
             >
               <Send className="size-4" />

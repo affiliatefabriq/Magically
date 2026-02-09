@@ -1,4 +1,4 @@
-import { Generate } from "@/components/pages/generations/effects/photo/Generate";
+import { Generate } from '@/components/pages/generations/effects/photo/Generate';
 
 const Page = () => {
   return <Generate />;

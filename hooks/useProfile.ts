@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import api from "@/lib/api";
-import { queryKeys } from "@/lib/queryKeys";
+import api from '@/lib/api';
+import { queryKeys } from '@/lib/queryKeys';
 
 // --- API Functions for /users routes ---
 const getProfile = async (username: string) => {
@@ -16,12 +16,12 @@ const getMyProfile = async () => {
 };
 
 const getMyFollowing = async () => {
-  const { data } = await api.get("/users/me/profile/following");
+  const { data } = await api.get('/users/me/profile/following');
   return data.data;
 };
 
 const getMyFollowers = async () => {
-  const { data } = await api.get("/users/me/profile/followers");
+  const { data } = await api.get('/users/me/profile/followers');
   return data.data;
 };
 
@@ -52,12 +52,12 @@ const getFollow = async ({
 };
 
 const updateProfile = async (formData: { fullname?: string; bio?: string }) => {
-  const { data } = await api.put("/users/me/profile", formData);
+  const { data } = await api.put('/users/me/profile', formData);
   return data;
 };
 
 const updateAvatar = async (formData: FormData) => {
-  const { data } = await api.put("/users/me/avatar", formData);
+  const { data } = await api.put('/users/me/avatar', formData);
   return data;
 };
 
@@ -73,7 +73,7 @@ export const useProfile = (username: string) => {
 
 export const useMyProfile = () => {
   return useQuery({
-    queryKey: queryKeys.users.profile("me"),
+    queryKey: queryKeys.users.profile('me'),
     queryFn: getMyProfile,
     staleTime: 5 * 60 * 1000,
   });
@@ -81,7 +81,7 @@ export const useMyProfile = () => {
 
 export const useMyFollowing = () => {
   return useQuery({
-    queryKey: queryKeys.users.following("me"),
+    queryKey: queryKeys.users.following('me'),
     queryFn: getMyFollowing,
     staleTime: 5 * 60 * 1000,
   });
@@ -89,7 +89,7 @@ export const useMyFollowing = () => {
 
 export const useMyFollowers = () => {
   return useQuery({
-    queryKey: queryKeys.users.followers("me"),
+    queryKey: queryKeys.users.followers('me'),
     queryFn: getMyFollowers,
     staleTime: 5 * 60 * 1000,
   });
@@ -124,8 +124,10 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.profile("me") });
-      toast.success("Profile updated!");
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.profile('me'),
+      });
+      toast.success('Profile updated!');
     },
   });
 };
@@ -135,8 +137,10 @@ export const useUpdateAvatar = () => {
   return useMutation({
     mutationFn: updateAvatar,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.profile("me") });
-      toast.success("Avatar updated!");
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.users.profile('me'),
+      });
+      toast.success('Avatar updated!');
     },
   });
 };

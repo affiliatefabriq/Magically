@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FollowButton } from "./FollowButton";
-import { API_URL } from "@/lib/api";
+import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { FollowButton } from './FollowButton';
+import { API_URL } from '@/lib/api';
 
 interface RecommendedUserCardProps {
   user: {
@@ -27,13 +27,8 @@ export const RecommendedUserCard = ({ user }: RecommendedUserCardProps) => {
       </Link>
 
       <div className="flex flex-col flex-1 items-center justify-start lg:items-start min-w-0">
-        <Link
-          href={`/profile/${user.username}`}
-          className="block"
-        >
-          <p className="font-semibold text-base truncate">
-            {user.username}
-          </p>
+        <Link href={`/profile/${user.username}`} className="block">
+          <p className="font-semibold text-base truncate">{user.username}</p>
           {user.fullname && (
             <p className="text-sm text-muted-foreground truncate">
               {user.fullname}
@@ -50,4 +45,4 @@ export const RecommendedUserCard = ({ user }: RecommendedUserCardProps) => {
       <FollowButton id={user.id} isFollowing={user.isFollowing!} />
     </div>
   );
-}
+};

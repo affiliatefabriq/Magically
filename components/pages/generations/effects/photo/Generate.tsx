@@ -1,26 +1,45 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft, Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ChevronLeft, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useForm } from 'react-hook-form';
 
-import { UploadImage } from "@/components/shared/create/UploadImage";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useGenerateNanoImage } from "@/hooks/useNano";
-import { formSchema, FormValues } from "@/lib/validation";
+import { UploadImage } from '@/components/shared/create/UploadImage';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useGenerateNanoImage } from '@/hooks/useNano';
+import { formSchema, FormValues } from '@/lib/validation';
 
 export const Generate = () => {
-  const t = useTranslations("Pages.Effects.PhotoGenerate");
+  const t = useTranslations('Pages.Effects.PhotoGenerate');
   const router = useRouter();
   const generateNano = useGenerateNanoImage();
   const [loading, setLoading] = useState(false);
@@ -28,11 +47,11 @@ export const Generate = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prompt: "",
-      aspect_ratio: "1:1",
+      prompt: '',
+      aspect_ratio: '1:1',
       images: [],
       publish: false,
-      model_type: "nano",
+      model_type: 'nano',
     },
   });
 
@@ -40,13 +59,13 @@ export const Generate = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("prompt", values.prompt);
-      formData.append("aspect_ratio", values.aspect_ratio);
-      formData.append("publish", String(values.publish));
+      formData.append('prompt', values.prompt);
+      formData.append('aspect_ratio', values.aspect_ratio);
+      formData.append('publish', String(values.publish));
 
       if (values.images && values.images.length > 0) {
         values.images.forEach((file) => {
-          formData.append("nanoImage", file);
+          formData.append('nanoImage', file);
         });
       }
 
@@ -65,15 +84,20 @@ export const Generate = () => {
   return (
     <section className="max-w-3xl mx-auto">
       <div className="fixed md:hidden h-12 backdrop-blur-2xl w-full top-0 left-0 right-0 text-sm z-10">
-        <Link href="/create/photo-effects" className="flex items-center justify-start h-full ml-4 link-text">
+        <Link
+          href="/create/photo-effects"
+          className="flex items-center justify-start h-full ml-4 link-text"
+        >
           <ChevronLeft className="size-4" />
-          <span>{t("PhotoEffects")}</span>
+          <span>{t('PhotoEffects')}</span>
         </Link>
       </div>
       <Card className="bg-transparent shadow-none border-none mt-8 md:mt-0">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 title-text">{t("title")}</CardTitle>
-          <CardDescription>{t("description")}</CardDescription>
+          <CardTitle className="flex items-center gap-2 title-text">
+            {t('title')}
+          </CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -83,9 +107,9 @@ export const Generate = () => {
                 name="prompt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("Prompt.title")}</FormLabel>
+                    <FormLabel>{t('Prompt.title')}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t("Prompt.placeholder")} {...field} />
+                      <Input placeholder={t('Prompt.placeholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -97,24 +121,48 @@ export const Generate = () => {
                 name="aspect_ratio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("Aspect.title")}</FormLabel>
+                    <FormLabel>{t('Aspect.title')}</FormLabel>
                     <ToggleGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       type="single"
                       className="flex flex-wrap items-center justify-center gap-2"
                     >
-                      <ToggleGroupItem value="1:1" aria-label="Toggle bold" className="size-28 border">
-                        <div className="flex items-center justify-center text-xs">{t("Aspect.1:1")}</div>
+                      <ToggleGroupItem
+                        value="1:1"
+                        aria-label="Toggle bold"
+                        className="size-28 border"
+                      >
+                        <div className="flex items-center justify-center text-xs">
+                          {t('Aspect.1:1')}
+                        </div>
                       </ToggleGroupItem>
-                      <ToggleGroupItem value="16:9" aria-label="Toggle italic" className="size-28 border">
-                        <div className="flex items-center justify-center text-xs">{t("Aspect.16:9")}</div>
+                      <ToggleGroupItem
+                        value="16:9"
+                        aria-label="Toggle italic"
+                        className="size-28 border"
+                      >
+                        <div className="flex items-center justify-center text-xs">
+                          {t('Aspect.16:9')}
+                        </div>
                       </ToggleGroupItem>
-                      <ToggleGroupItem value="9:16" aria-label="Toggle strikethrough" className="size-28 border">
-                        <div className="flex items-center justify-center text-xs">{t("Aspect.9:16")}</div>
+                      <ToggleGroupItem
+                        value="9:16"
+                        aria-label="Toggle strikethrough"
+                        className="size-28 border"
+                      >
+                        <div className="flex items-center justify-center text-xs">
+                          {t('Aspect.9:16')}
+                        </div>
                       </ToggleGroupItem>
-                      <ToggleGroupItem value="4:3" aria-label="Toggle strikethrough" className="size-28 border">
-                        <div className="flex items-center justify-center text-xs">{t("Aspect.4:3")}</div>
+                      <ToggleGroupItem
+                        value="4:3"
+                        aria-label="Toggle strikethrough"
+                        className="size-28 border"
+                      >
+                        <div className="flex items-center justify-center text-xs">
+                          {t('Aspect.4:3')}
+                        </div>
                       </ToggleGroupItem>
                     </ToggleGroup>
                     <FormMessage />
@@ -127,9 +175,12 @@ export const Generate = () => {
                 name="images"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("ReferenceImage")}</FormLabel>
+                    <FormLabel>{t('ReferenceImage')}</FormLabel>
                     <FormControl>
-                      <UploadImage imageAmount={1} onChange={(files) => field.onChange(files)} />
+                      <UploadImage
+                        imageAmount={1}
+                        onChange={(files) => field.onChange(files)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -142,11 +193,16 @@ export const Generate = () => {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                     <FormControl>
-                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>{t("Publish.title")}</FormLabel>
-                      <p className="text-sm text-muted-foreground">{t("Publish.description")}</p>
+                      <FormLabel>{t('Publish.title')}</FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        {t('Publish.description')}
+                      </p>
                     </div>
                   </FormItem>
                 )}
@@ -158,17 +214,28 @@ export const Generate = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Generation Model</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Model" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="nano">Nano Banana (Fastest)</SelectItem>
-                        <SelectItem value="nano-pro">Nano Pro (Balanced)</SelectItem>
-                        <SelectItem value="gpt-1.0">GPT Image 1.0 (Creative)</SelectItem>
-                        <SelectItem value="gpt-1.5">GPT Image 1.5 (High Detail)</SelectItem>
+                        <SelectItem value="nano">
+                          Nano Banana (Fastest)
+                        </SelectItem>
+                        <SelectItem value="nano-pro">
+                          Nano Pro (Balanced)
+                        </SelectItem>
+                        <SelectItem value="gpt-1.0">
+                          GPT Image 1.0 (Creative)
+                        </SelectItem>
+                        <SelectItem value="gpt-1.5">
+                          GPT Image 1.5 (High Detail)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -176,14 +243,18 @@ export const Generate = () => {
                 )}
               />
 
-              <Button type="submit" className="w-full btn-solid" disabled={loading || generateNano.isPending}>
+              <Button
+                type="submit"
+                className="w-full btn-solid"
+                disabled={loading || generateNano.isPending}
+              >
                 {loading || generateNano.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("Generate.action")}
+                    {t('Generate.action')}
                   </>
                 ) : (
-                  t("Generate.title")
+                  t('Generate.title')
                 )}
               </Button>
             </form>

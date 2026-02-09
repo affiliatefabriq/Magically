@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface ShootingStar {
   id: number;
@@ -48,8 +48,8 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
   maxSpeed = 30,
   minDelay = 1200,
   maxDelay = 4200,
-  starColor = "#9E00FF",
-  trailColor = "#2EB9DF",
+  starColor = '#9E00FF',
+  trailColor = '#2EB9DF',
   starWidth = 10,
   starHeight = 1,
   className,
@@ -85,11 +85,20 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
       if (star) {
         setStar((prevStar) => {
           if (!prevStar) return null;
-          const newX = prevStar.x + prevStar.speed * Math.cos((prevStar.angle * Math.PI) / 180);
-          const newY = prevStar.y + prevStar.speed * Math.sin((prevStar.angle * Math.PI) / 180);
+          const newX =
+            prevStar.x +
+            prevStar.speed * Math.cos((prevStar.angle * Math.PI) / 180);
+          const newY =
+            prevStar.y +
+            prevStar.speed * Math.sin((prevStar.angle * Math.PI) / 180);
           const newDistance = prevStar.distance + prevStar.speed;
           const newScale = 1 + newDistance / 100;
-          if (newX < -20 || newX > window.innerWidth + 20 || newY < -20 || newY > window.innerHeight + 20) {
+          if (
+            newX < -20 ||
+            newX > window.innerWidth + 20 ||
+            newY < -20 ||
+            newY > window.innerHeight + 20
+          ) {
             return null;
           }
           return {
@@ -108,7 +117,10 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
   }, [star]);
 
   return (
-    <svg ref={svgRef} className={cn("w-full h-full absolute inset-0", className)}>
+    <svg
+      ref={svgRef}
+      className={cn('w-full h-full absolute inset-0', className)}
+    >
       {star && (
         <rect
           key={star.id}
@@ -123,7 +135,10 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: trailColor, stopOpacity: 0 }} />
-          <stop offset="100%" style={{ stopColor: starColor, stopOpacity: 1 }} />
+          <stop
+            offset="100%"
+            style={{ stopColor: starColor, stopOpacity: 1 }}
+          />
         </linearGradient>
       </defs>
     </svg>

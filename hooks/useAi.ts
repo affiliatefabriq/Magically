@@ -1,6 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import api from "@/lib/api";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import api from '@/lib/api';
+import axios from 'axios';
 
 export interface AIModel {
   id: string;
@@ -9,7 +10,7 @@ export interface AIModel {
   description?: string;
   instruction?: string;
   imagePaths: string[];
-  provider: "unifically" | "ttapi";
+  provider: 'unifically' | 'ttapi';
   createdAt: string;
 }
 
@@ -25,7 +26,7 @@ export interface GenerateAIParams {
 
 // API Functions
 const getModels = async (): Promise<AIModel[]> => {
-  const { data } = await api.get("/ai/models");
+  const { data } = await api.get('/ai/models');
   return data.data;
 };
 
@@ -35,15 +36,21 @@ const getModelById = async (id: string): Promise<AIModel> => {
 };
 
 const createModel = async (formData: FormData) => {
-  const { data } = await api.post("/ai/models", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+  const { data } = await api.post('/ai/models', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return data;
 };
 
-const updateModel = async ({ id, formData }: { id: string; formData: FormData }) => {
+const updateModel = async ({
+  id,
+  formData,
+}: {
+  id: string;
+  formData: FormData;
+}) => {
   const { data } = await api.put(`/ai/models/${id}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return data;
 };
@@ -54,21 +61,21 @@ const deleteModel = async (id: string) => {
 };
 
 const generateImage = async (params: GenerateAIParams) => {
-  const { data } = await api.post("/ai/generate", params);
+  const { data } = await api.post('/ai/generate', params);
   return data;
 };
 
 // React Query Hooks
 export const useAIModels = () => {
   return useQuery({
-    queryKey: ["ai", "models"],
+    queryKey: ['ai', 'models'],
     queryFn: getModels,
   });
 };
 
 export const useAIModel = (id: string) => {
   return useQuery({
-    queryKey: ["ai", "model", id],
+    queryKey: ['ai', 'model', id],
     queryFn: () => getModelById(id),
     enabled: !!id,
     retry: 1,
@@ -80,11 +87,11 @@ export const useCreateAIModel = () => {
   return useMutation({
     mutationFn: createModel,
     onSuccess: () => {
-      toast.success("Model created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["ai", "models"] });
+      toast.success('Model created successfully!');
+      queryClient.invalidateQueries({ queryKey: ['ai', 'models'] });
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to create model");
+      toast.error(err.response?.data?.message || 'Failed to create model');
     },
   });
 };
@@ -94,11 +101,11 @@ export const useUpdateAIModel = () => {
   return useMutation({
     mutationFn: updateModel,
     onSuccess: () => {
-      toast.success("Model updated successfully!");
-      queryClient.invalidateQueries({ queryKey: ["ai", "models"] });
+      toast.success('Model updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ['ai', 'models'] });
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to update model");
+      toast.error(err.response?.data?.message || 'Failed to update model');
     },
   });
 };
@@ -108,11 +115,11 @@ export const useDeleteAIModel = () => {
   return useMutation({
     mutationFn: deleteModel,
     onSuccess: () => {
-      toast.success("Model deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["ai", "models"] });
+      toast.success('Model deleted successfully!');
+      queryClient.invalidateQueries({ queryKey: ['ai', 'models'] });
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Failed to delete model");
+      toast.error(err.response?.data?.message || 'Failed to delete model');
     },
   });
 };
@@ -122,12 +129,35 @@ export const useGenerateAI = () => {
   return useMutation({
     mutationFn: generateImage,
     onSuccess: () => {
-      toast.success("Generation started!");
-      queryClient.invalidateQueries({ queryKey: ["generationHistory"] });
-      queryClient.invalidateQueries({ queryKey: ["activeGeneration"] });
+      toast.success('Generation started!');
+      queryClient.invalidateQueries({ queryKey: ['generationHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['activeGeneration'] });
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Generation failed");
-    },
+    onError: (error: any) => {
+      if (axios.isAxiosError(error)) {
+        // Получаем ошибку из response.data.errors или response.data.message
+        const errorMsg =
+          error.response?.data?.errors ||
+          error.response?.data?.message ||
+          'Generation error';
+
+        // Проверяем на insufficient tokens
+        if (errorMsg.toLowerCase().includes('insufficient')) {
+          toast.error('Недостаточно токенов', {
+            description: 'Для генерации нужно 15 токенов',
+            duration: 4000,
+          });
+        } else {
+          toast.error('Ошибка генерации', {
+            description: errorMsg,
+            duration: 4000,
+          });
+        }
+
+        return;
+      }
+
+      toast.error('Неизвестная ошибка');
+    }
   });
 };

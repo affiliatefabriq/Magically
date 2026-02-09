@@ -13,7 +13,7 @@ interface BeGatewayParams {
   checkout: {
     iframe: boolean;
     test?: boolean;
-    transaction_type: "payment";
+    transaction_type: 'payment';
   };
   token: string;
   closeWidget: (status: BeGatewayStatus | null) => void;
@@ -23,7 +23,12 @@ interface BeGatewayInstance {
   createWidget: () => void;
 }
 
-type BeGatewayStatus = "successful" | "failed" | "pending" | "redirected" | "error";
+type BeGatewayStatus =
+  | 'successful'
+  | 'failed'
+  | 'pending'
+  | 'redirected'
+  | 'error';
 
 export interface Author {
   id: string;
@@ -63,7 +68,12 @@ export interface Publication {
   isFollowing?: boolean;
 }
 
-export type ReplicateStatus = "starting" | "processing" | "succeeded" | "failed" | "canceled";
+export type ReplicateStatus =
+  | 'starting'
+  | 'processing'
+  | 'succeeded'
+  | 'failed'
+  | 'canceled';
 
 export interface UserAttributes {
   id: string;
@@ -78,7 +88,7 @@ export interface UserAttributes {
     count: number;
     lastReset: Date;
   };
-  role: "user" | "admin";
+  role: 'user' | 'admin';
   isBlocked: boolean;
   verified: boolean;
   publicationsCount?: number;
@@ -106,7 +116,7 @@ export interface GalleryItem {
 // Generation-specific types
 export interface GptGenerationStatus {
   task_id: string;
-  status: "completed" | "processing" | "failed";
+  status: 'completed' | 'processing' | 'failed';
   prompt: string;
   output: {
     image_url?: string;

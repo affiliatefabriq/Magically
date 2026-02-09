@@ -1,4 +1,4 @@
-import { LongShot } from "@/components/pages/generations/effects/photo/editor/LongShot";
+import { LongShot } from '@/components/pages/generations/effects/photo/editor/LongShot';
 
 const Page = () => {
   return <LongShot />;

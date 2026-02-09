@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useParams } from "next/navigation";
+import { useParams } from 'next/navigation';
 
-import { Publication } from "@/components/pages/dynamic/Publication";
+import { Publication } from '@/components/pages/dynamic/Publication';
 
 const Page = () => {
   const { publicationId } = useParams();

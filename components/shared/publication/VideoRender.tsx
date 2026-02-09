@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
 
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 /**
  * Robust VideoRender component
@@ -15,7 +15,13 @@ import { cn } from "@/lib/utils";
  * - progress bar hidden on desktop while playing
  * - minimalistic glassmorphism overlays
  */
-export const VideoRender = ({ src, className }: { src: string; className?: string }) => {
+export const VideoRender = ({
+  src,
+  className,
+}: {
+  src: string;
+  className?: string;
+}) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,12 +37,18 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(typeof window !== "undefined" && ("ontouchstart" in window || navigator.maxTouchPoints > 0));
+    setIsMobile(
+      typeof window !== 'undefined' &&
+        ('ontouchstart' in window || navigator.maxTouchPoints > 0),
+    );
   }, []);
 
   // Intersection Observer to detect visibility
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { threshold: 0.6 });
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.6 },
+    );
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
@@ -49,8 +61,8 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
         if (isVisible) safePlay();
       }
     };
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
   }, [isVisible]);
 
   // Sync play/pause with intersection visibility
@@ -67,14 +79,14 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
     const v = videoRef.current;
     if (!v) return;
     const onTime = () => setProgress((v.currentTime / (v.duration || 1)) * 100);
-    v.addEventListener("timeupdate", onTime);
-    v.addEventListener("ended", () => {
+    v.addEventListener('timeupdate', onTime);
+    v.addEventListener('ended', () => {
       // keep overlay visible when ended
       setIsPlaying(false);
       setShowOverlay(true);
     });
     return () => {
-      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener('timeupdate', onTime);
     };
   }, []);
 
@@ -91,11 +103,14 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
       setShowOverlay(false);
     } catch (err: any) {
       // ignore AbortError and other expected interruptions
-      if (err && (err.name === "AbortError" || err.message?.includes("interrupted"))) {
+      if (
+        err &&
+        (err.name === 'AbortError' || err.message?.includes('interrupted'))
+      ) {
         // noop
       } else {
         // for debugging other errors, but don't crash UI
-        console.error("Video play failed:", err);
+        console.error('Video play failed:', err);
       }
       setIsPlaying(false);
     } finally {
@@ -143,7 +158,11 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
   return (
     <div
       ref={containerRef}
-      className={cn("relative w-full rounded-xl overflow-hidden group", "cursor-pointer", className)}
+      className={cn(
+        'relative w-full rounded-xl overflow-hidden group',
+        'cursor-pointer',
+        className,
+      )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={(e) => {
@@ -163,7 +182,14 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
         }
       }}
     >
-      <video ref={videoRef} src={src} muted={muted} playsInline loop className="w-full h-full object-cover" />
+      <video
+        ref={videoRef}
+        src={src}
+        muted={muted}
+        playsInline
+        loop
+        className="w-full h-full object-cover"
+      />
 
       {/* Top-right mute button (glass) */}
       <motion.button
@@ -188,7 +214,11 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
             togglePlay();
           }}
         >
-          {isPlaying ? <Pause size={24} strokeWidth={2} /> : <Play size={24} strokeWidth={2} />}
+          {isPlaying ? (
+            <Pause size={24} strokeWidth={2} />
+          ) : (
+            <Play size={24} strokeWidth={2} />
+          )}
         </div>
       </motion.div>
 
@@ -196,7 +226,12 @@ export const VideoRender = ({ src, className }: { src: string; className?: strin
       <motion.div
         className="absolute bottom-0 left-0 right-0 z-20 px-2 md:px-8 pb-2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: (isMobile || !isPlaying) && (hovered || showOverlay || isMobile) ? 1 : 0 }}
+        animate={{
+          opacity:
+            (isMobile || !isPlaying) && (hovered || showOverlay || isMobile)
+              ? 1
+              : 0,
+        }}
       >
         <Progress value={progress} className="h-1 bg-white/30" />
       </motion.div>

@@ -1,37 +1,43 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Heart, MessageCircle, Share2, Download, Check, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { Heart, MessageCircle, Share2, Download, Check, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import { AuthRequiredPopover } from "@/components/shared/publication/AuthRequiredPopover";
-import { CommentSection } from "@/components/shared/publication/CommentSection";
-import { LikeButton } from "@/components/shared/publication/LikeButton";
-import { PublicationActions } from "@/components/shared/publication/PublicationActions";
-import { PublicationImage } from "@/components/shared/publication/PublicationImage";
-import { VideoRender } from "@/components/shared/publication/VideoRender";
-import { UserProfile } from "@/components/shared/user/UserProfile";
-import { ExploreError } from "@/components/states/error/Error";
-import { PublicationLoader } from "@/components/states/loaders/Loaders";
-import { Button } from "@/components/ui/button";
-import { useUser } from "@/hooks/useAuth";
-import { usePublication } from "@/hooks/usePublications";
-import { API_URL } from "@/lib/api";
-import { formatDate } from "@/lib/utils";
-import { BackButton } from "@/components/shared/layout/BackButton";
-import { FollowButton } from "@/components/shared/user/FollowButton";
-import { FullscreenImageViewer } from "@/components/ui/fullscreen-image";
+import { AuthRequiredPopover } from '@/components/shared/publication/AuthRequiredPopover';
+import { CommentSection } from '@/components/shared/publication/CommentSection';
+import { LikeButton } from '@/components/shared/publication/LikeButton';
+import { PublicationActions } from '@/components/shared/publication/PublicationActions';
+import { PublicationImage } from '@/components/shared/publication/PublicationImage';
+import { VideoRender } from '@/components/shared/publication/VideoRender';
+import { UserProfile } from '@/components/shared/user/UserProfile';
+import { ExploreError } from '@/components/states/error/Error';
+import { PublicationLoader } from '@/components/states/loaders/Loaders';
+import { Button } from '@/components/ui/button';
+import { useUser } from '@/hooks/useAuth';
+import { usePublication } from '@/hooks/usePublications';
+import { API_URL } from '@/lib/api';
+import { formatDate } from '@/lib/utils';
+import { BackButton } from '@/components/shared/layout/BackButton';
+import { FollowButton } from '@/components/shared/user/FollowButton';
+import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
-  const t = useTranslations("Components.PublicationActions");
+  const t = useTranslations('Components.PublicationActions');
 
-  const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
+  const [expandedCommentsMap, setExpandedCommentsMap] = useState<
+    Record<string, boolean>
+  >({});
   const [isShared, setIsShared] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const { data: user } = useUser();
-  const { data: publication, isLoading, isError } = usePublication(publicationId);
+  const {
+    data: publication,
+    isLoading,
+    isError,
+  } = usePublication(publicationId);
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/publications/${publicationId}`;
@@ -56,16 +62,16 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
 
     try {
       const fileUrl = `${API_URL}${publication.imageUrl || publication.videoUrl}`;
-      const res = await fetch(fileUrl, { credentials: "include" });
+      const res = await fetch(fileUrl, { credentials: 'include' });
 
-      if (!res.ok) throw new Error("Download failed");
+      if (!res.ok) throw new Error('Download failed');
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
 
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = `publication-${publicationId}.${publication.videoUrl ? "mp4" : "jpg"}`;
+      a.download = `publication-${publicationId}.${publication.videoUrl ? 'mp4' : 'jpg'}`;
       document.body.appendChild(a);
       a.click();
 
@@ -75,7 +81,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
       setIsDownloaded(true);
       setTimeout(() => setIsDownloaded(false), 2000);
     } catch (e) {
-      console.error("Download error", e);
+      console.error('Download error', e);
     }
   };
 
@@ -95,7 +101,10 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
         <div className="flex justify-between w-full">
           <UserProfile {...publication.author} />
           {user && user.id !== publication.author.id && (
-            <FollowButton id={publication.author.id} isFollowing={publication.isFollowing ?? false} />
+            <FollowButton
+              id={publication.author.id}
+              isFollowing={publication.isFollowing ?? false}
+            />
           )}
         </div>
         {publication.videoUrl && (
@@ -140,16 +149,27 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
               onClick={handleShare}
               className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
             >
-              {isShared ? <Check className="size-5 stroke-1" /> : <Share2 className="size-5 stroke-1" />}
+              {isShared ? (
+                <Check className="size-5 stroke-1" />
+              ) : (
+                <Share2 className="size-5 stroke-1" />
+              )}
             </button>
             <button
               onClick={handleDownload}
               className="flex items-center justify-center p-0 gap-1 hover:text-green-500 transition-colors"
             >
-              {isDownloaded ? <Check className="size-5 stroke-1" /> : <Download className="size-5 stroke-1" />}
+              {isDownloaded ? (
+                <Check className="size-5 stroke-1" />
+              ) : (
+                <Download className="size-5 stroke-1" />
+              )}
             </button>
             {publication.author.id === user?.id && (
-              <PublicationActions publicationId={publication.id} initialContent={publication.content} />
+              <PublicationActions
+                publicationId={publication.id}
+                initialContent={publication.content}
+              />
             )}
           </div>
           <article className="mb-2 w-full">
@@ -171,14 +191,18 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
                     }));
                   }}
                 >
-                  {expandedCommentsMap[publication.id] ? null : t("readMore")}
+                  {expandedCommentsMap[publication.id] ? null : t('readMore')}
                 </Button>
               </>
             ) : (
-              <span className="prompt-text text-tertiary-text">{publication.content}</span>
+              <span className="prompt-text text-tertiary-text">
+                {publication.content}
+              </span>
             )}
           </article>
-          <div className="text-sm secondary-text mb-4">{formatDate(publication.createdAt)}</div>
+          <div className="text-sm secondary-text mb-4">
+            {formatDate(publication.createdAt)}
+          </div>
         </div>
       </div>
       <CommentSection publicationId={publicationId} />

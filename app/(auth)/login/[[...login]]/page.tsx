@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useTheme } from "next-themes";
-import Starfield from "react-starfield";
+import { useTheme } from 'next-themes';
+import Starfield from 'react-starfield';
 
-import { Login } from "@/components/pages/auth/Login";
+import { Login } from '@/components/pages/auth/Login';
 
 const Page = () => {
   const { theme } = useTheme();
@@ -12,9 +12,9 @@ const Page = () => {
     <section className="flex items-center justify-center flex-col min-h-screen section-padding">
       <Starfield
         starCount={1000}
-        starColor={theme === "dark" ? [255, 255, 255] : [0, 0, 0]}
+        starColor={theme === 'dark' ? [255, 255, 255] : [0, 0, 0]}
         speedFactor={0.05}
-        backgroundColor={theme === "dark" ? "black" : "white"}
+        backgroundColor={theme === 'dark' ? 'black' : 'white'}
       />
       <Login />
     </section>

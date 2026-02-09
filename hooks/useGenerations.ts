@@ -1,13 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import api from "@/lib/api";
+import api from '@/lib/api';
 
 export const useActiveGeneration = () => {
   return useQuery({
-    queryKey: ["activeGeneration"],
+    queryKey: ['activeGeneration'],
     queryFn: async () => {
-      const { data } = await api.get("/job/active");
+      const { data } = await api.get('/job/active');
       return data.data ?? null;
     },
     refetchInterval: 5000,
@@ -17,9 +17,9 @@ export const useActiveGeneration = () => {
 
 export const useGenerationHistory = () => {
   return useQuery({
-    queryKey: ["generationHistory"],
+    queryKey: ['generationHistory'],
     queryFn: async () => {
-      const { data } = await api.get("/job/history");
+      const { data } = await api.get('/job/history');
       return data.data;
     },
   });
@@ -27,13 +27,14 @@ export const useGenerationHistory = () => {
 
 export const useGenerationJob = (id: string) => {
   return useQuery({
-    queryKey: ["generation", id],
+    queryKey: ['generation', id],
     queryFn: async () => {
       const { data } = await api.get(`/job/jobs/${id}`);
       return data.data;
     },
     enabled: !!id,
-    refetchInterval: (query) => (query.state.data?.status === "pending" ? 2000 : false),
+    refetchInterval: (query) =>
+      query.state.data?.status === 'pending' ? 2000 : false,
   });
 };
 
@@ -45,10 +46,11 @@ export const usePublishJob = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["generationHistory"] });
-      queryClient.invalidateQueries({ queryKey: ["publications"] });
-      toast.success("Опубликовано в ленту!");
+      queryClient.invalidateQueries({ queryKey: ['generationHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['publications'] });
+      toast.success('Опубликовано в ленту!');
     },
-    onError: (err: any) => toast.error(err.response?.data?.message || "Failed to publish")
+    onError: (err: any) =>
+      toast.error(err.response?.data?.message || 'Failed to publish'),
   });
 };

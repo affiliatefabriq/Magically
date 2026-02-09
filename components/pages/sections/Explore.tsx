@@ -1,23 +1,23 @@
-"use client"
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "next-themes";
-import { PublicationCard } from "@/components/shared/publication/PublicationCard";
-import { RecommendedUserCard } from "@/components/shared/user/RecommendedUserCard";
-import { ExploreEmpty } from "@/components/states/empty/Empty";
-import { ExploreError } from "@/components/states/error/Error";
-import { ExploreLoader } from "@/components/states/loaders/Loaders";
-import { ShootingStars } from "@/components/ui/magic/shooting-stars";
-import { StarsBackground } from "@/components/ui/magic/stars-background";
-import { useUser } from "@/hooks/useAuth";
-import { usePublications } from "@/hooks/usePublications";
-import { useRecommendedUsers } from "@/hooks/useSearch";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from 'react';
+import { useTheme } from 'next-themes';
+import { PublicationCard } from '@/components/shared/publication/PublicationCard';
+import { RecommendedUserCard } from '@/components/shared/user/RecommendedUserCard';
+import { ExploreEmpty } from '@/components/states/empty/Empty';
+import { ExploreError } from '@/components/states/error/Error';
+import { ExploreLoader } from '@/components/states/loaders/Loaders';
+import { ShootingStars } from '@/components/ui/magic/shooting-stars';
+import { StarsBackground } from '@/components/ui/magic/stars-background';
+import { useUser } from '@/hooks/useAuth';
+import { usePublications } from '@/hooks/usePublications';
+import { useRecommendedUsers } from '@/hooks/useSearch';
+import { useTranslations } from 'next-intl';
 
 export const Explore = () => {
-  const t = useTranslations("Pages.Explore")
+  const t = useTranslations('Pages.Explore');
   const { theme } = useTheme();
-  const [filters] = useState({ sortBy: "newest", hashtag: "" });
+  const [filters] = useState({ sortBy: 'newest', hashtag: '' });
 
   const { data: user } = useUser();
   const {
@@ -26,13 +26,11 @@ export const Explore = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    isError
+    isError,
   } = usePublications(filters);
 
-  const {
-    data: recommendedUsers,
-    isLoading: isLoadingRecommended
-  } = useRecommendedUsers(true, 20);
+  const { data: recommendedUsers, isLoading: isLoadingRecommended } =
+    useRecommendedUsers(true, 20);
 
   const observerRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +44,7 @@ export const Explore = () => {
           fetchNextPage();
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1.0 },
     );
 
     const currentRef = observerRef.current;
@@ -61,19 +59,26 @@ export const Explore = () => {
   const insertRecommendations = () => {
     if (!data?.pages) return [];
 
-    const allPublications = data.pages.flatMap(page => page.publications);
+    const allPublications = data.pages.flatMap((page) => page.publications);
     const result: any[] = [];
     let userIndex = 0;
 
     // Проверяем есть ли рекомендованные пользователи
-    const hasRecommendations = recommendedUsers && Array.isArray(recommendedUsers) && recommendedUsers.length > 0;
+    const hasRecommendations =
+      recommendedUsers &&
+      Array.isArray(recommendedUsers) &&
+      recommendedUsers.length > 0;
     const usersArray = hasRecommendations ? recommendedUsers : [];
 
     allPublications.forEach((pub, index) => {
       result.push({ type: 'publication', data: pub });
 
       // Вставляем блок рекомендаций каждые 20 публикаций (если есть что показывать)
-      if (hasRecommendations && (index + 1) % 20 === 0 && userIndex < usersArray.length) {
+      if (
+        hasRecommendations &&
+        (index + 1) % 20 === 0 &&
+        userIndex < usersArray.length
+      ) {
         // Берем до 3 пользователей для показа
         const usersToShow = usersArray.slice(userIndex, userIndex + 3);
 
@@ -87,8 +92,8 @@ export const Explore = () => {
     return result;
   };
 
-  const starColor = theme === "dark" ? "#FFFFFF" : "#111111";
-  const trailColor = theme === "dark" ? "#F020F0" : "#A174D1";
+  const starColor = theme === 'dark' ? '#FFFFFF' : '#111111';
+  const trailColor = theme === 'dark' ? '#F020F0' : '#A174D1';
 
   // Показываем лоадер только если грузятся публикации (не ждем рекомендации)
   if (isLoading) {
@@ -108,7 +113,7 @@ export const Explore = () => {
   }
 
   const mixedContent = insertRecommendations();
-  const onlyPublications = mixedContent.filter(i => i.type === "publication");
+  const onlyPublications = mixedContent.filter((i) => i.type === 'publication');
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
@@ -130,7 +135,9 @@ export const Explore = () => {
           <div className="grid-4 gap-6 relative z-10">
             {mixedContent.map((item, index) => {
               if (item.type === 'publication') {
-                const pubIndex = onlyPublications.findIndex(p => p.data.id === item.data.id);
+                const pubIndex = onlyPublications.findIndex(
+                  (p) => p.data.id === item.data.id,
+                );
                 const isFirst = pubIndex === 0;
                 const isLast = pubIndex === onlyPublications.length - 1;
 
@@ -143,7 +150,7 @@ export const Explore = () => {
                     isLast={isLast}
                   />
                 );
-              };
+              }
 
               if (item.type === 'recommendations') {
                 return (
@@ -151,9 +158,7 @@ export const Explore = () => {
                     key={`rec-${index}`}
                     className="col-span-full bg-linear-to-br from-card/30 to-card/10 backdrop-blur-sm rounded-2xl p-6 border border-border/50"
                   >
-                    <h3 className="text-lg font-bold mb-4">
-                      {t("Suggested")}
-                    </h3>
+                    <h3 className="text-lg font-bold mb-4">{t('Suggested')}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {item.data.map((user: any) => (
                         <RecommendedUserCard key={user.id} user={user} />
@@ -177,7 +182,10 @@ export const Explore = () => {
 
         {/* Infinite scroll trigger - продолжаем загружать публикации независимо от рекомендаций */}
         {hasNextPage && (
-          <div ref={observerRef} className="h-20 flex items-center justify-center mt-8">
+          <div
+            ref={observerRef}
+            className="h-20 flex items-center justify-center mt-8"
+          >
             {isFetchingNextPage && <ExploreLoader />}
           </div>
         )}

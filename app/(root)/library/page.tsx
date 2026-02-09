@@ -1,4 +1,4 @@
-import { Library } from "@/components/pages/sections/Library";
+import { Library } from '@/components/pages/sections/Library';
 
 const Page = () => {
   return <Library />;

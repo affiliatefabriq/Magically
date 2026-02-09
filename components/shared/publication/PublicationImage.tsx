@@ -1,9 +1,9 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import { useState } from "react";
-import { API_URL } from "@/lib/api";
-import { ImageIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { API_URL } from '@/lib/api';
+import { ImageIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type PublicationImageProps = {
   src: string;
@@ -12,15 +12,20 @@ type PublicationImageProps = {
   onClick?: () => void;
 };
 
-export const PublicationImage = ({ src, alt, className, onClick }: PublicationImageProps) => {
-  const t = useTranslations("Components.Publication");
+export const PublicationImage = ({
+  src,
+  alt,
+  className,
+  onClick,
+}: PublicationImageProps) => {
+  const t = useTranslations('Components.Publication');
   const [error, setError] = useState(false);
 
   if (error || !src) {
     return (
       <div className="flex flex-col items-center justify-center w-full gap-2 text-muted-foreground aspect-square rounded-xl theme-2">
         <ImageIcon className="size-6 sm:size-12" />
-        <span className="text-xs sm:text-base">{t("noImage")}</span>
+        <span className="text-xs sm:text-base">{t('noImage')}</span>
       </div>
     );
   }
@@ -28,16 +33,16 @@ export const PublicationImage = ({ src, alt, className, onClick }: PublicationIm
   const getImageUrl = () => {
     if (!src) return null;
 
-    if (src.startsWith("http://localhost")) {
+    if (src.startsWith('http://localhost')) {
       return src;
     }
 
-    if (src.startsWith("http://") || src.startsWith("https://")) {
+    if (src.startsWith('http://') || src.startsWith('https://')) {
       return src;
-    };
+    }
 
     const fullUrl = `${API_URL}${src}`;
-    console.log("Constructed URL:", fullUrl);
+    console.log('Constructed URL:', fullUrl);
     return fullUrl;
   };
 
@@ -57,14 +62,14 @@ export const PublicationImage = ({ src, alt, className, onClick }: PublicationIm
 };
 
 export const ModelImage = ({ src, alt, className }: PublicationImageProps) => {
-  const t = useTranslations("Components.Publication");
+  const t = useTranslations('Components.Publication');
   const [error, setError] = useState(false);
 
   if (error || !src) {
     return (
       <div className="flex flex-col items-center justify-center w-full gap-2 text-muted-foreground aspect-square rounded-xl theme-2">
         <ImageIcon className="size-12" />
-        <span>{t("noImage")}</span>
+        <span>{t('noImage')}</span>
       </div>
     );
   }
@@ -79,4 +84,4 @@ export const ModelImage = ({ src, alt, className }: PublicationImageProps) => {
       onError={() => setError(true)}
     />
   );
-}
+};

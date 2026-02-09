@@ -1,58 +1,58 @@
-import Image from "next/image";
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export const PhotoEditor = () => {
-  const t = useTranslations("Pages.Effects.PhotoEditor");
+  const t = useTranslations('Pages.Effects.PhotoEditor');
 
   const items = [
     {
       id: 1,
-      name: t("LowAngle"),
-      url: "/low-angle",
-      image: "/effects/edit/low-angle.jpg",
+      name: t('LowAngle'),
+      url: '/low-angle',
+      image: '/effects/edit/low-angle.jpg',
     },
     {
       id: 2,
-      name: t("LongShot"),
-      url: "/long-shot",
-      image: "/effects/edit/long-shot.jpg",
+      name: t('LongShot'),
+      url: '/long-shot',
+      image: '/effects/edit/long-shot.jpg',
     },
     {
       id: 3,
-      name: t("FromAHeight"),
-      url: "/from-a-height",
-      image: "/effects/edit/from-a-height.jpg",
+      name: t('FromAHeight'),
+      url: '/from-a-height',
+      image: '/effects/edit/from-a-height.jpg',
     },
     {
       id: 4,
-      name: t("FromBack"),
-      url: "/from-back",
-      image: "/effects/edit/from-back.jpg",
+      name: t('FromBack'),
+      url: '/from-back',
+      image: '/effects/edit/from-back.jpg',
     },
     {
       id: 5,
-      name: t("Profile"),
-      url: "/profile",
-      image: "/effects/edit/profile.jpg",
+      name: t('Profile'),
+      url: '/profile',
+      image: '/effects/edit/profile.jpg',
     },
     {
       id: 6,
-      name: t("AntiBlur"),
-      url: "/anti-blur",
-      image: "/effects/edit/anti-blur.jpg",
+      name: t('AntiBlur'),
+      url: '/anti-blur',
+      image: '/effects/edit/anti-blur.jpg',
     },
     {
       id: 7,
-      name: t("RemovePeople"),
-      url: "/anti-blur",
-      image: "/effects/edit/remove-people.jpg",
+      name: t('RemovePeople'),
+      url: '/anti-blur',
+      image: '/effects/edit/remove-people.jpg',
     },
     {
       id: 8,
-      name: t("OwnRequest"),
-      url: "/own-request",
-      image: "/effects/edit/own-request.jpg",
+      name: t('OwnRequest'),
+      url: '/own-request',
+      image: '/effects/edit/own-request.jpg',
     },
   ];
 

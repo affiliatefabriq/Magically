@@ -1,4 +1,4 @@
-import { Followers } from "@/components/pages/dynamic/Followers";
+import { Followers } from '@/components/pages/dynamic/Followers';
 
 const Page = () => {
   return <Followers />;

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { useFollow } from "@/hooks/useProfile";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { useFollow } from '@/hooks/useProfile';
+import { useTranslations } from 'next-intl';
 
 export const FollowButton = ({
   id,
@@ -13,7 +13,7 @@ export const FollowButton = ({
   id: string;
   isFollowing: boolean;
 }) => {
-  const t = useTranslations("Components.FollowButton");
+  const t = useTranslations('Components.FollowButton');
   const [isFollowing, setIsFollowing] = useState(initialFollowing);
   const followMutation = useFollow();
 
@@ -34,7 +34,7 @@ export const FollowButton = ({
       });
     } catch (err) {
       setIsFollowing(!next);
-      console.error("follow error", err);
+      console.error('follow error', err);
     }
   };
 
@@ -42,14 +42,14 @@ export const FollowButton = ({
     <Button
       onClick={handleClick}
       disabled={followMutation.isPending}
-      className={`${isFollowing ? "btn-outline" : "btn-solid"} min-w-24`}
+      className={`${isFollowing ? 'btn-outline' : 'btn-solid'} min-w-24`}
     >
       {followMutation.isPending ? (
         <Loader2 className="size-4 animate-spin" />
       ) : isFollowing ? (
-        t("Unfollow")
+        t('Unfollow')
       ) : (
-        t("Follow")
+        t('Follow')
       )}
     </Button>
   );

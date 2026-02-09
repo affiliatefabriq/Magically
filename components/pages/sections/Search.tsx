@@ -1,20 +1,23 @@
-"use client"
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { Search as SearchIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { PublicationCardSimplified } from "@/components/shared/publication/PublicationCard";
-import { SearchPublicationEmpty } from "@/components/states/empty/Empty";
-import { NotAuthorized, SearchError } from "@/components/states/error/Error";
-import { SearchLoader, SearchPublicationLoader } from "@/components/states/loaders/Loaders";
-import { Input } from "@/components/ui/input";
-import { useUser } from "@/hooks/useAuth";
-import { useSearchPublications } from "@/hooks/useSearch";
+import { useEffect, useRef, useState } from 'react';
+import { Search as SearchIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { PublicationCardSimplified } from '@/components/shared/publication/PublicationCard';
+import { SearchPublicationEmpty } from '@/components/states/empty/Empty';
+import { NotAuthorized, SearchError } from '@/components/states/error/Error';
+import {
+  SearchLoader,
+  SearchPublicationLoader,
+} from '@/components/states/loaders/Loaders';
+import { Input } from '@/components/ui/input';
+import { useUser } from '@/hooks/useAuth';
+import { useSearchPublications } from '@/hooks/useSearch';
 
 export const Search = () => {
-  const t = useTranslations("Pages.Search");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const t = useTranslations('Pages.Search');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,7 +38,7 @@ export const Search = () => {
     isError,
   } = useSearchPublications({
     query: debouncedQuery,
-    sortBy: "newest"
+    sortBy: 'newest',
   });
 
   const observerRef = useRef<HTMLDivElement>(null);
@@ -50,7 +53,7 @@ export const Search = () => {
           fetchNextPage();
         }
       },
-      { threshold: 1.0 }
+      { threshold: 1.0 },
     );
 
     const currentRef = observerRef.current;
@@ -73,12 +76,12 @@ export const Search = () => {
 
   return (
     <section className="flex flex-col container mx-auto section-padding">
-      <h1 className="title-text my-4">{t("title")}</h1>
+      <h1 className="title-text my-4">{t('title')}</h1>
 
       <div className="relative flex gap-4">
         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
         <Input
-          placeholder={t("search")}
+          placeholder={t('search')}
           className="component-dark pl-10 h-10 w-full"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -88,7 +91,7 @@ export const Search = () => {
       {/* Publications Grid */}
       <div className="mt-6">
         {isLoading ? (
-            <SearchPublicationLoader />
+          <SearchPublicationLoader />
         ) : data?.pages && data.pages[0]?.publications.length > 0 ? (
           <>
             <div className="grid grid-cols-3 gap-0 grid-flow-dense auto-rows-auto">
@@ -99,7 +102,7 @@ export const Search = () => {
                     publication={pub}
                     id={idx}
                   />
-                ))
+                )),
               )}
             </div>
 
@@ -114,10 +117,10 @@ export const Search = () => {
             {hasNextPage && <div ref={observerRef} className="h-4 mt-4" />}
           </>
         ) : debouncedQuery ? (
-            <SearchPublicationEmpty />
+          <SearchPublicationEmpty />
         ) : (
           <div className="text-center py-12 text-muted-foreground">
-            <p>{t("startSearching")}</p>
+            <p>{t('startSearching')}</p>
           </div>
         )}
       </div>
@@ -130,4 +133,4 @@ export const Search = () => {
       )}
     </section>
   );
-}
+};

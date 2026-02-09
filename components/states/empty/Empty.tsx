@@ -1,15 +1,30 @@
-"use client"
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { BookOpen, GalleryHorizontalEnd, Newspaper, Plus, SearchX, UserRoundX, Workflow } from "lucide-react";
-import { useTranslations } from "next-intl";
+import {
+  BookOpen,
+  GalleryHorizontalEnd,
+  Newspaper,
+  Plus,
+  SearchX,
+  UserRoundX,
+  Workflow,
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
-import { CreateModelDialog } from "@/components/shared/create/CreateModelDialog";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { CreateModelDialog } from '@/components/shared/create/CreateModelDialog';
 
 export const EmptyComponent = ({
   title,
@@ -45,12 +60,12 @@ export const EmptyComponent = ({
 };
 
 export const ExploreEmpty = () => {
-  const t = useTranslations("States.Empty.Publications");
+  const t = useTranslations('States.Empty.Publications');
   return (
     <EmptyComponent
-      title={t("title")}
-      description={t("description")}
-      button={t("button")}
+      title={t('title')}
+      description={t('description')}
+      button={t('button')}
       buttonLink="/create/magic-photo"
       icon={Newspaper}
     />
@@ -58,22 +73,34 @@ export const ExploreEmpty = () => {
 };
 
 export const SearchUserEmpty = () => {
-  const t = useTranslations("States.Empty.SearchUser");
-  return <EmptyComponent title={t("title")} description={t("description")} icon={UserRoundX} />;
+  const t = useTranslations('States.Empty.SearchUser');
+  return (
+    <EmptyComponent
+      title={t('title')}
+      description={t('description')}
+      icon={UserRoundX}
+    />
+  );
 };
 
 export const SearchPublicationEmpty = () => {
-  const t = useTranslations("States.Empty.SearchPublication");
-  return <EmptyComponent title={t("title")} description={t("description")} icon={SearchX} />;
+  const t = useTranslations('States.Empty.SearchPublication');
+  return (
+    <EmptyComponent
+      title={t('title')}
+      description={t('description')}
+      icon={SearchX}
+    />
+  );
 };
 
 export const PersonalProfileEmpty = () => {
-  const t = useTranslations("States.Empty.PersonalProfile");
+  const t = useTranslations('States.Empty.PersonalProfile');
   return (
     <EmptyComponent
-      title={t("title")}
-      description={t("description")}
-      button={t("button")}
+      title={t('title')}
+      description={t('description')}
+      button={t('button')}
       buttonLink="/create/magic-photo"
       icon={BookOpen}
     />
@@ -81,17 +108,23 @@ export const PersonalProfileEmpty = () => {
 };
 
 export const UserProfileEmpty = () => {
-  const t = useTranslations("States.Empty.UserProfile");
-  return <EmptyComponent title={t("title")} description={t("description")} icon={BookOpen} />;
+  const t = useTranslations('States.Empty.UserProfile');
+  return (
+    <EmptyComponent
+      title={t('title')}
+      description={t('description')}
+      icon={BookOpen}
+    />
+  );
 };
 
 export const LibraryEmpty = () => {
-  const t = useTranslations("States.Empty.Library");
+  const t = useTranslations('States.Empty.Library');
   return (
     <EmptyComponent
-      title={t("title")}
-      description={t("description")}
-      button={t("button")}
+      title={t('title')}
+      description={t('description')}
+      button={t('button')}
       buttonLink="/create/magic-photo"
       icon={GalleryHorizontalEnd}
     />
@@ -99,12 +132,12 @@ export const LibraryEmpty = () => {
 };
 
 export const JobEmpty = () => {
-  const t = useTranslations("States.Empty.Job");
+  const t = useTranslations('States.Empty.Job');
   return (
     <EmptyComponent
-      title={t("title")}
-      description={t("description")}
-      button={t("button")}
+      title={t('title')}
+      description={t('description')}
+      button={t('button')}
       buttonLink="/"
       icon={Workflow}
     />
@@ -112,13 +145,13 @@ export const JobEmpty = () => {
 };
 
 export const NotFoundPage = () => {
-  const t = useTranslations("States.Empty.NotFound");
+  const t = useTranslations('States.Empty.NotFound');
 
   return (
     <EmptyComponent
-      title={t("title")}
-      description={t("description")}
-      button={t("button")}
+      title={t('title')}
+      description={t('description')}
+      button={t('button')}
       buttonLink="/"
       icon={SearchX}
     />
@@ -126,7 +159,7 @@ export const NotFoundPage = () => {
 };
 
 export const ModelsEmpty = () => {
-  const t = useTranslations("States.Empty.Models");
+  const t = useTranslations('States.Empty.Models');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -142,8 +175,8 @@ export const ModelsEmpty = () => {
               className="rounded-xl"
             />
           </EmptyMedia>
-          <EmptyTitle>{t("title")}</EmptyTitle>
-          <EmptyDescription>{t("description")}</EmptyDescription>
+          <EmptyTitle>{t('title')}</EmptyTitle>
+          <EmptyDescription>{t('description')}</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button
@@ -151,7 +184,7 @@ export const ModelsEmpty = () => {
             className="btn-login gap-2"
           >
             <Plus className="size-4" />
-            {t("button")}
+            {t('button')}
           </Button>
         </EmptyContent>
       </Empty>

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -24,15 +24,20 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
           },
           mutations: {
             retry: (failureCount, error: any) => {
-              if (error?.response?.status === 401 || error?.response?.status === 403) {
+              if (
+                error?.response?.status === 401 ||
+                error?.response?.status === 403
+              ) {
                 return false;
               }
               return failureCount < 2;
             },
           },
         },
-      })
+      }),
   );
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

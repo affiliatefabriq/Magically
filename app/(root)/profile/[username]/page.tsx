@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useParams } from "next/navigation";
+import { useParams } from 'next/navigation';
 
-import { Profile } from "@/components/pages/dynamic/Profile";
+import { Profile } from '@/components/pages/dynamic/Profile';
 
 const Page = () => {
   const { username } = useParams();

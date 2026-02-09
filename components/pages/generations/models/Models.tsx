@@ -1,38 +1,45 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { useState } from "react";
-import { MoreVertical, Pencil, Plus, Sparkles, Trash, ImageIcon } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useState } from 'react';
+import {
+  MoreVertical,
+  Pencil,
+  Plus,
+  Sparkles,
+  Trash,
+  ImageIcon,
+} from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 
-import { CreateModelDialog } from "@/components/shared/create/CreateModelDialog";
-import { PublicationImage } from "@/components/shared/publication/PublicationImage";
-import { ListLoader } from "@/components/states/loaders/Loaders";
-import { Button } from "@/components/ui/button";
+import { CreateModelDialog } from '@/components/shared/create/CreateModelDialog';
+import { PublicationImage } from '@/components/shared/publication/PublicationImage';
+import { ListLoader } from '@/components/states/loaders/Loaders';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
-import { useDeleteAIModel, useAIModels } from "@/hooks/useAi";
-import { API_URL } from "@/lib/api";
-import { ModelsEmpty } from "@/components/states/empty/Empty";
-import { useUser } from "@/hooks/useAuth";
-import { NotAuthorized } from "@/components/states/error/Error";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+import { useDeleteAIModel, useAIModels } from '@/hooks/useAi';
+import { API_URL } from '@/lib/api';
+import { ModelsEmpty } from '@/components/states/empty/Empty';
+import { useUser } from '@/hooks/useAuth';
+import { NotAuthorized } from '@/components/states/error/Error';
+import { Badge } from '@/components/ui/badge';
 
 export const Models = () => {
-  const t = useTranslations("Pages.Models");
+  const t = useTranslations('Pages.Models');
   const locale = useLocale();
   const { data: user } = useUser();
   const { data: models, isLoading } = useAIModels();
@@ -53,7 +60,7 @@ export const Models = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this model?")) {
+    if (confirm('Are you sure you want to delete this model?')) {
       deleteModel.mutate(id);
     }
   };
@@ -80,15 +87,15 @@ export const Models = () => {
       <div className="flex flex-col space-y-4 mt-4 mb-6">
         <div className="flex flex-row items-start justify-between gap-4">
           <div>
-            <h1 className="title-text text-2xl sm:text-3xl">{t("title")}</h1>
+            <h1 className="title-text text-2xl sm:text-3xl">{t('title')}</h1>
           </div>
           <div className="flex sm:flex-row flex-col gap-2 w-auto">
-            <Link href="/create/magic-photo" className="w-auto order-1 sm:order-2">
-              <Button
-                className="w-full gap-2 btn-solid"
-                size="sm"
-              >
-                <Sparkles className="size-4" /> {t("createMagic")}
+            <Link
+              href="/create/magic-photo"
+              className="w-auto order-1 sm:order-2"
+            >
+              <Button className="w-full gap-2 btn-solid" size="sm">
+                <Sparkles className="size-4" /> {t('createMagic')}
               </Button>
             </Link>
             <Button
@@ -97,7 +104,7 @@ export const Models = () => {
               size="sm"
               className="w-auto gap-2 order-2 sm:order-1 btn-outline"
             >
-              <Plus className="size-4" /> {t("create")}
+              <Plus className="size-4" /> {t('create')}
             </Button>
           </div>
         </div>
@@ -116,10 +123,7 @@ export const Models = () => {
                 className="group relative overflow-hidden theme shadow-none border hover:shadow-md transition-all duration-200 flex flex-col h-full pt-0"
               >
                 {/* Image Section */}
-                <Link
-                  href={`/models/${model.id}`}
-                  className="block"
-                >
+                <Link href={`/models/${model.id}`} className="block">
                   <div className="relative aspect-square bg-muted overflow-hidden">
                     <PublicationImage
                       src={model.imagePaths[0]}
@@ -130,7 +134,10 @@ export const Models = () => {
                     {/* Image Count Badge */}
                     {model.imagePaths.length > 1 && (
                       <div className="absolute bottom-2 right-2">
-                        <Badge variant="secondary" className="text-xs backdrop-blur-sm bg-background/80">
+                        <Badge
+                          variant="secondary"
+                          className="text-xs backdrop-blur-sm bg-background/80"
+                        >
                           <ImageIcon className="size-3 mr-1" />
                           {model.imagePaths.length}
                         </Badge>
@@ -168,7 +175,7 @@ export const Models = () => {
                             handleEdit(model);
                           }}
                         >
-                          <Pencil className="mr-2 size-4" /> {t("edit")}
+                          <Pencil className="mr-2 size-4" /> {t('edit')}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={(e) => {
@@ -177,7 +184,8 @@ export const Models = () => {
                           }}
                           className="text-red-500 focus:text-red-500"
                         >
-                          <Trash className="text-red-500 mr-2 size-4" /> {t("delete")}
+                          <Trash className="text-red-500 mr-2 size-4" />{' '}
+                          {t('delete')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -190,21 +198,31 @@ export const Models = () => {
                       {model.description}
                     </p>
                   )}
-                  <Link href={`/create/magic-photo?modelId=${model.id}`} className="w-full">
-                    <Button variant="outline" size="sm" className="w-full gap-2">
+                  <Link
+                    href={`/create/magic-photo?modelId=${model.id}`}
+                    className="w-full"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full gap-2"
+                    >
                       <Sparkles className="size-3" />
-                      {t("createMagic")}
+                      {t('createMagic')}
                     </Button>
                   </Link>
                 </CardContent>
 
                 <CardFooter className="pt-3 border-t text-xs text-muted-foreground">
                   <time dateTime={model.createdAt}>
-                    {new Date(model.createdAt).toLocaleDateString(locale === 'ru' ? 'ru-RU' : 'en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
+                    {new Date(model.createdAt).toLocaleDateString(
+                      locale === 'ru' ? 'ru-RU' : 'en-US',
+                      {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      },
+                    )}
                   </time>
                 </CardFooter>
               </Card>

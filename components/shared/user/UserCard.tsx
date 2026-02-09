@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { UserAttributes } from "@/types";
-import { FollowButton } from "./FollowButton";
-import { UserProfile } from "./UserProfile";
+import { UserAttributes } from '@/types';
+import { FollowButton } from './FollowButton';
+import { UserProfile } from './UserProfile';
 
 export const UserCard = ({ user }: { user: UserAttributes }) => (
   <div

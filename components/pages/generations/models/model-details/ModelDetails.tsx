@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { AlertCircle, ChevronLeft, Sparkles } from "lucide-react";
-import { useTranslations } from "next-intl";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { AlertCircle, ChevronLeft, Sparkles } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useAIModel } from "@/hooks/useAi";
-import { API_URL } from "@/lib/api";
-import { BackButton } from "@/components/shared/layout/BackButton";
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useAIModel } from '@/hooks/useAi';
+import { API_URL } from '@/lib/api';
+import { BackButton } from '@/components/shared/layout/BackButton';
 
 export const ModelDetails = ({ modelId }: { modelId: string }) => {
   const router = useRouter();
-  const t = useTranslations("Pages.Models");
+  const t = useTranslations('Pages.Models');
 
   const { data: model, isLoading } = useAIModel(modelId);
 
@@ -55,7 +55,7 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
 
         <Separator className="my-2" />
 
-        <h3 className="text-lg font-semibold mb-4">{t("trainingData")}</h3>
+        <h3 className="text-lg font-semibold mb-4">{t('trainingData')}</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {model.imagePaths.map((path, idx) => (
             <div
@@ -80,7 +80,7 @@ export const ModelDetails = ({ modelId }: { modelId: string }) => {
             className="btn-solid w-full gap-2 py-3"
           >
             <Sparkles />
-            {t("generate")}
+            {t('generate')}
           </Button>
         </div>
       </div>

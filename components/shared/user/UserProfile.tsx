@@ -1,12 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import { UserAvatar } from "./UserAvatar";
+import { UserAvatar } from './UserAvatar';
 
 type UserProfileProps = {
   username: string;
   fullname: string;
   avatar?: string | null;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 };
 
 export const UserProfile = ({ size, ...user }: UserProfileProps) => {
@@ -17,8 +17,12 @@ export const UserProfile = ({ size, ...user }: UserProfileProps) => {
     >
       <UserAvatar {...user} size={size} className="shrink-0" />
       <div className="flex flex-col items-start justify-center min-w-0 overflow-hidden">
-        <span className="text-sm font-semibold truncate w-full">{user.fullname}</span>
-        <span className="text-neutral-400 text-sm truncate w-full">@{user.username}</span>
+        <span className="text-sm font-semibold truncate w-full">
+          {user.fullname}
+        </span>
+        <span className="text-neutral-400 text-sm truncate w-full">
+          @{user.username}
+        </span>
       </div>
     </Link>
   );

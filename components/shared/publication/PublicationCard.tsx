@@ -1,25 +1,31 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Check, Dot, Download, Heart, MessageCircle, Share2, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Check,
+  Dot,
+  Download,
+  Heart,
+  MessageCircle,
+  Share2,
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { API_URL } from "@/lib/api";
-import { cn, formatDate } from "@/lib/utils";
-import { Publication } from "@/types";
-import { UserAvatar } from "../user/UserAvatar";
-import { AuthRequiredPopover } from "./AuthRequiredPopover";
-import { LikeButton } from "./LikeButton";
-import { PublicationActions } from "./PublicationActions";
-import { PublicationImage } from "./PublicationImage";
-import { VideoRender } from "./VideoRender";
-import { PublicationDialog } from "./PublicationDialog";
-import { FullscreenImageViewer } from "@/components/ui/fullscreen-image";
+import { Button } from '@/components/ui/button';
+import { API_URL } from '@/lib/api';
+import { cn, formatDate } from '@/lib/utils';
+import { Publication } from '@/types';
+import { UserAvatar } from '../user/UserAvatar';
+import { AuthRequiredPopover } from './AuthRequiredPopover';
+import { LikeButton } from './LikeButton';
+import { PublicationActions } from './PublicationActions';
+import { PublicationImage } from './PublicationImage';
+import { VideoRender } from './VideoRender';
+import { PublicationDialog } from './PublicationDialog';
+import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
 
 type PublicationCardProps = {
   publication: Publication;
@@ -29,10 +35,17 @@ type PublicationCardProps = {
   isLast?: boolean;
 };
 
-export const PublicationCard = ({ publication, userId, isFirst, isLast }: PublicationCardProps) => {
-  const t = useTranslations("Components.Publication");
+export const PublicationCard = ({
+  publication,
+  userId,
+  isFirst,
+  isLast,
+}: PublicationCardProps) => {
+  const t = useTranslations('Components.Publication');
 
-  const [expandedCommentsMap, setExpandedCommentsMap] = useState<Record<string, boolean>>({});
+  const [expandedCommentsMap, setExpandedCommentsMap] = useState<
+    Record<string, boolean>
+  >({});
   const [isShared, setIsShared] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
@@ -45,8 +58,7 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
         await navigator.share({ url: shareUrl });
         setIsShared(true);
         setTimeout(() => setIsShared(false), 2000);
-      } catch (err) {
-      }
+      } catch (err) {}
     } else {
       await navigator.clipboard.writeText(shareUrl);
       setIsShared(true);
@@ -59,16 +71,16 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
 
     try {
       const fileUrl = `${API_URL}${publication.imageUrl || publication.videoUrl}`;
-      const res = await fetch(fileUrl, { credentials: "include" });
+      const res = await fetch(fileUrl, { credentials: 'include' });
 
-      if (!res.ok) throw new Error("Download failed");
+      if (!res.ok) throw new Error('Download failed');
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
 
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = `publication-${publication.id}.${publication.videoUrl ? "mp4" : "jpg"}`;
+      a.download = `publication-${publication.id}.${publication.videoUrl ? 'mp4' : 'jpg'}`;
       document.body.appendChild(a);
       a.click();
 
@@ -78,7 +90,7 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
       setIsDownloaded(true);
       setTimeout(() => setIsDownloaded(false), 2000);
     } catch (e) {
-      console.error("Download error", e);
+      console.error('Download error', e);
     }
   };
 
@@ -104,7 +116,9 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
                   {publication.author.username}
                 </Link>
                 <Dot />
-                <div className="text-sm secondary-text">{formatDate(publication.createdAt)}</div>
+                <div className="text-sm secondary-text">
+                  {formatDate(publication.createdAt)}
+                </div>
               </div>
               <article className="mb-2">
                 {publication.content.length > 128 ? (
@@ -125,11 +139,15 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
                         }));
                       }}
                     >
-                      {expandedCommentsMap[publication.id] ? null : t("readMore")}
+                      {expandedCommentsMap[publication.id]
+                        ? null
+                        : t('readMore')}
                     </Button>
                   </>
                 ) : (
-                  <span className="prompt-text text-tertiary-text">{publication.content}</span>
+                  <span className="prompt-text text-tertiary-text">
+                    {publication.content}
+                  </span>
                 )}
               </article>
               {publication.videoUrl && (
@@ -179,16 +197,27 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
                   onClick={handleShare}
                   className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
                 >
-                  {isShared ? <Check className="size-5 stroke-1" /> : <Share2 className="size-5 stroke-1" />}
+                  {isShared ? (
+                    <Check className="size-5 stroke-1" />
+                  ) : (
+                    <Share2 className="size-5 stroke-1" />
+                  )}
                 </button>
                 <button
                   onClick={handleDownload}
                   className="flex items-center justify-center p-0 gap-1 hover:text-green-500 transition-colors"
                 >
-                  {isDownloaded ? <Check className="size-5 stroke-1" /> : <Download className="size-5 stroke-1" />}
+                  {isDownloaded ? (
+                    <Check className="size-5 stroke-1" />
+                  ) : (
+                    <Download className="size-5 stroke-1" />
+                  )}
                 </button>
                 {userId === publication.author.id && (
-                  <PublicationActions publicationId={publication.id} initialContent={publication.content} />
+                  <PublicationActions
+                    publicationId={publication.id}
+                    initialContent={publication.content}
+                  />
                 )}
               </div>
             </div>
@@ -202,7 +231,9 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
                 className="rounded-xl object-cover aspect-square w-full"
               />
             )}
-            {publication.imageUrl && <PublicationImage src={publication.imageUrl} alt="publication" />}
+            {publication.imageUrl && (
+              <PublicationImage src={publication.imageUrl} alt="publication" />
+            )}
           </div>
         </PublicationDialog>
       </div>
@@ -210,10 +241,13 @@ export const PublicationCard = ({ publication, userId, isFirst, isLast }: Public
   );
 };
 
-export const PublicationCardSimplified = ({ publication, id }: PublicationCardProps) => {
+export const PublicationCardSimplified = ({
+  publication,
+  id,
+}: PublicationCardProps) => {
   return (
     <div
-      className={`border border-white dark:border-black row-span-1 ${id === 3 || id === 6 ? "col-span-2 row-span-2" : "col-span-1"}`}
+      className={`border border-white dark:border-black row-span-1 ${id === 3 || id === 6 ? 'col-span-2 row-span-2' : 'col-span-1'}`}
     >
       <div className="relative group">
         <Link href={`/publications/${publication.id}`} key={publication.id}>

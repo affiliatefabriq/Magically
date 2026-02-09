@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import api from "@/lib/api";
-import { useEffect, useRef } from "react";
-import { RootLayoutProps } from "@/types";
+import api from '@/lib/api';
+import { useEffect, useRef } from 'react';
+import { RootLayoutProps } from '@/types';
 
 declare global {
   interface Window {
@@ -25,7 +25,7 @@ export const TelegramProvider = ({ children }: RootLayoutProps) => {
           tg.disableVerticalSwipes();
         }
         tg.enableClosingConfirmation();
-      };
+      }
 
       if (!tg) return false;
 
@@ -36,14 +36,15 @@ export const TelegramProvider = ({ children }: RootLayoutProps) => {
 
       sentRef.current = true;
 
-      api.post("/auth/telegram/webapp", {
-        initData: tg.initData,
-      })
-        .then(() => {
-          console.log("Telegram WebApp auto-login success");
+      api
+        .post('/auth/telegram/webapp', {
+          initData: tg.initData,
         })
-        .catch(err => {
-          console.error("Telegram WebApp auth error", err);
+        .then(() => {
+          console.log('Telegram WebApp auto-login success');
+        })
+        .catch((err) => {
+          console.error('Telegram WebApp auth error', err);
           sentRef.current = false;
         });
 

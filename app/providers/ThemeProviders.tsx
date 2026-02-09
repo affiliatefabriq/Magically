@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ReactNode, useEffect, useState } from "react";
-import { ThemeProvider } from "next-themes";
+import { ReactNode, useEffect, useState } from 'react';
+import { ThemeProvider } from 'next-themes';
 
 export const ThemeProviders = ({ children }: { children: ReactNode }) => {
   const [mounted, setMounted] = useState(false);
@@ -11,7 +11,7 @@ export const ThemeProviders = ({ children }: { children: ReactNode }) => {
   }, []);
 
   if (!mounted) {
-    return <div style={{ visibility: "hidden" }}>{children}</div>;
+    return <div style={{ visibility: 'hidden' }}>{children}</div>;
   }
 
   return (

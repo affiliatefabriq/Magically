@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState, useTransition } from "react";
-import { GlobeIcon } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import { GlobeIcon } from 'lucide-react';
+import { useLocale } from 'next-intl';
 
-import { Locale } from "@/app/i18n/config";
-import { setUserLocale } from "@/app/i18n/locale";
-import { Button } from "../ui/button";
+import { Locale } from '@/app/i18n/config';
+import { setUserLocale } from '@/app/i18n/locale';
+import { Button } from '../ui/button';
 
 export const LanguageSwitcher = () => {
   const locale = useLocale();
@@ -18,9 +18,9 @@ export const LanguageSwitcher = () => {
   }, [locale]);
 
   const toggleLocale = useCallback(() => {
-    const nextLocale = currentLocale === "en" ? "ru" : "en";
+    const nextLocale = currentLocale === 'en' ? 'ru' : 'en';
     startTransition(async () => {
-      localStorage.setItem("locale", nextLocale);
+      localStorage.setItem('locale', nextLocale);
       await setUserLocale(nextLocale);
       setCurrentLocale(nextLocale as Locale);
     });
@@ -34,7 +34,7 @@ export const LanguageSwitcher = () => {
       className="flex items-center justify-start cursor-pointer rounded-full py-2 px-4! w-full secondary-hover magic-transition"
     >
       <GlobeIcon className="size-4" />
-      {currentLocale === "en" ? "English" : "Русский"}
+      {currentLocale === 'en' ? 'English' : 'Русский'}
     </Button>
   );
 };

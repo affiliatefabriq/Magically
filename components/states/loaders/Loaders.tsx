@@ -1,5 +1,5 @@
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const ExploreLoader = () => {
   return (
@@ -21,7 +21,9 @@ export const PublicationLoader = () => {
 };
 
 export const SearchLoader = () => {
-  return Array.from({ length: 24 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-16 w-full mb-2" />);
+  return Array.from({ length: 24 }).map((_, i) => (
+    <Skeleton key={i} className="flex flex-col h-16 w-full mb-2" />
+  ));
 };
 
 export const SearchPublicationLoader = () => {
@@ -38,7 +40,10 @@ export const ListLoader = () => {
   return (
     <div className="flex flex-col space-y-2 container mx-auto max-w-6xl mt-4">
       {Array.from({ length: 24 }).map((_, i) => (
-        <div key={i} className="flex items-center justify-between px-4 py-2 rounded-lg">
+        <div
+          key={i}
+          className="flex items-center justify-between px-4 py-2 rounded-lg"
+        >
           <div className="flex items-center gap-2">
             <Skeleton className="w-10 h-10 rounded-full" />
             <div className="flex flex-col gap-2">
@@ -54,7 +59,9 @@ export const ListLoader = () => {
 };
 
 export const LargeListLoader = () => {
-  return Array.from({ length: 24 }).map((_, i) => <Skeleton key={i} className="flex flex-col h-48 w-full mb-4" />);
+  return Array.from({ length: 24 }).map((_, i) => (
+    <Skeleton key={i} className="flex flex-col h-48 w-full mb-4" />
+  ));
 };
 
 export const JobLoader = () => {

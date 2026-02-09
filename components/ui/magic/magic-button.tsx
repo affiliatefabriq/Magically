@@ -1,11 +1,19 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-export const MagicButton = ({ icon: Icon, className, title, btn, ...props }: any) => {
-  const [stars, setStars] = useState<{ left: number; top: number; scale: number; delay: number }[]>([]);
+export const MagicButton = ({
+  icon: Icon,
+  className,
+  title,
+  btn,
+  ...props
+}: any) => {
+  const [stars, setStars] = useState<
+    { left: number; top: number; scale: number; delay: number }[]
+  >([]);
   const [shooting, setShooting] = useState<{ delay: number }[]>([]);
 
   useEffect(() => {
@@ -26,7 +34,7 @@ export const MagicButton = ({ icon: Icon, className, title, btn, ...props }: any
   }, []);
 
   return (
-    <div className={cn("special-btn", className)}>
+    <div className={cn('special-btn', className)}>
       <button type="button" {...props} className={btn}>
         <div className="flex items-center justify-center w-full h-full">
           <Icon className="size-5 mr-px" />

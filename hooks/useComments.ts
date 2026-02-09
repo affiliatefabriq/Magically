@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
-import api from "@/lib/api";
-import { queryKeys } from "@/lib/queryKeys";
+import api from '@/lib/api';
+import { queryKeys } from '@/lib/queryKeys';
 
 // --- API Functions for comment routes ---
 const getComments = async (publicationId: string) => {
@@ -10,12 +10,26 @@ const getComments = async (publicationId: string) => {
   return data.data;
 };
 
-const createComment = async ({ publicationId, text }: { publicationId: string; text: string }) => {
-  const { data } = await api.post(`/comments/${publicationId}/comments`, { text });
+const createComment = async ({
+  publicationId,
+  text,
+}: {
+  publicationId: string;
+  text: string;
+}) => {
+  const { data } = await api.post(`/comments/${publicationId}/comments`, {
+    text,
+  });
   return data;
 };
 
-const replyToComment = async ({ commentId, text }: { commentId: string; text: string }) => {
+const replyToComment = async ({
+  commentId,
+  text,
+}: {
+  commentId: string;
+  text: string;
+}) => {
   const { data } = await api.post(`/comments/${commentId}/reply`, { text });
   return data;
 };
@@ -48,9 +62,13 @@ export const useCreateComment = () => {
   return useMutation({
     mutationFn: createComment,
     onSuccess: (data, { publicationId }) => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.list(publicationId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.publications.detail(publicationId) });
-      toast.success("Comment posted!");
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.comments.list(publicationId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.publications.detail(publicationId),
+      });
+      toast.success('Comment posted!');
     },
   });
 };
@@ -62,7 +80,7 @@ export const useReplyToComment = () => {
     onSuccess: (data) => {
       // Invalidate all comments for the publication as we don't know the parent pubId easily
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.all });
-      toast.success("Reply posted!");
+      toast.success('Reply posted!');
     },
   });
 };
@@ -74,7 +92,7 @@ export const useDeleteComment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.comments.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.publications.all });
-      toast.success("Comment deleted.");
+      toast.success('Comment deleted.');
     },
   });
 };

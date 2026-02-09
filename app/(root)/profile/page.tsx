@@ -1,4 +1,4 @@
-import { Profile } from "@/components/pages/sections/Profile";
+import { Profile } from '@/components/pages/sections/Profile';
 
 const Page = () => {
   return <Profile />;

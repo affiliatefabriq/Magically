@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from 'next-intl';
 
-import { UserCard } from "@/components/shared/user/UserCard";
-import { FollowingError } from "@/components/states/error/Error";
-import { ListLoader } from "@/components/states/loaders/Loaders";
-import { Separator } from "@/components/ui/separator";
-import { useMyFollowing } from "@/hooks/useProfile";
-import { UserAttributes } from "@/types";
+import { UserCard } from '@/components/shared/user/UserCard';
+import { FollowingError } from '@/components/states/error/Error';
+import { ListLoader } from '@/components/states/loaders/Loaders';
+import { Separator } from '@/components/ui/separator';
+import { useMyFollowing } from '@/hooks/useProfile';
+import { UserAttributes } from '@/types';
 
 export const Following = () => {
-  const t = useTranslations("Components.Following");
+  const t = useTranslations('Components.Following');
   const { data, isLoading, isError } = useMyFollowing();
 
   if (isLoading) return <ListLoader />;
@@ -26,9 +26,11 @@ export const Following = () => {
       <Separator orientation="horizontal" className="my-1" />
       <div className="flex-column space-y-2">
         {data.length > 0 ? (
-          data.map((user: UserAttributes) => <UserCard key={user.id} user={user} />)
+          data.map((user: UserAttributes) => (
+            <UserCard key={user.id} user={user} />
+          ))
         ) : (
-          <p className="text-center text-muted-foreground py-4">{t("empty")}</p>
+          <p className="text-center text-muted-foreground py-4">{t('empty')}</p>
         )}
       </div>
     </section>

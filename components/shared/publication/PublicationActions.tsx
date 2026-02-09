@@ -1,28 +1,40 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { EllipsisVertical, Pencil, Trash } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { EllipsisVertical, Pencil, Trash } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Textarea } from "@/components/ui/textarea";
-import { useDeletePublication, useUpdatePublication } from "@/hooks/usePublications";
+} from '@/components/ui/dropdown-menu';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  useDeletePublication,
+  useUpdatePublication,
+} from '@/hooks/usePublications';
 
 interface PublicationActionsProps {
   publicationId: string;
   initialContent: string;
 }
 
-export const PublicationActions = ({ publicationId, initialContent }: PublicationActionsProps) => {
-  const t = useTranslations("Components.PublicationActions");
+export const PublicationActions = ({
+  publicationId,
+  initialContent,
+}: PublicationActionsProps) => {
+  const t = useTranslations('Components.PublicationActions');
 
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -33,7 +45,7 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
 
   const handleUpdate = () => {
     if (!content.trim()) {
-      toast.error(t("enter"));
+      toast.error(t('enter'));
       return;
     }
 
@@ -43,7 +55,7 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
         onSuccess: () => {
           setEditOpen(false);
         },
-      }
+      },
     );
   };
 
@@ -65,10 +77,13 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setEditOpen(true)}>
-            <Pencil className="size-4 mr-2" /> {t("edit")}
+            <Pencil className="size-4 mr-2" /> {t('edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setDeleteOpen(true)} className="text-destructive">
-            <Trash className="size-4 mr-2" /> {t("delete.title")}
+          <DropdownMenuItem
+            onClick={() => setDeleteOpen(true)}
+            className="text-destructive"
+          >
+            <Trash className="size-4 mr-2" /> {t('delete.title')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -76,12 +91,12 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-7xl">
           <DialogHeader>
-            <DialogTitle className="mt-4">{t("title")}</DialogTitle>
+            <DialogTitle className="mt-4">{t('title')}</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4 py-2">
             <Textarea
-              placeholder={t("enter")}
+              placeholder={t('enter')}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="min-h-15"
@@ -89,11 +104,21 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOpen(false)} className="btn-outline">
-              {t("cancel")}
+            <Button
+              variant="outline"
+              onClick={() => setEditOpen(false)}
+              className="btn-outline"
+            >
+              {t('cancel')}
             </Button>
-            <Button onClick={handleUpdate} disabled={updatePublication.isPending} className="btn-solid">
-              {updatePublication.isPending ? t("button.saving") : t("button.save")}
+            <Button
+              onClick={handleUpdate}
+              disabled={updatePublication.isPending}
+              className="btn-solid"
+            >
+              {updatePublication.isPending
+                ? t('button.saving')
+                : t('button.save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -102,17 +127,23 @@ export const PublicationActions = ({ publicationId, initialContent }: Publicatio
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("confirm")}</DialogTitle>
+            <DialogTitle>{t('confirm')}</DialogTitle>
           </DialogHeader>
 
-          <p className="text-sm text-muted-foreground">{t("confirmText")}</p>
+          <p className="text-sm text-muted-foreground">{t('confirmText')}</p>
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteOpen(false)}>
-              {t("cancel")}
+              {t('cancel')}
             </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={deletePublication.isPending}>
-              {deletePublication.isPending ? t("delete.deleting") : t("delete.title")}
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deletePublication.isPending}
+            >
+              {deletePublication.isPending
+                ? t('delete.deleting')
+                : t('delete.title')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,4 +1,4 @@
-import { Followers } from "@/components/shared/user/Followers";
+import { Followers } from '@/components/shared/user/Followers';
 
 const Page = () => {
   return <Followers />;

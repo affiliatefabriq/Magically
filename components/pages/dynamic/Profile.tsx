@@ -1,20 +1,21 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useTranslations } from "next-intl";
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
-import { UserProfile } from "@/components/shared/user/UserProfile";
-import { UserProfileEmpty } from "@/components/states/empty/Empty";
-import { NotAuthorized, ProfileError } from "@/components/states/error/Error";
-import { UserProfileLoader } from "@/components/states/loaders/Loaders";
-import { Separator } from "@/components/ui/separator";
-import { useProfile } from "@/hooks/useProfile";
-import { API_URL } from "@/lib/api";
-import { PublicationImage } from "@/components/shared/publication/PublicationImage";
-import { FollowButton } from "@/components/shared/user/FollowButton";
+import { UserProfile } from '@/components/shared/user/UserProfile';
+import { UserProfileEmpty } from '@/components/states/empty/Empty';
+import { NotAuthorized, ProfileError } from '@/components/states/error/Error';
+import { UserProfileLoader } from '@/components/states/loaders/Loaders';
+import { Separator } from '@/components/ui/separator';
+import { useProfile } from '@/hooks/useProfile';
+import { API_URL } from '@/lib/api';
+import { PublicationImage } from '@/components/shared/publication/PublicationImage';
+import { FollowButton } from '@/components/shared/user/FollowButton';
+import { BackButton } from '@/components/shared/layout/BackButton';
 
 export const Profile = ({ username }: { username: string }) => {
-  const t = useTranslations("Pages.Profile");
+  const t = useTranslations('Pages.Profile');
   const { data: user, isLoading, isError } = useProfile(username);
 
   if (!user) {
@@ -39,25 +40,32 @@ export const Profile = ({ username }: { username: string }) => {
 
   return (
     <section className="section-padding container max-w-7xl mx-auto border-0 border-muted md:border h-full rounded-t-3xl mt-0 sm:mt-4">
-      <div className="flex flex-col px-2 md:px-4 mt-4">
+      <BackButton />
+      <div className="flex flex-col px-2 md:px-4 mt-12 md:mt-4">
         <div className="flex items-center justify-between">
           <UserProfile {...user} />
         </div>
-        <p className="text-sm text-muted-foreground wrap-break-word mt-6 mb-4">{user.bio}</p>
+        <p className="text-sm text-muted-foreground wrap-break-word mt-6 mb-4">
+          {user.bio}
+        </p>
         <FollowButton id={user.id} isFollowing={user.isFollowing ?? false} />
       </div>
       <Separator className="bg-muted my-4" />
       <div className="flex items-center justify-evenly gap-4 secondary-text">
         <div className="text-center">
-          <h3 className="font-semibold text-sm">{t("publications")}</h3>
+          <h3 className="font-semibold text-sm">{t('publications')}</h3>
           <p className="text-xs">{user.publicationsCount}</p>
         </div>
         <div
           // href={`/profile/${user.username}/interested`}
           className="text-center"
         >
-          <h3 className="font-semibold text-sm">{t("interested")}</h3>
-          <p className="text-xs">{user.followersCount === undefined ? 0 : user.followersCount + user.followingCount}</p>
+          <h3 className="font-semibold text-sm">{t('interested')}</h3>
+          <p className="text-xs">
+            {user.followersCount === undefined
+              ? 0
+              : user.followersCount + user.followingCount}
+          </p>
         </div>
       </div>
       <Separator className="bg-muted my-4" />
@@ -68,7 +76,11 @@ export const Profile = ({ username }: { username: string }) => {
       )}
       <div className="grid-3-mobile">
         {user.publications.map((pub: any) => (
-          <Link href={`/publications/${pub.id}`} key={pub.id} className="w-full border border-white dark:border-black">
+          <Link
+            href={`/publications/${pub.id}`}
+            key={pub.id}
+            className="w-full border border-white dark:border-black"
+          >
             {pub.imageUrl && (
               <PublicationImage
                 src={pub.imageUrl}
@@ -76,7 +88,12 @@ export const Profile = ({ username }: { username: string }) => {
                 className="rounded-none! object-cover aspect-square"
               />
             )}
-            {pub.videoUrl && <video src={`${API_URL}${pub.videoUrl}`} className="object-cover aspect-square" />}
+            {pub.videoUrl && (
+              <video
+                src={`${API_URL}${pub.videoUrl}`}
+                className="object-cover aspect-square"
+              />
+            )}
           </Link>
         ))}
       </div>
