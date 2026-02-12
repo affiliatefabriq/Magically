@@ -22,10 +22,11 @@ import { UserAvatar } from '../user/UserAvatar';
 import { AuthRequiredPopover } from './AuthRequiredPopover';
 import { LikeButton } from './LikeButton';
 import { PublicationActions } from './PublicationActions';
-import { PublicationImage } from './PublicationImage';
+import { getImageUrl, PublicationImage } from './PublicationImage';
 import { VideoRender } from './VideoRender';
 import { PublicationDialog } from './PublicationDialog';
 import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
+import { useRouter } from 'next/navigation';
 
 type PublicationCardProps = {
   publication: Publication;
@@ -42,6 +43,7 @@ export const PublicationCard = ({
   isLast,
 }: PublicationCardProps) => {
   const t = useTranslations('Components.Publication');
+  const router = useRouter();
 
   const [expandedCommentsMap, setExpandedCommentsMap] = useState<
     Record<string, boolean>
@@ -70,7 +72,7 @@ export const PublicationCard = ({
     if (!publication) return;
 
     try {
-      const fileUrl = `${API_URL}${publication.imageUrl || publication.videoUrl}`;
+      const fileUrl = getImageUrl(publication.imageUrl!);
       const res = await fetch(fileUrl, { credentials: 'include' });
 
       if (!res.ok) throw new Error('Download failed');
@@ -92,6 +94,13 @@ export const PublicationCard = ({
     } catch (e) {
       console.error('Download error', e);
     }
+  };
+
+  const handleRemix = () => {
+    if (!publication.content) return;
+    router.push(
+      `/create/magic-photo?prompt=${encodeURIComponent(publication.content)}`,
+    );
   };
 
   return (
@@ -171,6 +180,14 @@ export const PublicationCard = ({
                   />
                 </>
               )}
+              <Button
+                onClick={handleRemix}
+                size="sm"
+                variant="ghost"
+                className="p-0 text-lime-500"
+              >
+                ✦ {t('alsoWant')}
+              </Button>
 
               <div className="flex items-center justify-start gap-4 mt-2">
                 {userId ? (

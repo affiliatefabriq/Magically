@@ -337,7 +337,9 @@ export const CommentSection = ({
               className="flex flex-col items-center justify-center py-12"
             >
               <MessageCircle className="h-12 w-12 text-muted-foreground/50 mb-3" />
-              <p className="text-sm text-muted-foreground text-center"></p>
+              <p className="text-sm text-muted-foreground text-center">
+                {t('empty')}
+              </p>
             </motion.div>
           )}
         </div>

@@ -3,10 +3,10 @@
     "Sidebar": {
       "BalanceTopUp": "Пополнить",
       "Logo": "Волшебный",
-      "Explore": "Главная",
+      "Explore": "Лента",
       "Search": "Поиск",
       "Create": "Создать",
-      "Library": "Галерея",
+      "Library": "Мои образы",
       "Profile": "Профиль",
       "Login": "Войти",
       "Register": "Регистрация",
@@ -73,7 +73,8 @@
     "Publication": {
       "readMore": "Читать больше",
       "readLess": "Читать меньше",
-      "noImage": "Нет изображения"
+      "noImage": "Нет изображения",
+      "alsoWant": "Хочу также"
     },
     "CommentSection": {
       "title": "Комментарии",
@@ -194,6 +195,8 @@
       "generate": "Создать фото ✨",
       "edit": "Редактировать",
       "delete": "Удалить",
+      "description": "Описание",
+      "instruction": "Инструкции",
       "Dialog": {
         "createTitle": "Создание модели",
         "editTitle": "Редактирование модели",
@@ -236,6 +239,7 @@
       "noModelsTitle": "Модели не найдены",
       "noModelsDesc": "Сначала создайте модель.",
       "createModelBtn": "Создать модель",
+      "quality": "Качество волшебного фото",
       "Aspect": {
         "Square": "1:1 Квадрат",
         "Landscape": "16:9 Ландшафт",
@@ -254,7 +258,9 @@
       "tokens": "Баланс",
       "activity": "Активность",
       "share": "Поделиться",
-      "edit": "Управление"
+      "edit": "Управление",
+      "copied": "Скопировано",
+      "pay": "Пополнить баланс"
     },
     "Settings": {
       "BackToProfile": "Профиль",

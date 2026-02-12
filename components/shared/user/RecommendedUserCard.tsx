@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import { FollowButton } from './FollowButton';
-import { API_URL } from '@/lib/api';
+import { getImageUrl } from '../publication/PublicationImage';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface RecommendedUserCardProps {
   user: {
@@ -19,7 +20,7 @@ export const RecommendedUserCard = ({ user }: RecommendedUserCardProps) => {
     <div className="flex flex-col lg:flex-row items-center gap-3 p-4 rounded-2xl theme-2 transition-colors">
       <Link href={`/profile/${user.username}`} className="flex">
         <Avatar className="size-12 ring-2 ring-primary/10">
-          <AvatarImage src={API_URL! + user.avatar} alt={user.username} />
+          <AvatarImage src={getImageUrl(user.avatar!)} alt={user.username} />
           <AvatarFallback className="bg-linear-to-br from-primary/20 to-secondary/20">
             {user.username?.charAt(0).toUpperCase()}
           </AvatarFallback>

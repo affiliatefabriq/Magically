@@ -158,6 +158,6 @@ export const useGenerateAI = () => {
       }
 
       toast.error('Неизвестная ошибка');
-    }
+    },
   });
 };

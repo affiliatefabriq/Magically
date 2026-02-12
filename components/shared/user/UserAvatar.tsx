@@ -1,5 +1,5 @@
+import { getImageUrl } from '../publication/PublicationImage';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { API_URL } from '@/lib/api';
 
 type UserAvatarProps = {
   username: string;
@@ -28,7 +28,7 @@ export const UserAvatar = ({
       `}
     >
       <AvatarImage
-        src={avatar ? API_URL + avatar : ''}
+        src={avatar ? getImageUrl(avatar) : ''}
         alt={username}
         className="rounded-full h-full w-full object-cover"
       />

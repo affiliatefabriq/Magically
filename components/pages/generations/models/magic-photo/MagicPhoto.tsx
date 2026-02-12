@@ -53,15 +53,18 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const MagicPhoto = () => {
   const t = useTranslations('Pages.MagicPhoto');
-  const { data: user } = useUser();
+
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const generateImage = useGenerateAI();
+
+  const { data: user } = useUser();
   const { data: models, isLoading: isModelsLoading } = useAIModels();
+
   const [isGenerating, setIsGenerating] = useState(false);
 
   const queryModelId = searchParams.get('modelId');
+  const queryPrompt = searchParams.get('prompt');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -82,7 +85,13 @@ export const MagicPhoto = () => {
     } else {
       form.setValue('modelId', models[0].id, { shouldValidate: true });
     }
-  }, [models, queryModelId, form]);
+
+    if (queryPrompt) {
+      form.setValue('prompt', decodeURIComponent(queryPrompt), {
+        shouldValidate: true,
+      });
+    }
+  }, [models, queryModelId, queryPrompt, form]);
 
   const onSubmit = async (values: FormValues) => {
     console.log(values);
@@ -198,63 +207,70 @@ export const MagicPhoto = () => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="aspect_ratio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('aspectLabel')}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Aspect Ratio" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="1:1">
-                          {t('Aspect.Square')}
-                        </SelectItem>
-                        <SelectItem value="16:9">
-                          {t('Aspect.Landscape')}
-                        </SelectItem>
-                        <SelectItem value="9:16">
-                          {t('Aspect.Portrait')}
-                        </SelectItem>
-                        <SelectItem value="4:3">
-                          {t('Aspect.Standard')}
-                        </SelectItem>
-                        <SelectItem value="3:4">{t('Aspect.Tall')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-wrap items-center gap-4">
+                <FormField
+                  control={form.control}
+                  name="aspect_ratio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('aspectLabel')}</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Aspect Ratio" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1:1">
+                            {t('Aspect.Square')}
+                          </SelectItem>
+                          <SelectItem value="16:9">
+                            {t('Aspect.Landscape')}
+                          </SelectItem>
+                          <SelectItem value="9:16">
+                            {t('Aspect.Portrait')}
+                          </SelectItem>
+                          <SelectItem value="4:3">
+                            {t('Aspect.Standard')}
+                          </SelectItem>
+                          <SelectItem value="3:4">
+                            {t('Aspect.Tall')}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="quality"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Качество волшебного фото</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Quality" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="1K">1K (1024px)</SelectItem>
-                        <SelectItem value="2K">2K (2048px)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                <FormField
+                  control={form.control}
+                  name="quality"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('quality')}</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Quality" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1K">1K (1024px)</SelectItem>
+                          <SelectItem value="2K">2K (2048px)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}
@@ -288,9 +304,7 @@ export const MagicPhoto = () => {
                     {t('generatingBtn')}
                   </>
                 ) : (
-                  <>
-                    <Sparkles className="mr-2" /> {t('generateBtn')}
-                  </>
+                  <>{t('generateBtn')} (✦15)</>
                 )}
               </Button>
             </form>

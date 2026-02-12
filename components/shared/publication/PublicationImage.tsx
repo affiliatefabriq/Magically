@@ -1,15 +1,37 @@
 import Image from 'next/image';
 
 import { useState } from 'react';
-import { API_URL } from '@/lib/api';
 import { ImageIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { API_URL, BUCKET_NAME, S3, S3_URL } from '@/lib/api';
 
 type PublicationImageProps = {
   src: string;
   alt: string;
   className?: string;
   onClick?: () => void;
+};
+
+export const getImageUrl = (src: string) => {
+  if (!src) return 'no src';
+
+  if (S3 === 'true') {
+    const path = `${S3_URL}/${BUCKET_NAME}/${src}`;
+
+    return path;
+  }
+
+  if (src.startsWith('http://localhost')) {
+    return src;
+  }
+
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    return src;
+  }
+
+  const fullUrl = `${API_URL}${src}`;
+  console.log(fullUrl);
+  return fullUrl;
 };
 
 export const PublicationImage = ({
@@ -30,23 +52,7 @@ export const PublicationImage = ({
     );
   }
 
-  const getImageUrl = () => {
-    if (!src) return null;
-
-    if (src.startsWith('http://localhost')) {
-      return src;
-    }
-
-    if (src.startsWith('http://') || src.startsWith('https://')) {
-      return src;
-    }
-
-    const fullUrl = `${API_URL}${src}`;
-    console.log('Constructed URL:', fullUrl);
-    return fullUrl;
-  };
-
-  const finalImageUrl = getImageUrl();
+  const finalImageUrl = getImageUrl(src);
 
   return (
     <Image

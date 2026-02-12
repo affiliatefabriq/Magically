@@ -8,7 +8,10 @@ import { AuthRequiredPopover } from '@/components/shared/publication/AuthRequire
 import { CommentSection } from '@/components/shared/publication/CommentSection';
 import { LikeButton } from '@/components/shared/publication/LikeButton';
 import { PublicationActions } from '@/components/shared/publication/PublicationActions';
-import { PublicationImage } from '@/components/shared/publication/PublicationImage';
+import {
+  getImageUrl,
+  PublicationImage,
+} from '@/components/shared/publication/PublicationImage';
 import { VideoRender } from '@/components/shared/publication/VideoRender';
 import { UserProfile } from '@/components/shared/user/UserProfile';
 import { ExploreError } from '@/components/states/error/Error';
@@ -61,7 +64,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
     if (!publication) return;
 
     try {
-      const fileUrl = `${API_URL}${publication.imageUrl || publication.videoUrl}`;
+      const fileUrl = getImageUrl(publication.imageUrl);
       const res = await fetch(fileUrl, { credentials: 'include' });
 
       if (!res.ok) throw new Error('Download failed');
@@ -95,7 +98,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
   if (!publication) return null;
 
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 section-padding">
+    <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2 px-2">
       <BackButton />
       <div className="flex flex-col items-start justify-start gap-4 mt-12 md:mt-4">
         <div className="flex justify-between w-full">

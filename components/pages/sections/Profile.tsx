@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
+
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { BrainCircuit, Cog, ForwardIcon, Mail, Pencil } from 'lucide-react';
+import { Check, ForwardIcon, Pencil } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { EditProfileDialog } from '@/components/shared/user/EditProfileDialog';
@@ -13,20 +13,22 @@ import { PersonalProfileEmpty } from '@/components/states/empty/Empty';
 import { NotAuthorized, ProfileError } from '@/components/states/error/Error';
 import { ProfileLoader } from '@/components/states/loaders/Loaders';
 import { Button } from '@/components/ui/button';
-import { ConfettiButton } from '@/components/ui/confetti';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { useMyProfile } from '@/hooks/useProfile';
 import { API_URL, BASE_URL } from '@/lib/api';
 import { PublicationImage } from '@/components/shared/publication/PublicationImage';
+import { LanguageSwitcher } from '@/components/functions/LanguageSwitcher';
 
 export const Profile = () => {
   const t = useTranslations('Pages.Profile');
   const pathname = usePathname();
   const router = useRouter();
-  const { data: user, isLoading, isError } = useMyProfile();
+
   const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [copied, setCopied] = useState<Record<string, boolean>>({});
+
+  const { data: user, isLoading, isError } = useMyProfile();
 
   if (!user) {
     return (
@@ -50,8 +52,12 @@ export const Profile = () => {
 
   const links = BASE_URL + pathname + '/' + user.username;
 
-  const copyLink = (e: any) => {
-    navigator.clipboard.writeText(links);
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(links);
+    setCopied((prev) => ({ ...prev, ['profile']: true }));
+    setTimeout(() => {
+      setCopied((prev) => ({ ...prev, ['profile']: false }));
+    }, 2000);
   };
 
   return (
@@ -59,9 +65,7 @@ export const Profile = () => {
       <div className="flex flex-col px-2 md:px-4 mt-4">
         <div className="flex md:hidden items-center justify-between">
           <span className="text-2xl font-bold">{user.username}</span>
-          <Link href="/settings" className="ease hover:bg-muted p-2 rounded-md">
-            <Cog />
-          </Link>
+          <LanguageSwitcher isMobile={true} />
         </div>
         <Separator className="flex md:hidden my-2" />
         <div className="flex items-start justify-between">
@@ -71,7 +75,7 @@ export const Profile = () => {
             <span className="hidden md:flex text-neutral-400 text-sm">
               @{user.username}
             </span>
-            <div className="flex items-center gap-1 text-sm clear-start text-neutral-400 mt-1 w-16">
+            <div className="flex items-center gap-1 text-sm clear-start text-neutral-400 mt-0 w-16">
               <span>{user.email}</span>
             </div>
           </div>
@@ -81,10 +85,19 @@ export const Profile = () => {
                 onClick={copyLink}
                 className="flex items-center justify-center w-full"
               >
-                <ConfettiButton className="btn-outline text-xs sm:text-sm px-1.5! sm:px-2!">
-                  <ForwardIcon className="hidden sm:flex" />
-                  {t('share')}
-                </ConfettiButton>
+                <Button className="btn-outline text-xs sm:text-sm px-1.5! sm:px-2!">
+                  {copied['profile'] ? (
+                    <>
+                      <Check className="hidden sm:flex size-4" />
+                      {t('copied')}
+                    </>
+                  ) : (
+                    <>
+                      <ForwardIcon className="hidden sm:flex size-4" />
+                      {t('share')}
+                    </>
+                  )}
+                </Button>
               </div>
               <div className="w-full">
                 <Dialog
@@ -104,31 +117,32 @@ export const Profile = () => {
                 </Dialog>
               </div>
             </div>
-            <div className="hidden md:flex items-center justify-center gap-1">
+            {/* <div className="hidden md:flex items-center justify-center gap-1">
               <Link
                 href="/settings"
                 className="ease hover:bg-muted p-2 rounded-md"
               >
                 <Cog />
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
-        <p className="text-sm text-muted-foreground wrap-break-word mt-2">
-          {user.bio}
-        </p>
+        <div className="text-sm text-muted-foreground wrap-break-word my-2">
+          <p>{user.bio}</p>
+          <p>
+            {t('activity')}: {user.dailyActions.count} / 10
+          </p>
+        </div>
       </div>
-      <div className="flex flex-wrap items-center justify-start gap-2">
+      <div className="flex flex-wrap items-center justify-start gap-2 px-2 md:px-4">
         <Button
           className="btn-outline"
           onClick={() => router.push('/transactions')}
         >
           {t('history')} | ✦ {user.tokens}
         </Button>
-        <Button className="btn-outline">
-          <span className="px-2 text-sm">
-            {t('activity')} {user.dailyActions.count} / 10
-          </span>
+        <Button className="btn-solid" onClick={() => router.push('/pay')}>
+          {t('pay')}
         </Button>
       </div>
 

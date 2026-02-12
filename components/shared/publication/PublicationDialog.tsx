@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Publication } from '@/types';
-import { PublicationImage } from './PublicationImage';
+import { getImageUrl, PublicationImage } from './PublicationImage';
 import { UserAvatar } from '../user/UserAvatar';
 import { CommentSection } from './CommentSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -26,7 +26,6 @@ import {
 import { useEffect, useState } from 'react';
 import { LikeButton } from './LikeButton';
 import { PublicationActions } from './PublicationActions';
-import { API_URL } from '@/lib/api';
 import { useUser } from '@/hooks/useAuth';
 import { AuthRequiredPopover } from './AuthRequiredPopover';
 import { formatDate } from '@/lib/utils';
@@ -73,7 +72,7 @@ export const PublicationDialog = ({
     if (!publication) return;
 
     try {
-      const fileUrl = `${API_URL}${publication.imageUrl || publication.videoUrl}`;
+      const fileUrl = getImageUrl(publication.imageUrl!);
       const res = await fetch(fileUrl, { credentials: 'include' });
 
       if (!res.ok) throw new Error('Download failed');
@@ -144,11 +143,9 @@ export const PublicationDialog = ({
         <div className="relative w-full h-full flex-1 publication-fullscreen-target">
           <PublicationImage
             src={publication.imageUrl!}
-            className={`
-                            w-full h-full transition-all duration-300 ease-in-out
-                            object-contain bg-black
-                            ${isNativeFullscreen ? 'object-contain!' : ''}
-                            `}
+            className={`w-full h-full transition-all duration-300 ease-in-out object-contain bg-black
+                      ${isNativeFullscreen ? 'object-contain!' : ''}
+            `}
             alt=""
           />
           <button
@@ -224,7 +221,7 @@ export const PublicationDialog = ({
           </div>
           <div className="flex-1 overflow-hidden w-full">
             <ScrollArea className="h-full w-full">
-              <div className="p-4">
+              <div className="h-screen p-4">
                 {publication.content.length > 128 ? (
                   <>
                     <span className="prompt-text text-tertiary-text">

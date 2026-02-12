@@ -57,7 +57,7 @@ export const EditProfileDialog = ({
   };
 
   return (
-    <DialogContent>
+    <DialogContent className="w-full max-w-2xl">
       <DialogHeader>
         <DialogTitle>{t('title')}</DialogTitle>
       </DialogHeader>

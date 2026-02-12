@@ -9,9 +9,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <section>
       <SidebarProvider>
         <AppSidebar />
-        <div className="flex-1 mb-24 md:mb-0">{children}</div>
+        <div className="flex-1">{children}</div>
         <Bottombar />
-        <Toaster theme='system' />
+        <Toaster theme="dark" />
       </SidebarProvider>
     </section>
   );

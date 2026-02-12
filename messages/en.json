@@ -63,7 +63,8 @@
     "Publication": {
       "noImage": "No image",
       "readLess": "Read less",
-      "readMore": "Read more"
+      "readMore": "Read more",
+      "alsoWant": "I also want"
     },
     "PublicationActions": {
       "back": "Back",
@@ -92,9 +93,9 @@
         "PhotoEffects": "Photo effects",
         "VideoEffects": "Video effects"
       },
-      "Explore": "Explore",
+      "Explore": "Reel",
       "InDevelopment": "In development",
-      "Library": "Library",
+      "Library": "My images",
       "Login": "Log In",
       "Logo": "Magical",
       "MagicPhoto": "Magic photo",
@@ -260,7 +261,8 @@
       "publishLabel": "Publish to feed",
       "selectModel": "Select a model",
       "selectPlaceholder": "Select a model...",
-      "title": "Magic Photo Generator"
+      "title": "Magic Photo Generator",
+      "quality": "Magic photo quality"
     },
     "Models": {
       "Alerts": {
@@ -298,7 +300,9 @@
       "title": "Models",
       "trainingData": "Training data",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "description": "Description",
+      "instruction": "Instruction"
     },
     "Pay": {
       "AmountLabel": "Amount",
@@ -343,7 +347,9 @@
       "publications": "Activity",
       "share": "Share",
       "title": "Profile",
-      "tokens": "Balance"
+      "tokens": "Balance",
+      "copied": "Copied",
+      "pay": "Top up balance"
     },
     "Search": {
       "loadMore": "Load more",

@@ -8,7 +8,11 @@ import { Locale } from '@/app/i18n/config';
 import { setUserLocale } from '@/app/i18n/locale';
 import { Button } from '../ui/button';
 
-export const LanguageSwitcher = () => {
+export const LanguageSwitcher = ({
+  isMobile = false,
+}: {
+  isMobile?: boolean;
+}) => {
   const locale = useLocale();
   const [currentLocale, setCurrentLocale] = useState<Locale>(locale as Locale);
   const [isPending, startTransition] = useTransition();
@@ -31,7 +35,7 @@ export const LanguageSwitcher = () => {
       onClick={toggleLocale}
       disabled={isPending}
       variant="ghost"
-      className="flex items-center justify-start cursor-pointer rounded-full py-2 px-4! w-full secondary-hover magic-transition"
+      className={`flex items-center justify-start cursor-pointer rounded-full ${isMobile ? 'py-0! px-0! w-auto' : 'py-2 px-4! w-full'} secondary-hover magic-transition`}
     >
       <GlobeIcon className="size-4" />
       {currentLocale === 'en' ? 'English' : 'Русский'}

@@ -175,7 +175,7 @@ export const Explore = () => {
 
         {/* Empty state - только если нет публикаций вообще */}
         {data?.pages[0]?.publications?.length === 0 && (
-          <div className="h-screen state-center">
+          <div className="h-screen state-center section-padding w-full">
             <ExploreEmpty />
           </div>
         )}

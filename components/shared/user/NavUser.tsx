@@ -36,7 +36,7 @@ export function NavUser(user: UserAttributes) {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="cursor-pointer">
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -57,9 +57,17 @@ export function NavUser(user: UserAttributes) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                {user && <UserAvatar {...user} size="md" />}
+                {user && (
+                  <Link href="/profile">
+                    <UserAvatar {...user} size="md" />
+                  </Link>
+                )}
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.username}</span>
+                  <Link href="/profile">
+                    <span className="truncate font-medium">
+                      {user.username}
+                    </span>
+                  </Link>
                   <span className={`flex flex-row gap-1`}>
                     <span className="truncate text-xs">✦{user.tokens}</span>
                     <Link href={'/pay'} className={`link-text text-xs`}>
@@ -71,12 +79,12 @@ export function NavUser(user: UserAttributes) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <Link href="/settings" className="flex items-center gap-2">
                   <Cog />
                   {t('Settings')}
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>

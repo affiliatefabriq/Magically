@@ -1,14 +1,13 @@
 'use client';
 
-import Image from 'next/image';
+import { z } from 'zod';
+import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
 import { useTranslations } from 'next-intl';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { UploadImage } from '@/components/shared/create/UploadImage';
 import { Button } from '@/components/ui/button';
@@ -30,8 +29,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateAIModel, useUpdateAIModel } from '@/hooks/useAi';
-import { API_URL } from '@/lib/api';
-import { PublicationImage } from '../publication/PublicationImage';
+import {
+  getImageUrl,
+  ModelImage,
+  PublicationImage,
+} from '../publication/PublicationImage';
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -222,17 +224,18 @@ export const CreateModelDialog = ({
                       className="relative aspect-square rounded-md overflow-hidden group"
                     >
                       <PublicationImage
-                        src={`${API_URL}${path}`}
+                        src={path}
                         alt="existing"
-                        className="object-cover "
+                        className="object-cover"
                       />
-                      <button
+                      <Button
+                        size="icon-sm"
                         type="button"
                         onClick={() => handleDeleteExisting(path)}
-                        className="absolute top-1 right-1 bg-red-500/80 p-1 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 right-1 bg-red-500 size-5 rounded-full text-white cursor-pointer hover:bg-red-600"
                       >
-                        <X className="size-3" />
-                      </button>
+                        <X className="size-4" />
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -259,7 +262,7 @@ export const CreateModelDialog = ({
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-2">
+            <div className="flex flex-col justify-end gap-2 pt-2">
               <Button
                 type="button"
                 variant="outline"

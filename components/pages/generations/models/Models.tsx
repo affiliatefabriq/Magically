@@ -17,30 +17,22 @@ import { CreateModelDialog } from '@/components/shared/create/CreateModelDialog'
 import { PublicationImage } from '@/components/shared/publication/PublicationImage';
 import { ListLoader } from '@/components/states/loaders/Loaders';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
 import { useDeleteAIModel, useAIModels } from '@/hooks/useAi';
-import { API_URL } from '@/lib/api';
 import { ModelsEmpty } from '@/components/states/empty/Empty';
 import { useUser } from '@/hooks/useAuth';
 import { NotAuthorized } from '@/components/states/error/Error';
 import { Badge } from '@/components/ui/badge';
+import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 
 export const Models = () => {
   const t = useTranslations('Pages.Models');
-  const locale = useLocale();
   const { data: user } = useUser();
   const { data: models, isLoading } = useAIModels();
 
@@ -192,39 +184,26 @@ export const Models = () => {
                   </div>
                 </CardHeader>
 
-                <CardContent className="pb-3 flex-1">
+                <CardContent className="flex-1">
                   {model.description && (
-                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-8">
                       {model.description}
                     </p>
                   )}
                   <Link
                     href={`/create/magic-photo?modelId=${model.id}`}
-                    className="w-full"
+                    className="w-full items-end-safe"
                   >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full gap-2"
+                    <HoverBorderGradient
+                      containerClassName="rounded-full"
+                      as="button"
+                      className="flex flex-1 items-center space-x-4 w-full!"
                     >
-                      <Sparkles className="size-3" />
+                      <Sparkles className="size-4" />
                       {t('createMagic')}
-                    </Button>
+                    </HoverBorderGradient>
                   </Link>
                 </CardContent>
-
-                <CardFooter className="pt-3 border-t text-xs text-muted-foreground">
-                  <time dateTime={model.createdAt}>
-                    {new Date(model.createdAt).toLocaleDateString(
-                      locale === 'ru' ? 'ru-RU' : 'en-US',
-                      {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      },
-                    )}
-                  </time>
-                </CardFooter>
               </Card>
             ))}
           </div>

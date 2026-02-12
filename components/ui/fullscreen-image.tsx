@@ -2,7 +2,7 @@
 
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { API_URL } from '@/lib/api';
+import { getImageUrl } from '../shared/publication/PublicationImage';
 
 type Props = {
   src: string | null;
@@ -12,7 +12,7 @@ type Props = {
 export const FullscreenImageViewer = ({ src, onClose }: Props) => {
   if (!src) return null;
 
-  const fullSrc = src.startsWith('http') ? src : `${API_URL}${src}`;
+  const fullSrc = src.startsWith('http') ? src : getImageUrl(src);
 
   return (
     <AnimatePresence>

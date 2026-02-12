@@ -161,7 +161,7 @@
   }
 
   .section-padding {
-    @apply p-2;
+    @apply p-2 mb-12 md:mb-0;
   }
 }
 

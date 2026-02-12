@@ -1,19 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import {
-  Bot,
   Brush,
   Compass,
   Folder,
   ImageIcon,
   Loader,
-  Sparkles,
+  Sparkle,
   TriangleAlert,
   UserRound,
   Video,
@@ -27,11 +25,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-import { MagicButton } from '@/components/ui/magic/magic-button';
+import { Button } from '@/components/ui/button';
 
 export const Bottombar = () => {
   const locale = useLocale();
@@ -46,10 +42,10 @@ export const Bottombar = () => {
   // ---------- items ----------
   const items = [
     { id: 1, title: t('Explore'), url: '/', icon: Compass },
-    { id: 2, title: t('Models'), url: '/models', icon: ImageIcon },
-    { id: 3, title: t('Create'), url: '/create', icon: Sparkles },
-    { id: 4, title: t('Library'), url: '/library', icon: Folder },
-    { id: 5, title: t('Profile'), url: '/profile', icon: UserRound },
+    // { id: 2, title: t('Models'), url: '/models', icon: ImageIcon },
+    { id: 2, title: t('Create'), url: '/create', icon: Sparkle },
+    { id: 3, title: t('Library'), url: '/library', icon: ImageIcon },
+    { id: 4, title: t('Profile'), url: '/profile', icon: UserRound },
   ];
 
   useEffect(() => {
@@ -87,11 +83,11 @@ export const Bottombar = () => {
   return (
     <nav
       style={bottomBarStyle}
-      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-0 z-10 w-full h-18 px-2"
+      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-0 z-10 w-full max-w-96 mx-auto px-4 pb-2"
     >
-      <div className="flex items-center justify-center gap-3 rounded-2xl border p-3 backdrop-blur-xl mx-auto bg-white/50 dark:bg-black/20">
+      <div className="flex items-center justify-evenly w-full rounded-full border border-border/50 py-2.5 backdrop-blur-xl bg-white/80 dark:bg-black/80">
         {items.map((item) =>
-          item.id === 3 ? (
+          item.id === 2 ? (
             <DropdownMenu
               key={item.id}
               open={open}
@@ -99,18 +95,32 @@ export const Bottombar = () => {
               modal={false}
             >
               <DropdownMenuTrigger asChild>
-                <MagicButton
-                  icon={item.icon}
-                  className="size-9 text-white"
-                  btn="rounded-lg"
-                />
+                <button className="flex flex-col gap-0.5 items-center justify-center text-lime-500">
+                  <item.icon strokeWidth={2} className="size-5" />
+                  <span className="text-[10px] font-medium leading-tight">
+                    {t('Create')}
+                  </span>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="relative p-4 mx-auto rounded-xl overflow-hidden"
                 align="center"
               >
-                <DropdownMenuLabel>{t('Create')}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                {/* CREATE */}
+                <DropdownMenuLabel className="sr-only">
+                  {t('Create')}
+                </DropdownMenuLabel>
+                {/* MODELS */}
+                <DropdownMenuItem
+                  onClick={() => go('/models')}
+                  className="mt-2 py-3 rounded-xl cursor-pointer"
+                >
+                  <div className="flex items-center gap-3 font-semibold">
+                    <Folder className="size-4" />
+                    {t('Models')}
+                  </div>
+                </DropdownMenuItem>
+                {/* MAGIC PHOTO */}
                 <DropdownMenuItem
                   onClick={() => go('/create/magic-photo')}
                   className="mt-2 py-3 rounded-xl cursor-pointer"
@@ -120,51 +130,73 @@ export const Bottombar = () => {
                     {t('MagicPhoto')}
                   </div>
                 </DropdownMenuItem>
-                {[
-                  { icon: Brush, label: t('Effects.PhotoEditor') },
-                  { icon: Loader, label: t('Effects.PhotoEffects') },
-                  { icon: Video, label: t('Effects.VideoEffects') },
-                ].map((x, i) => (
-                  <DropdownMenuItem
-                    key={i}
-                    className="mt-2 py-3 rounded-xl cursor-not-allowed"
-                  >
-                    <div className="flex items-start justify-between w-full relative">
-                      <div className="flex items-center gap-2 blur-[2px] opacity-70">
-                        <x.icon className="size-4" />
-                        <span className="font-semibold">{x.label}</span>
-                      </div>
-
-                      <div className="absolute right-0 left-6 flex items-start justify-start gap-1 text-xs font-bold text-yellow-300">
-                        <TriangleAlert className="size-4 text-yellow-300" />
-                        {t('InDevelopment')}
-                      </div>
+                {/* Photo editor */}
+                <DropdownMenuItem className="mt-2 py-3 rounded-xl cursor-not-allowed">
+                  <div className="flex items-start justify-between w-full relative">
+                    <div className="flex items-center gap-2 blur-[2px] opacity-70">
+                      <Brush className="size-4" />
+                      <span className="font-semibold">
+                        {t('Effects.PhotoEditor')}
+                      </span>
                     </div>
-                  </DropdownMenuItem>
-                ))}
+
+                    <div className="absolute right-0 left-6 flex items-start justify-start gap-1 text-xs font-bold text-yellow-300">
+                      <TriangleAlert className="size-4 text-yellow-300" />
+                      {t('InDevelopment')}
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+                {/* Photo effects */}
+                {/* <DropdownMenuItem
+                  className="mt-2 py-3 rounded-xl cursor-not-allowed"
+                >
+                  <div className="flex items-start justify-between w-full relative">
+                    <div className="flex items-center gap-2 blur-[2px] opacity-70">
+                      <Loader className="size-4" />
+                      <span className="font-semibold">{t('Effects.PhotoEffects')}</span>
+                    </div>
+
+                    <div className="absolute right-0 left-6 flex items-start justify-start gap-1 text-xs font-bold text-yellow-300">
+                      <TriangleAlert className="size-4 text-yellow-300" />
+                      {t('InDevelopment')}
+                    </div>
+                  </div>
+                </DropdownMenuItem> */}
+                {/* Video effects */}
+                {/* <DropdownMenuItem
+                  className="mt-2 py-3 rounded-xl cursor-not-allowed"
+                >
+                  <div className="flex items-start justify-between w-full relative">
+                    <div className="flex items-center gap-2 blur-[2px] opacity-70">
+                      <Video className="size-4" />
+                      <span className="font-semibold">{t('Effects.VideoEffects')}</span>
+                    </div>
+
+                    <div className="absolute right-0 left-6 flex items-start justify-start gap-1 text-xs font-bold text-yellow-300">
+                      <TriangleAlert className="size-4 text-yellow-300" />
+                      {t('InDevelopment')}
+                    </div>
+                  </div>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : item.id === 1 ? (
-            <Link
-              href={item.url}
-              key={item.id}
-              className={`relative flex flex-col items-center gap-4 font-semibold`}
-            >
-              <Image
-                src="/assets/logo.jpg"
-                alt="logo"
-                width={28}
-                height={28}
-                className="rounded-lg"
-              />
-            </Link>
           ) : (
             <Link
               href={item.url}
               key={item.id}
-              className={`relative flex flex-col items-center gap-4 rounded-lg p-2 font-thin ${pathname === item.url ? 'btn-magic' : ''}`}
+              className={`flex flex-col gap-0.5 items-center justify-center rounded-xl transition-all duration-200 ${
+                pathname === item.url
+                  ? 'text-foreground'
+                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-95'
+              }`}
             >
-              <item.icon strokeWidth={1.25} className="size-5" />
+              <item.icon
+                strokeWidth={pathname === item.url ? 2 : 1.5}
+                className="size-5"
+              />
+              <span className="text-[10px] font-medium leading-tight">
+                {item.title}
+              </span>
             </Link>
           ),
         )}

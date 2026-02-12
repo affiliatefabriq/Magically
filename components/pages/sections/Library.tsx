@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { JobEmpty } from '@/components/states/empty/Empty';
 import { LargeListLoader } from '@/components/states/loaders/Loaders';
-import { API_URL } from '@/lib/api';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDate } from '@/lib/utils';
 import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
+import { getImageUrl } from '@/components/shared/publication/PublicationImage';
 
 export const Library = () => {
   const t = useTranslations('Pages.Library');
@@ -34,6 +34,7 @@ export const Library = () => {
   const [expandedPromptsMap, setExpandedPromptsMap] = useState<
     Record<string, boolean>
   >({});
+
   const [downloadedMap, setDownloadedMap] = useState<Record<string, boolean>>(
     {},
   );
@@ -41,7 +42,7 @@ export const Library = () => {
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const handleShare = async (jobId: string, resultUrl: string) => {
-    const shareUrl = `${API_URL}${resultUrl}`;
+    const shareUrl = getImageUrl(resultUrl);
 
     if (navigator.share) {
       try {
@@ -61,7 +62,7 @@ export const Library = () => {
 
   const handleDownload = async (jobId: string, resultUrl: string) => {
     try {
-      const fileUrl = `${API_URL}${resultUrl}`;
+      const fileUrl = getImageUrl(resultUrl);
       const res = await fetch(fileUrl, { credentials: 'include' });
 
       if (!res.ok) throw new Error('Download failed');
@@ -136,7 +137,9 @@ export const Library = () => {
                             }));
                           }}
                         >
-                          {expandedPromptsMap[job.id] ? null : t('expand')}
+                          {expandedPromptsMap[job.id]
+                            ? t('expand')
+                            : t('collapse')}
                         </Button>
                       </>
                     ) : (

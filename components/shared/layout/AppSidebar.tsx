@@ -11,14 +11,13 @@ import {
   Folder,
   Globe,
   Loader,
-  Sparkles,
   TriangleAlert,
   UserRound,
   Video,
   Wand,
   Coins,
-  Bot,
   ImageIcon,
+  Sparkle,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 
@@ -37,7 +36,6 @@ import { useUser } from '@/hooks/useAuth';
 import { LanguageSwitcher } from '@/components/functions/LanguageSwitcher';
 import { ThemeSwitcher } from '@/components/functions/ThemeSwitcher';
 import { AuroraText } from '@/components/ui/magic/aurora-text';
-import { MagicButton } from '@/components/ui/magic/magic-button';
 import { NavUser } from '@/components/shared/user/NavUser';
 
 export const AppSidebar = () => {
@@ -50,36 +48,36 @@ export const AppSidebar = () => {
   const { data: user, isLoading, isError } = useUser();
 
   const items = [
-    {
-      id: 1,
-      title: t('Explore'),
-      url: '/',
-      icon: Compass,
-    },
-    {
-      id: 2,
-      title: t('Models'),
-      url: '/models',
-      icon: ImageIcon,
-    },
+    // {
+    //   id: 1,
+    //   title: t('Explore'),
+    //   url: '/',
+    //   icon: Compass,
+    // },
     {
       id: 3,
       title: t('Create'),
       url: '/create',
-      icon: Sparkles,
+      icon: Sparkle,
     },
+    // {
+    //   id: 2,
+    //   title: t('Models'),
+    //   url: '/models',
+    //   icon: ImageIcon,
+    // },
     {
       id: 4,
       title: t('Library'),
       url: '/library',
-      icon: Folder,
+      icon: ImageIcon,
     },
-    {
-      id: 5,
-      title: t('Profile'),
-      url: '/profile',
-      icon: UserRound,
-    },
+    // {
+    //   id: 5,
+    //   title: t('Profile'),
+    //   url: '/profile',
+    //   icon: UserRound,
+    // },
   ];
 
   return (
@@ -111,23 +109,34 @@ export const AppSidebar = () => {
                         ref={summaryRef}
                       >
                         <div
-                          className={`w-full mb-2 ${pathname === item.url ? 'btn-magic' : 'flex items-center gap-3'}`}
+                          className={`flex gap-2 items-center p-2 mb-2 rounded-full w-full text-md magic-transition
+                          ${pathname === item.url ? 'magic-hover' : 'secondary-hover'}`}
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             summaryRef.current?.click();
                           }}
                         >
-                          <MagicButton
-                            icon={item.icon}
-                            title={t('Create')}
-                            className="w-full"
-                            btn="px-5 py-2 rounded-full text-white"
-                          />
+                          <item.icon className="size-4 ml-2.5" />
+                          <span>{item.title}</span>
                         </div>
                       </summary>
 
                       <div className="flex flex-col pl-3 mt-2 gap-1">
+                        <SidebarMenuButton
+                          asChild
+                          className="p-3 rounded-full text-md magic-transition"
+                        >
+                          <Link
+                            href="/models"
+                            className="btn-magic-secondary flex items-center justify-start"
+                          >
+                            <Folder className="size-5" />
+                            <span className="font-semibold z-20">
+                              {t('Models')}
+                            </span>
+                          </Link>
+                        </SidebarMenuButton>
                         <SidebarMenuButton
                           asChild
                           className="p-3 rounded-full text-md magic-transition"
@@ -144,7 +153,7 @@ export const AppSidebar = () => {
                         </SidebarMenuButton>
                         <SidebarMenuButton
                           asChild
-                          className="p-3 rounded-full text-md magic-transition"
+                          className="p-3 mb-1 rounded-full text-md magic-transition"
                         >
                           <Link
                             href="/"
@@ -162,7 +171,7 @@ export const AppSidebar = () => {
                             </div>
                           </Link>
                         </SidebarMenuButton>
-                        <SidebarMenuButton
+                        {/* <SidebarMenuButton
                           asChild
                           className="p-3 rounded-full text-md magic-transition"
                         >
@@ -201,27 +210,9 @@ export const AppSidebar = () => {
                               {t('InDevelopment')}
                             </div>
                           </Link>
-                        </SidebarMenuButton>
+                        </SidebarMenuButton> */}
                       </div>
                     </details>
-                  </SidebarMenuItem>
-                ) : item.id === 1 ? (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      className={`p-4.5 mb-2 rounded-full text-md magic-transition
-                          ${pathname === item.url ? 'magic-hover' : 'secondary-hover'}`}
-                    >
-                      <Link
-                        href={item.url}
-                        className={`${pathname === item.url ? 'btn-magic' : ''}`}
-                      >
-                        <span className="flex justify-center items-center size-5">
-                          {locale === 'ru' ? 'В' : 'M'}
-                        </span>
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ) : item.id === 5 && user ? (
                   <SidebarMenuItem key={item.title}>
@@ -292,7 +283,6 @@ export const AppSidebar = () => {
         <SidebarMenu className="mt-2">
           <div className="flex flex-col items-start gap-2 my-4 w-full">
             <LanguageSwitcher />
-            <ThemeSwitcher />
           </div>
           {user ? (
             <NavUser {...user} />
