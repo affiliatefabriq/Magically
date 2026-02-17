@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
@@ -39,38 +39,56 @@ import {
   registerDetailsSchema,
 } from '@/lib/validation';
 
+const RESEND_COOLDOWN = 60;
+
 export const Register = () => {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('Auth.Register');
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+
+  // Resend OTP cooldown state
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startCooldown = () => {
+    setResendCooldown(RESEND_COOLDOWN);
+    cooldownRef.current = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(cooldownRef.current!);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current);
+    };
+  }, []);
 
   // Mutations for each step
   const requestOtpMutation = useRequestOtp();
   const verifyOtpMutation = useVerifyOtp();
   const completeRegistrationMutation = useCompleteRegistration();
 
-  // Forms with proper default values to prevent uncontrolled input error
+  // Forms
   const emailForm = useForm<EmailFormValues>({
     resolver: zodResolver(emailSchema),
-    defaultValues: {
-      email: '',
-    },
+    defaultValues: { email: '' },
   });
   const otpForm = useForm<OtpFormValues>({
     resolver: zodResolver(otpSchema),
-    defaultValues: {
-      otp: '',
-    },
+    defaultValues: { otp: '' },
   });
   const detailsForm = useForm<RegisterDetailsFormValues>({
     resolver: zodResolver(registerDetailsSchema),
-    defaultValues: {
-      fullname: '',
-      username: '',
-      password: '',
-    },
+    defaultValues: { fullname: '', username: '', password: '' },
   });
 
   const handleStep1 = (values: EmailFormValues) => {
@@ -79,10 +97,27 @@ export const Register = () => {
       onSuccess: () => {
         setEmail(values.email);
         setStep(2);
+        startCooldown();
       },
       onError: (err: any) =>
         setError(err.response?.data?.message || 'Failed to send OTP.'),
     });
+  };
+
+  const handleResendOtp = () => {
+    if (resendCooldown > 0 || requestOtpMutation.isPending) return;
+    setError('');
+    requestOtpMutation.mutate(
+      { email },
+      {
+        onSuccess: () => {
+          startCooldown();
+          otpForm.reset();
+        },
+        onError: (err: any) =>
+          setError(err.response?.data?.message || 'Failed to resend OTP.'),
+      },
+    );
   };
 
   const handleStep2 = (values: OtpFormValues) => {
@@ -103,11 +138,11 @@ export const Register = () => {
       { ...values, email },
       {
         onSuccess: () => {
-          // On success, redirect to login or directly to the app
           router.push('/');
           router.refresh();
         },
-        onError: (error: any) => setError(error),
+        onError: (err: any) =>
+          setError(err.response?.data?.message || 'Registration failed.'),
       },
     );
   };
@@ -151,6 +186,13 @@ export const Register = () => {
                       </FormItem>
                     )}
                   />
+                  {error && (
+                    <p className="text-sm text-red-500 -mt-2">
+                      {error && (
+                        locale === "en" ? "The email is already in use." : "Эта почта уже используется."
+                      )}
+                    </p>
+                  )}
                   <Button
                     type="submit"
                     disabled={requestOtpMutation.isPending}
@@ -164,6 +206,7 @@ export const Register = () => {
               </Form>
             </motion.div>
           )}
+
           {step === 2 && (
             <motion.div
               key="step2"
@@ -201,6 +244,32 @@ export const Register = () => {
                       </FormItem>
                     )}
                   />
+                  {error && (
+                    <p className="text-sm text-red-500 -mt-2">
+                      {error && (
+                        locale === 'en' ? "The OTP is invalid." : "Одноразовый пароль не валидный."
+                      )}
+                    </p>
+                  )}
+                  {/* Resend OTP */}
+                  <div className="flex items-center gap-2 text-sm">
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      disabled={resendCooldown > 0 || requestOtpMutation.isPending}
+                      className={`link-text transition-opacity ${resendCooldown > 0 || requestOtpMutation.isPending
+                        ? 'opacity-40 cursor-not-allowed'
+                        : 'opacity-100'
+                        }`}
+                    >
+                      {t('ResendOTP')}
+                    </button>
+                    {resendCooldown > 0 && (
+                      <span className="text-muted-foreground">
+                        ({resendCooldown}s)
+                      </span>
+                    )}
+                  </div>
                   <Button
                     type="submit"
                     disabled={verifyOtpMutation.isPending}
@@ -214,6 +283,7 @@ export const Register = () => {
               </Form>
             </motion.div>
           )}
+
           {step === 3 && (
             <motion.div
               key="step3"
@@ -272,6 +342,13 @@ export const Register = () => {
                       </FormItem>
                     )}
                   />
+                  {error && (
+                    <p className="text-sm text-red-500">
+                      {error && (
+                        locale === "en" ? "Username is already taken." : "Имя пользователя уже занято."
+                      )}
+                    </p>
+                  )}
                   <Button
                     type="submit"
                     disabled={completeRegistrationMutation.isPending}
@@ -286,9 +363,7 @@ export const Register = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        {error && (
-          <p className="text-center text-red-500 text-sm pt-4">{error}</p>
-        )}
+
         <Separator orientation="horizontal" className="bg-secondary my-4" />
         <div className="flex justify-between items-center">
           <Link className="link-text text-sm" href="/login/">

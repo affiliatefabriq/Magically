@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertTriangle, Sparkles } from 'lucide-react';
-import { getImageUrl, PublicationImage } from '../publication/PublicationImage';
+import { PublicationImage } from '../publication/PublicationImage';
 
 type Props = {
   status: 'pending' | 'processing' | 'completed' | 'failed';
@@ -20,12 +20,11 @@ export function JobImage({
   onClick,
   className,
 }: Props) {
-  const finalImageUrl = getImageUrl(imageUrl!);
 
   if (status === 'completed' && imageUrl) {
     return (
       <PublicationImage
-        src={finalImageUrl!}
+        src={imageUrl}
         alt={alt || 'result'}
         className={`${className} rounded-xl object-cover`}
         onClick={onClick}

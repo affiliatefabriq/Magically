@@ -29,18 +29,12 @@ import Image from 'next/image';
 
 export const Login = () => {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('Auth.Login');
   const loginMutation = useLogin();
   const queryClient = useQueryClient();
-  const t = useTranslations('Auth.Login');
-  const locale = useLocale();
 
-  const [isTelegramWebApp, setIsTelegramWebApp] = useState(false);
-
-  useEffect(() => {
-    if ((window as any)?.Telegram?.WebApp?.initData) {
-      setIsTelegramWebApp(true);
-    }
-  }, []);
+  const [formError, setFormError] = useState('');
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -51,13 +45,18 @@ export const Login = () => {
   });
 
   const onSubmit = (values: LoginFormValues) => {
+    setFormError('');
     loginMutation.mutate(values, {
       onSuccess: () => {
         router.push('/');
         router.refresh();
       },
       onError: (error: any) => {
-        console.error(error);
+        setFormError(
+          error?.response?.data?.message ||
+          error?.message ||
+          'Invalid credentials.'
+        );
       },
     });
     form.reset();
@@ -66,7 +65,6 @@ export const Login = () => {
   const handleTelegramAuth = async (user: any) => {
     try {
       const { data } = await api.post('/auth/telegram/widget', user);
-
       queryClient.setQueryData(['auth', 'me'], data.data.user);
       toast.success('Logged in with Telegram!');
       router.push('/');
@@ -95,10 +93,7 @@ export const Login = () => {
               <FormItem>
                 <FormLabel>{t('UsernameOrEmail')}</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="johndoe, email@example.com..."
-                    {...field}
-                  />
+                  <Input placeholder="johndoe, email@example.com..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -119,6 +114,14 @@ export const Login = () => {
             )}
           />
 
+          {formError && (
+            <p className="text-sm text-red-500">
+              {formError && (
+                locale === "en" ? "Invalid credentials." : "Неверные учетные данные."
+              )}
+            </p>
+          )}
+
           <div className="flex items-center justify-end w-full">
             <Link className="link-text text-xs" href="/forgot-password/">
               {t('ForgotPassword')}
@@ -138,6 +141,7 @@ export const Login = () => {
               {t('Register')}
             </Link>
           </div>
+
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -148,30 +152,31 @@ export const Login = () => {
               </span>
             </div>
           </div>
-          <div className="flex items-center justify-center flex-1 grow flex-wrap gap-2 w-full h-full">
+
+          {/* Social icons row */}
+          <div className="flex flex-col items-center justify-center gap-3">
             <LoginButton
               botUsername="volshebhy_bot"
               onAuthCallback={handleTelegramAuth}
               showAvatar={false}
               buttonSize="large"
-              cornerRadius={6}
+              cornerRadius={12}
               lang={locale === 'ru' ? 'ru' : 'en'}
             />
-            <Button
-              onClick={() => {
-                window.location.href = `${API_URL}/api/v1/auth/google`;
-              }}
-              className="h-10 text-base cursor-pointer"
+            <button
+              type="button"
+              onClick={() => { window.location.href = `${API_URL}/api/v1/auth/google`; }}
+              className="flex items-center justify-center w-9 h-9 rounded-md border border-input bg-background hover:bg-accent transition-colors cursor-pointer"
+              aria-label="Sign in with Google"
             >
               <Image
                 src="/assets/google.svg"
-                alt="logo"
+                alt="Google"
                 width={18}
                 height={18}
                 className="invert dark:invert-0"
               />
-              {t('GoogleLogin')}
-            </Button>
+            </button>
           </div>
         </form>
       </div>

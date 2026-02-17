@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
@@ -25,10 +25,12 @@ interface ResetPasswordProps {
 
 export const ResetPassword = ({ token }: ResetPasswordProps) => {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('Auth.ResetPassword');
+  const resetPasswordMutation = useResetPassword();
+
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const resetPasswordMutation = useResetPassword();
 
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
@@ -54,7 +56,7 @@ export const ResetPassword = ({ token }: ResetPasswordProps) => {
   };
 
   return (
-    <div className="w-full max-w-sm glassmorphism z-20">
+    <div className="w-full max-w-sm theme z-20">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -100,7 +102,7 @@ export const ResetPassword = ({ token }: ResetPasswordProps) => {
               <Button
                 type="submit"
                 disabled={resetPasswordMutation.isPending}
-                className="w-full"
+                className="btn-solid w-full"
               >
                 {resetPasswordMutation.isPending
                   ? t('Button.Sending')
@@ -109,7 +111,9 @@ export const ResetPassword = ({ token }: ResetPasswordProps) => {
               {error && <p className="text-center text-red-500">{error}</p>}
             </>
           ) : (
-            <p className="text-center text-green-500">{message}</p>
+            <p className="text-center text-green-500">
+              {locale === 'en' ? message : "Пароль был успешно изменен!"}
+            </p>
           )}
         </form>
       </Form>

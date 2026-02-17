@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ import {
 
 export const ForgotPassword = () => {
   const t = useTranslations('Auth.ForgotPassword');
+  const locale = useLocale();
   const [message, setMessage] = useState('');
   const forgotPasswordMutation = useForgotPassword();
 
@@ -85,7 +86,11 @@ export const ForgotPassword = () => {
               </Button>
             </>
           ) : (
-            <p className="text-center text-green-500">{message}</p>
+            <p className="text-center text-green-500">
+              {locale === 'en'
+                ? message
+                : "Если пользователь с такой почтой существует, письмо восстановления пароля был отправлен"}
+            </p>
           )}
         </form>
       </Form>
