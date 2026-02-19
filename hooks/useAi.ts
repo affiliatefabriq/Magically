@@ -22,6 +22,7 @@ export interface GenerateAIParams {
   width?: number;
   height?: number;
   seed?: number;
+  quality?: '1K' | '2K';
 }
 
 // API Functions

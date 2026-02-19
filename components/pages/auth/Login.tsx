@@ -163,10 +163,10 @@ export const Login = () => {
               cornerRadius={12}
               lang={locale === 'ru' ? 'ru' : 'en'}
             />
-            <button
+            <Button
               type="button"
               onClick={() => { window.location.href = `${API_URL}/api/v1/auth/google`; }}
-              className="flex items-center justify-center w-9 h-9 rounded-md border border-input bg-background hover:bg-accent transition-colors cursor-pointer"
+              className="flex items-center justify-center rounded-md border py-2! border-input bg-background hover:bg-accent transition-colors cursor-pointer text-white"
               aria-label="Sign in with Google"
             >
               <Image
@@ -176,7 +176,8 @@ export const Login = () => {
                 height={18}
                 className="invert dark:invert-0"
               />
-            </button>
+              {t("GoogleLogin")}
+            </Button>
           </div>
         </form>
       </div>

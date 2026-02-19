@@ -103,6 +103,7 @@ export const MagicPhoto = () => {
         modelId: values.modelId,
         publish: values.publish,
         aspect_ratio: values.aspect_ratio,
+        quality: values.quality,
       });
       router.push('/library?tab=jobs');
     } catch (error: any) {
