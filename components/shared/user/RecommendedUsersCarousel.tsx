@@ -6,12 +6,15 @@ import {
     CarouselItem,
 } from '@/components/ui/carousel'
 import { RecommendedUserCard } from './RecommendedUserCard'
+import { useTranslations } from 'next-intl'
 
 interface Props {
     users: any[]
 }
 
 export const RecommendedUsersCarousel = ({ users }: Props) => {
+    const t = useTranslations("Pages.Explore");
+
     if (!users?.length) return null
 
     return (
@@ -31,7 +34,7 @@ export const RecommendedUsersCarousel = ({ users }: Props) => {
          */
         <div className="relative w-full min-w-0 overflow-hidden my-10">
             <div className="mb-5 px-1">
-                <h3 className="text-xl font-bold">Suggested for you</h3>
+                <h3 className="text-xl font-bold">{t("Suggested")}</h3>
             </div>
 
             {/* overflow-hidden here is the hard visual clip guard */}

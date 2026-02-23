@@ -36,13 +36,7 @@ export const RecommendedUserCard = ({ user }: RecommendedUserCardProps) => {
             </p>
           )}
         </Link>
-        {user.bio && (
-          <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">
-            {user.bio}
-          </p>
-        )}
       </div>
-
       <FollowButton id={user.id} isFollowing={user.isFollowing!} />
     </div>
   );

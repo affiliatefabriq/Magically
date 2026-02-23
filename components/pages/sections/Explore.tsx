@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { useTheme } from 'next-themes'
 import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -20,6 +20,71 @@ import { usePublications } from '@/hooks/usePublications'
 import { useRecommendedUsers } from '@/hooks/useSearch'
 
 const CAROUSEL_INTERVAL = 50
+
+/**
+ * Returns the current column count based on viewport width,
+ * mirroring the Tailwind breakpoints: 1 / sm:2 / lg:3 / xl:4
+ */
+function getColumnCount(): number {
+  if (typeof window === 'undefined') return 4
+  const w = window.innerWidth
+  if (w >= 1280) return 4
+  if (w >= 1024) return 3
+  if (w >= 640) return 2
+  return 1
+}
+
+function useColumnCount() {
+  const [cols, setCols] = useState(getColumnCount)
+
+  useEffect(() => {
+    const handler = () => setCols(getColumnCount())
+    const ro = new ResizeObserver(handler)
+    ro.observe(document.documentElement)
+    return () => ro.disconnect()
+  }, [])
+
+  return cols
+}
+
+/**
+ * Distributes items into `colCount` columns left-to-right (index % colCount),
+ * which guarantees the visual left→right order matches the logical array order.
+ * CSS `columns` fills top→bottom per column, so item 0 goes to col-0 row-0,
+ * item 1 goes to col-0 row-1, etc. — that's why new posts appear to "rotate".
+ * With explicit column arrays we control placement entirely.
+ */
+function distributeToColumns<T>(items: T[], colCount: number): T[][] {
+  const columns: T[][] = Array.from({ length: colCount }, () => [])
+  items.forEach((item, i) => columns[i % colCount].push(item))
+  return columns
+}
+
+/**
+ * A stable masonry grid that never reorders existing cards.
+ * Items are placed left-to-right by index so position[0] is always
+ * the newest post in the top-left column.
+ */
+const MasonryGrid = ({
+  items,
+  renderItem,
+}: {
+  items: any[]
+  renderItem: (item: any) => React.ReactNode
+}) => {
+  const cols = useColumnCount()
+  const columns = useMemo(() => distributeToColumns(items, cols), [items, cols])
+
+  return (
+    <div className="flex gap-2 w-full items-start">
+      {columns.map((col, ci) => (
+        <div key={ci} className="flex flex-col gap-2 flex-1 min-w-0">
+          {col.map((item) => renderItem(item))}
+        </div>
+      ))}
+    </div>
+  )
+}
 
 /**
  * Splits an array into chunks of `size`, inserting a carousel marker
@@ -111,11 +176,10 @@ export const Explore = () => {
   if (isLoading) {
     return (
       <div className="section-padding">
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4">
-          {SKELETON_HEIGHTS.map((h, i) => (
-            <SkeletonCard key={i} height={h} />
-          ))}
-        </div>
+        <MasonryGrid
+          items={SKELETON_HEIGHTS.map((h, i) => ({ id: i, h }))}
+          renderItem={(item) => <SkeletonCard key={item.id} height={item.h} />}
+        />
       </div>
     )
   }
@@ -165,11 +229,10 @@ export const Explore = () => {
               }
 
               return (
-                <div
-                  key={idx}
-                  className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4"
-                >
-                  {chunk.items.map((pub) => (
+                <MasonryGrid
+                  key={`posts-chunk-${idx}`}
+                  items={chunk.items}
+                  renderItem={(pub) => (
                     <motion.div
                       key={pub.id}
                       initial={{ opacity: 0, y: 16 }}
@@ -181,8 +244,8 @@ export const Explore = () => {
                         userId={user?.id}
                       />
                     </motion.div>
-                  ))}
-                </div>
+                  )}
+                />
               )
             })
           )}
