@@ -1,4 +1,5 @@
 import Script from 'next/script';
+import { CSSProperties } from 'react';
 
 import { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
@@ -33,7 +34,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const locale = await getLocale();
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      style={{ "--tg-viewport-height": "100vh", "--tg-viewport-stable-height": "100vh" } as CSSProperties}
+    >
       <head>
         <Script
           src="https://telegram.org/js/telegram-web-app.js"
@@ -55,4 +59,4 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </body>
     </html>
   );
-}
+};

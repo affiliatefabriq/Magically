@@ -60,7 +60,7 @@ export const PublicationImage = ({
       width={1024}
       height={1024}
       alt={alt}
-      className={`rounded-xl object-cover aspect-square w-full ${className}`}
+      className={`rounded-xl w-full h-auto ${className}`}
       onError={() => setError(true)}
       onClick={onClick}
     />

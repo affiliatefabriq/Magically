@@ -22,6 +22,7 @@ import {
   MessageCircle,
   Check,
   Dot,
+  Sparkle,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { LikeButton } from './LikeButton';
@@ -31,6 +32,7 @@ import { AuthRequiredPopover } from './AuthRequiredPopover';
 import { formatDate } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 export const PublicationDialog = ({
   publication,
@@ -39,6 +41,7 @@ export const PublicationDialog = ({
   publication: Publication;
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
   const t = useTranslations('Components.Publication');
   const { data: user } = useUser();
 
@@ -94,6 +97,13 @@ export const PublicationDialog = ({
     } catch (e) {
       console.error('Download error', e);
     }
+  };
+
+  const handleRemix = () => {
+    if (!publication.content) return;
+    router.push(
+      `/create/magic-photo?prompt=${encodeURIComponent(publication.content)}`,
+    );
   };
 
   const goFullScreen = () => {
@@ -190,6 +200,12 @@ export const PublicationDialog = ({
               <button className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors">
                 <MessageCircle className="size-5 stroke-1" />
                 <span>{publication.commentCount}</span>
+              </button>
+              <button
+                onClick={handleRemix}
+                className="p-0 hover:text-lime-500"
+              >
+                <Sparkle className="size-5 stroke-1" />
               </button>
               <button
                 onClick={handleShare}

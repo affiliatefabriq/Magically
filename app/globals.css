@@ -183,7 +183,11 @@
   }
 
   .prompt-text {
-    @apply break-all text-balance text-sm;
+    @apply text-balance text-sm text-justify;
+  }
+
+  .anti-vandal-text {
+    @apply break-all text-balance;
   }
 
   .secondary-text {

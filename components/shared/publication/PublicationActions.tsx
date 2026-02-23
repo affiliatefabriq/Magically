@@ -76,9 +76,9 @@ export const PublicationActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+          {/* <DropdownMenuItem onClick={() => setEditOpen(true)}>
             <Pencil className="size-4 mr-2" /> {t('edit')}
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem
             onClick={() => setDeleteOpen(true)}
             className="text-destructive"
