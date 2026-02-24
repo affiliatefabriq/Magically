@@ -202,12 +202,6 @@ export const PublicationDialog = ({
                 <span>{publication.commentCount}</span>
               </button>
               <button
-                onClick={handleRemix}
-                className="p-0 hover:text-lime-500"
-              >
-                <Sparkle className="size-5 stroke-1" />
-              </button>
-              <button
                 onClick={handleShare}
                 className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
               >
@@ -227,6 +221,14 @@ export const PublicationDialog = ({
                   <Download className="size-5 stroke-1" />
                 )}
               </button>
+              <Button
+                onClick={handleRemix}
+                size="sm"
+                variant="ghost"
+                className="p-0 text-lime-500"
+              >
+                ✦ {t('alsoWant')}
+              </Button>
               {publication.author.id === user?.id && (
                 <PublicationActions
                   publicationId={publication.id}

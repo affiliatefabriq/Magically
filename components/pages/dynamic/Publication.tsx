@@ -24,8 +24,10 @@ import { formatDate } from '@/lib/utils';
 import { BackButton } from '@/components/shared/layout/BackButton';
 import { FollowButton } from '@/components/shared/user/FollowButton';
 import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
+import { useRouter } from 'next/navigation';
 
 export const Publication = ({ publicationId }: { publicationId: string }) => {
+  const router = useRouter();
   const t = useTranslations('Components.PublicationActions');
 
   const [expandedCommentsMap, setExpandedCommentsMap] = useState<
@@ -88,6 +90,13 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
     }
   };
 
+  const handleRemix = () => {
+    if (!publication.content) return;
+    router.push(
+      `/create/magic-photo?prompt=${encodeURIComponent(publication.content)}`,
+    );
+  };
+
   if (isError)
     return (
       <div className="state-center section-padding">
@@ -103,6 +112,12 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
       <div className="flex flex-col items-start justify-start gap-4 mt-12 md:mt-4">
         <div className="flex justify-between w-full">
           <UserProfile {...publication.author} />
+          {publication.author.id === user?.id && (
+            <PublicationActions
+              publicationId={publication.id}
+              initialContent={publication.content}
+            />
+          )}
           {user && user.id !== publication.author.id && (
             <FollowButton
               id={publication.author.id}
@@ -133,7 +148,7 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
         )}
 
         <div className="flex flex-col items-start justify-center gap-2 px-2 w-full">
-          <div className="flex items-center justify-start gap-4 w-full">
+          <div className="flex flex-wrap items-center justify-start gap-4 w-full">
             {user ? (
               <LikeButton {...publication} />
             ) : (
@@ -168,12 +183,14 @@ export const Publication = ({ publicationId }: { publicationId: string }) => {
                 <Download className="size-5 stroke-1" />
               )}
             </button>
-            {publication.author.id === user?.id && (
-              <PublicationActions
-                publicationId={publication.id}
-                initialContent={publication.content}
-              />
-            )}
+            <Button
+              onClick={handleRemix}
+              size="sm"
+              variant="ghost"
+              className="p-0 text-lime-500"
+            >
+              ✦ {t('alsoWant')}
+            </Button>
           </div>
           <article className="mb-2 w-full">
             {publication.content.length > 256 ? (

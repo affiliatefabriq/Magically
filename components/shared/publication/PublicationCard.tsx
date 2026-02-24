@@ -28,6 +28,7 @@ import { VideoRender } from './VideoRender';
 import { PublicationDialog } from './PublicationDialog';
 import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
 import { useRouter } from 'next/navigation';
+import { UserProfile } from '../user/UserProfile';
 
 type PublicationCardProps = {
   publication: Publication;
@@ -109,21 +110,14 @@ export const PublicationCard = ({
       <div className="relative w-full group">
         <div className="flex flex-col justify-center md:hidden">
           <div className="flex items-start md:hidden flex-col gap-2" key={publication.id}>
-            <div className="flex items-center justify-start gap-2">
-              <Link
-                href={`/profile/${publication.author.username}`}
-                className="relative z-10 bg-background rounded-full mt-2"
-              >
-                <UserAvatar {...publication.author} size="sm" />
-              </Link>
-              <div className="flex justify-start items-center">
-                <Link
-                  href={`/profile/${publication.author.username}`}
-                  className="text-base font-semibold"
-                >
-                  {publication.author.username}
-                </Link>
-              </div>
+            <div className="flex items-center justify-between w-full gap-2">
+              <UserProfile {...publication.author} />
+              {userId === publication.author.id && (
+                <PublicationActions
+                  publicationId={publication.id}
+                  initialContent={publication.content}
+                />
+              )}
             </div>
             {publication.videoUrl && (
               <VideoRender
@@ -146,7 +140,7 @@ export const PublicationCard = ({
                 />
               </>
             )}
-            <div className="flex items-center justify-start gap-4 mt-2">
+            <div className="flex flex-wrap items-center justify-start gap-4 mt-2 px-1">
               {userId ? (
                 <LikeButton {...publication} />
               ) : (
@@ -167,12 +161,6 @@ export const PublicationCard = ({
                   <span>{publication.commentCount}</span>
                 </Link>
               </motion.div>
-              <motion.button whileTap={{ scale: 0.9 }}
-                onClick={handleRemix}
-                className="p-0 hover:text-lime-500"
-              >
-                <Sparkle className="size-5 stroke-1" />
-              </motion.button>
               <button
                 onClick={handleShare}
                 className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
@@ -193,14 +181,16 @@ export const PublicationCard = ({
                   <Download className="size-5 stroke-1" />
                 )}
               </button>
-              {userId === publication.author.id && (
-                <PublicationActions
-                  publicationId={publication.id}
-                  initialContent={publication.content}
-                />
-              )}
+              <Button
+                onClick={handleRemix}
+                size="sm"
+                variant="ghost"
+                className="p-0 text-lime-500"
+              >
+                ✦ {t('alsoWant')}
+              </Button>
             </div>
-            <article className="mb-2">
+            <article className="mb-2 px-1">
               {publication.content.length > 128 ? (
                 <>
                   <span className="prompt-text text-tertiary-text">

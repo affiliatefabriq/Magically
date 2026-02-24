@@ -26,7 +26,7 @@ export function JobImage({
       <PublicationImage
         src={imageUrl}
         alt={alt || 'result'}
-        className={`${className} rounded-xl object-cover`}
+        className={`${className} rounded-xl object-cover aspect-square`}
         onClick={onClick}
       />
     );
