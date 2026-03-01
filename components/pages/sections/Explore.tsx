@@ -1,131 +1,117 @@
-'use client'
+'use client';
 
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
-import { useTheme } from 'next-themes'
-import { useTranslations } from 'next-intl'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
+import { motion, AnimatePresence } from 'framer-motion';
 
-import { PublicationCard } from '@/components/shared/publication/PublicationCard'
-import { RecommendedUsersCarousel } from '@/components/shared/user/RecommendedUsersCarousel'
+import { PublicationCard } from '@/components/shared/publication/PublicationCard';
+import { RecommendedUsersCarousel } from '@/components/shared/user/RecommendedUsersCarousel';
+import { TrendsList } from '@/components/shared/publication/TrendsList';
 
-import { ExploreEmpty } from '@/components/states/empty/Empty'
-import { ExploreError } from '@/components/states/error/Error'
-import { ExploreLoader } from '@/components/states/loaders/Loaders'
+import { ExploreEmpty } from '@/components/states/empty/Empty';
+import { ExploreError } from '@/components/states/error/Error';
+import { ExploreLoader } from '@/components/states/loaders/Loaders';
 
-import { ShootingStars } from '@/components/ui/magic/shooting-stars'
-import { StarsBackground } from '@/components/ui/magic/stars-background'
+import { ShootingStars } from '@/components/ui/magic/shooting-stars';
+import { StarsBackground } from '@/components/ui/magic/stars-background';
 
-import { useUser } from '@/hooks/useAuth'
-import { usePublications } from '@/hooks/usePublications'
-import { useRecommendedUsers } from '@/hooks/useSearch'
+import { useUser } from '@/hooks/useAuth';
+import { usePublications } from '@/hooks/usePublications';
+import { useRecommendedUsers } from '@/hooks/useSearch';
 
-const CAROUSEL_INTERVAL = 50
+const CAROUSEL_INTERVAL = 50;
 
-/**
- * Returns the current column count based on viewport width,
- * mirroring the Tailwind breakpoints: 1 / sm:2 / lg:3 / xl:4
- */
 function getColumnCount(): number {
-  if (typeof window === 'undefined') return 4
-  const w = window.innerWidth
-  if (w >= 1280) return 4
-  if (w >= 1024) return 3
-  if (w >= 640) return 2
-  return 1
+  if (typeof window === 'undefined') return 4;
+  const w = window.innerWidth;
+  if (w >= 1280) return 4;
+  if (w >= 1024) return 3;
+  if (w >= 640) return 2;
+  return 1;
 }
 
 function useColumnCount() {
-  const [cols, setCols] = useState(getColumnCount)
+  const [cols, setCols] = useState(getColumnCount);
 
   useEffect(() => {
-    const handler = () => setCols(getColumnCount())
-    const ro = new ResizeObserver(handler)
-    ro.observe(document.documentElement)
-    return () => ro.disconnect()
-  }, [])
+    const handler = () => setCols(getColumnCount());
+    const ro = new ResizeObserver(handler);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, []);
 
-  return cols
+  return cols;
 }
 
-/**
- * Distributes items into `colCount` columns left-to-right (index % colCount),
- * which guarantees the visual left→right order matches the logical array order.
- * CSS `columns` fills top→bottom per column, so item 0 goes to col-0 row-0,
- * item 1 goes to col-0 row-1, etc. — that's why new posts appear to "rotate".
- * With explicit column arrays we control placement entirely.
- */
 function distributeToColumns<T>(items: T[], colCount: number): T[][] {
-  const columns: T[][] = Array.from({ length: colCount }, () => [])
-  items.forEach((item, i) => columns[i % colCount].push(item))
-  return columns
+  const columns: T[][] = Array.from({ length: colCount }, () => []);
+  items.forEach((item, i) => columns[i % colCount].push(item));
+  return columns;
 }
 
-/**
- * A stable masonry grid that never reorders existing cards.
- * Items are placed left-to-right by index so position[0] is always
- * the newest post in the top-left column.
- */
 const MasonryGrid = ({
   items,
   renderItem,
 }: {
-  items: any[]
-  renderItem: (item: any) => React.ReactNode
+  items: any[];
+  renderItem: (item: any) => React.ReactNode;
 }) => {
-  const cols = useColumnCount()
-  const columns = useMemo(() => distributeToColumns(items, cols), [items, cols])
+  const cols = useColumnCount();
+  const columns = useMemo(
+    () => distributeToColumns(items, cols),
+    [items, cols],
+  );
 
   return (
     <div className="flex gap-2 w-full items-start">
       {columns.map((col, ci) => (
-        <div key={ci} className="flex flex-col gap-2 flex-1 min-w-0">
+        <div key={ci} className="flex flex-col flex-1 min-w-0">
           {col.map((item) => renderItem(item))}
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-/**
- * Splits an array into chunks of `size`, inserting a carousel marker
- * after every `CAROUSEL_INTERVAL` items.
- */
 function buildChunks(publications: any[]) {
-  const chunks: Array<{ type: 'posts'; items: any[] } | { type: 'carousel'; key: string }> = []
-  let i = 0
-  let chunkIndex = 0
+  const chunks: Array<
+    { type: 'posts'; items: any[] } | { type: 'carousel'; key: string }
+  > = [];
+  let i = 0;
+  let chunkIndex = 0;
 
   while (i < publications.length) {
-    const slice = publications.slice(i, i + CAROUSEL_INTERVAL)
-    chunks.push({ type: 'posts', items: slice })
-    i += CAROUSEL_INTERVAL
+    const slice = publications.slice(i, i + CAROUSEL_INTERVAL);
+    chunks.push({ type: 'posts', items: slice });
+    i += CAROUSEL_INTERVAL;
 
-    // Insert carousel marker after every full chunk (not after the last partial one)
     if (i < publications.length || slice.length === CAROUSEL_INTERVAL) {
-      chunks.push({ type: 'carousel', key: `carousel-${chunkIndex}` })
+      chunks.push({ type: 'carousel', key: `carousel-${chunkIndex}` });
     }
-    chunkIndex++
+    chunkIndex++;
   }
 
-  return chunks
+  return chunks;
 }
 
-// Skeleton card for loading state
 const SkeletonCard = ({ height }: { height: number }) => (
   <div
     className="w-full rounded-xl bg-muted/40 animate-pulse mb-4 break-inside-avoid"
     style={{ height }}
   />
-)
+);
 
-const SKELETON_HEIGHTS = [200, 280, 180, 320, 240, 200, 260, 300, 220, 180, 340, 200]
+const SKELETON_HEIGHTS = [
+  200, 280, 180, 320, 240, 200, 260, 300, 220, 180, 340, 200,
+];
 
 export const Explore = () => {
-  const t = useTranslations('Pages.Explore')
-  const { theme } = useTheme()
-  const [filters] = useState({ sortBy: 'newest', hashtag: '' })
+  const t = useTranslations('Pages.Explore');
+  const { theme } = useTheme();
+  const [filters] = useState({ sortBy: 'newest', hashtag: '' });
 
-  const { data: user } = useUser()
+  const { data: user } = useUser();
 
   const {
     data,
@@ -134,54 +120,63 @@ export const Explore = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = usePublications(filters)
+  } = usePublications(filters);
 
-  const {
-    data: recommendedUsers,
-    isLoading: isLoadingRecommended,
-  } = useRecommendedUsers(true, 20)
+  const { data: recommendedUsers, isLoading: isLoadingRecommended } =
+    useRecommendedUsers(true, 20);
 
-  const observerRef = useRef<HTMLDivElement>(null)
+  const observerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!hasNextPage || isFetchingNextPage) return
+    if (!hasNextPage || isFetchingNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) fetchNextPage()
+        if (entries[0].isIntersecting) fetchNextPage();
       },
       { threshold: 0.5 },
-    )
+    );
 
-    const currentRef = observerRef.current
-    if (currentRef) observer.observe(currentRef)
-    return () => { if (currentRef) observer.unobserve(currentRef) }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+    const currentRef = observerRef.current;
+    if (currentRef) observer.observe(currentRef);
+    return () => {
+      if (currentRef) observer.unobserve(currentRef);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const allPublications = useMemo(
     () => data?.pages.flatMap((page) => page.publications) ?? [],
-    [data]
-  )
+    [data],
+  );
 
-  const chunks = useMemo(() => buildChunks(allPublications), [allPublications])
+  const chunks = useMemo(() => buildChunks(allPublications), [allPublications]);
 
   const carouselUsers = useMemo(
     () => recommendedUsers?.slice(0, 15) ?? [],
-    [recommendedUsers]
-  )
+    [recommendedUsers],
+  );
 
-  const starColor = theme === 'dark' ? '#FFFFFF' : '#111111'
-  const trailColor = theme === 'dark' ? '#F020F0' : '#A174D1'
+  const starColor = theme === 'dark' ? '#FFFFFF' : '#111111';
+  const trailColor = theme === 'dark' ? '#F020F0' : '#A174D1';
 
   if (isLoading) {
     return (
-      <div className="section-padding">
+      <div className="section-padding space-y-6">
+        {/* Trends skeleton */}
+        <div className="flex gap-3 overflow-hidden">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="shrink-0 w-36 sm:w-44 aspect-3/4 rounded-2xl bg-muted/40 animate-pulse"
+            />
+          ))}
+        </div>
         <MasonryGrid
           items={SKELETON_HEIGHTS.map((h, i) => ({ id: i, h }))}
           renderItem={(item) => <SkeletonCard key={item.id} height={item.h} />}
         />
       </div>
-    )
+    );
   }
 
   if (isError) {
@@ -189,7 +184,7 @@ export const Explore = () => {
       <div className="section-padding state-center">
         <ExploreError />
       </div>
-    )
+    );
   }
 
   return (
@@ -205,7 +200,13 @@ export const Explore = () => {
       </div>
 
       <div className="relative z-10 w-full h-full section-padding">
-        <div className="relative mt-4 space-y-4">
+        {/* ── Тренды вверху ── */}
+        <div className="mt-4 mb-6">
+          <TrendsList />
+        </div>
+
+        {/* ── Публикации ── */}
+        <div className="relative space-y-4">
           {allPublications.length === 0 ? (
             <div className="h-screen state-center w-full">
               <ExploreEmpty />
@@ -213,8 +214,8 @@ export const Explore = () => {
           ) : (
             chunks.map((chunk, idx) => {
               if (chunk.type === 'carousel') {
-                // Only render carousel when recommended users are loaded and available
-                if (isLoadingRecommended || carouselUsers.length === 0) return null
+                if (isLoadingRecommended || carouselUsers.length === 0)
+                  return null;
 
                 return (
                   <motion.div
@@ -225,7 +226,7 @@ export const Explore = () => {
                   >
                     <RecommendedUsersCarousel users={carouselUsers} />
                   </motion.div>
-                )
+                );
               }
 
               return (
@@ -239,14 +240,11 @@ export const Explore = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.35, ease: 'easeOut' }}
                     >
-                      <PublicationCard
-                        publication={pub}
-                        userId={user?.id}
-                      />
+                      <PublicationCard publication={pub} userId={user?.id} />
                     </motion.div>
                   )}
                 />
-              )
+              );
             })
           )}
         </div>
@@ -270,5 +268,5 @@ export const Explore = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

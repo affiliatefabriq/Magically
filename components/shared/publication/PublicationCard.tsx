@@ -62,7 +62,7 @@ export const PublicationCard = ({
         await navigator.share({ url: shareUrl });
         setIsShared(true);
         setTimeout(() => setIsShared(false), 2000);
-      } catch (err) { }
+      } catch (err) {}
     } else {
       await navigator.clipboard.writeText(shareUrl);
       setIsShared(true);
@@ -109,7 +109,10 @@ export const PublicationCard = ({
     <div className="w-full break-inside-avoid mb-4">
       <div className="relative w-full group">
         <div className="flex flex-col justify-center md:hidden">
-          <div className="flex items-start md:hidden flex-col gap-2" key={publication.id}>
+          <div
+            className="flex items-start md:hidden flex-col gap-2"
+            key={publication.id}
+          >
             <div className="flex items-center justify-between w-full gap-2">
               <UserProfile {...publication.author} />
               {userId === publication.author.id && (
@@ -209,9 +212,7 @@ export const PublicationCard = ({
                       }));
                     }}
                   >
-                    {expandedCommentsMap[publication.id]
-                      ? null
-                      : t('readMore')}
+                    {expandedCommentsMap[publication.id] ? null : t('readMore')}
                   </Button>
                 </>
               ) : (
@@ -243,7 +244,9 @@ export const PublicationCard = ({
   );
 };
 
-export const PublicationCardSimplified = ({ publication }: PublicationCardProps) => {
+export const PublicationCardSimplified = ({
+  publication,
+}: PublicationCardProps) => {
   return (
     <div className="break-inside-avoid mb-4">
       <Link href={`/publications/${publication.id}`}>
@@ -257,10 +260,7 @@ export const PublicationCardSimplified = ({ publication }: PublicationCardProps)
             className="w-full h-auto rounded-xl"
           />
         ) : (
-          <PublicationImage
-            src={publication.imageUrl!}
-            alt="publication"
-          />
+          <PublicationImage src={publication.imageUrl!} alt="publication" />
         )}
       </Link>
     </div>

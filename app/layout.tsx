@@ -36,7 +36,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
       lang={locale}
-      style={{ "--tg-viewport-height": "100vh", "--tg-viewport-stable-height": "100vh" } as CSSProperties}
+      style={
+        {
+          '--tg-viewport-height': '100vh',
+          '--tg-viewport-stable-height': '100vh',
+        } as CSSProperties
+      }
     >
       <head>
         <Script
@@ -59,4 +64,4 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </body>
     </html>
   );
-};
+}

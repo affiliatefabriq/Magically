@@ -188,9 +188,10 @@ export const Register = () => {
                   />
                   {error && (
                     <p className="text-sm text-red-500 -mt-2">
-                      {error && (
-                        locale === "en" ? "The email is already in use." : "Эта почта уже используется."
-                      )}
+                      {error &&
+                        (locale === 'en'
+                          ? 'The email is already in use.'
+                          : 'Эта почта уже используется.')}
                     </p>
                   )}
                   <Button
@@ -246,9 +247,10 @@ export const Register = () => {
                   />
                   {error && (
                     <p className="text-sm text-red-500 -mt-2">
-                      {error && (
-                        locale === 'en' ? "The OTP is invalid." : "Одноразовый пароль не валидный."
-                      )}
+                      {error &&
+                        (locale === 'en'
+                          ? 'The OTP is invalid.'
+                          : 'Одноразовый пароль не валидный.')}
                     </p>
                   )}
                   {/* Resend OTP */}
@@ -256,11 +258,14 @@ export const Register = () => {
                     <button
                       type="button"
                       onClick={handleResendOtp}
-                      disabled={resendCooldown > 0 || requestOtpMutation.isPending}
-                      className={`link-text transition-opacity ${resendCooldown > 0 || requestOtpMutation.isPending
-                        ? 'opacity-40 cursor-not-allowed'
-                        : 'opacity-100'
-                        }`}
+                      disabled={
+                        resendCooldown > 0 || requestOtpMutation.isPending
+                      }
+                      className={`link-text transition-opacity ${
+                        resendCooldown > 0 || requestOtpMutation.isPending
+                          ? 'opacity-40 cursor-not-allowed'
+                          : 'opacity-100'
+                      }`}
                     >
                       {t('ResendOTP')}
                     </button>
@@ -344,9 +349,10 @@ export const Register = () => {
                   />
                   {error && (
                     <p className="text-sm text-red-500">
-                      {error && (
-                        locale === "en" ? "Username is already taken." : "Имя пользователя уже занято."
-                      )}
+                      {error &&
+                        (locale === 'en'
+                          ? 'Username is already taken.'
+                          : 'Имя пользователя уже занято.')}
                     </p>
                   )}
                   <Button

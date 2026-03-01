@@ -54,8 +54,8 @@ export const Login = () => {
       onError: (error: any) => {
         setFormError(
           error?.response?.data?.message ||
-          error?.message ||
-          'Invalid credentials.'
+            error?.message ||
+            'Invalid credentials.',
         );
       },
     });
@@ -93,7 +93,10 @@ export const Login = () => {
               <FormItem>
                 <FormLabel>{t('UsernameOrEmail')}</FormLabel>
                 <FormControl>
-                  <Input placeholder="johndoe, email@example.com..." {...field} />
+                  <Input
+                    placeholder="johndoe, email@example.com..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,9 +119,10 @@ export const Login = () => {
 
           {formError && (
             <p className="text-sm text-red-500">
-              {formError && (
-                locale === "en" ? "Invalid credentials." : "Неверные учетные данные."
-              )}
+              {formError &&
+                (locale === 'en'
+                  ? 'Invalid credentials.'
+                  : 'Неверные учетные данные.')}
             </p>
           )}
 
@@ -165,7 +169,9 @@ export const Login = () => {
             />
             <Button
               type="button"
-              onClick={() => { window.location.href = `${API_URL}/api/v1/auth/google`; }}
+              onClick={() => {
+                window.location.href = `${API_URL}/api/v1/auth/google`;
+              }}
               className="flex items-center justify-center rounded-md border py-2! border-input bg-background hover:bg-accent transition-colors cursor-pointer text-white"
               aria-label="Sign in with Google"
             >
@@ -176,7 +182,7 @@ export const Login = () => {
                 height={18}
                 className="invert dark:invert-0"
               />
-              {t("GoogleLogin")}
+              {t('GoogleLogin')}
             </Button>
           </div>
         </form>

@@ -112,7 +112,7 @@ export const ResetPassword = ({ token }: ResetPasswordProps) => {
             </>
           ) : (
             <p className="text-center text-green-500">
-              {locale === 'en' ? message : "Пароль был успешно изменен!"}
+              {locale === 'en' ? message : 'Пароль был успешно изменен!'}
             </p>
           )}
         </form>

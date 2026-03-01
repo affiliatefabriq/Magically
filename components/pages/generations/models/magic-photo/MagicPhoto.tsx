@@ -77,7 +77,13 @@ export const MagicPhoto = () => {
   };
 
   const handleSubmit = async () => {
-    if (!prompt.trim() || prompt.trim().length < 3 || !selectedModelId || isGenerating) return;
+    if (
+      !prompt.trim() ||
+      prompt.trim().length < 3 ||
+      !selectedModelId ||
+      isGenerating
+    )
+      return;
     setIsGenerating(true);
     try {
       await generateImage.mutateAsync({
@@ -148,18 +154,20 @@ export const MagicPhoto = () => {
         {selectedModel && selectedModel.imagePaths?.length > 0 && (
           <div className="w-full">
             <div className="grid grid-cols-4 gap-2">
-              {selectedModel.imagePaths.slice(0, 4).map((path: string, i: number) => (
-                <div
-                  key={i}
-                  className="relative rounded-xl overflow-hidden border border-white/10 bg-white/5"
-                >
-                  <PublicationImage
-                    src={path}
-                    alt={`${selectedModel.name} preview ${i + 1}`}
-                    className="object-cover aspect-square w-full h-full"
-                  />
-                </div>
-              ))}
+              {selectedModel.imagePaths
+                .slice(0, 4)
+                .map((path: string, i: number) => (
+                  <div
+                    key={i}
+                    className="relative rounded-xl overflow-hidden border border-white/10 bg-white/5"
+                  >
+                    <PublicationImage
+                      src={path}
+                      alt={`${selectedModel.name} preview ${i + 1}`}
+                      className="object-cover aspect-square w-full h-full"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
         )}
@@ -186,7 +194,6 @@ export const MagicPhoto = () => {
 
           {/* Toolbar row */}
           <div className="flex items-center gap-2 px-3 pb-3 flex-wrap">
-
             {/* Model pill */}
             <div className="relative">
               <button
@@ -225,10 +232,11 @@ export const MagicPhoto = () => {
                         setSelectedModelId(model.id);
                         setModelDropdownOpen(false);
                       }}
-                      className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${model.id === selectedModelId
-                        ? 'bg-white/5 text-[#AAFF00]'
-                        : 'text-foreground'
-                        }`}
+                      className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${
+                        model.id === selectedModelId
+                          ? 'bg-white/5 text-[#AAFF00]'
+                          : 'text-foreground'
+                      }`}
                     >
                       {model.imagePaths?.[0] && (
                         <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0">
@@ -273,8 +281,11 @@ export const MagicPhoto = () => {
                         setAspectRatio(r.value);
                         setAspectDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${r.value === aspectRatio ? 'text-[#AAFF00]' : 'text-foreground'
-                        }`}
+                      className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${
+                        r.value === aspectRatio
+                          ? 'text-[#AAFF00]'
+                          : 'text-foreground'
+                      }`}
                     >
                       {r.label}
                     </button>
@@ -310,8 +321,11 @@ export const MagicPhoto = () => {
                         setQuality(q.value as '1K' | '2K');
                         setQualityDropdownOpen(false);
                       }}
-                      className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${q.value === quality ? 'text-[#AAFF00]' : 'text-foreground'
-                        }`}
+                      className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${
+                        q.value === quality
+                          ? 'text-[#AAFF00]'
+                          : 'text-foreground'
+                      }`}
                     >
                       {q.label}
                     </button>
@@ -346,7 +360,10 @@ export const MagicPhoto = () => {
                 </>
               ) : (
                 <>
-                  <span>{t('generateBtn')}{quality === "2K" ? '(✦20)' : '(✦15)'}</span>
+                  <span>
+                    {t('generateBtn')}
+                    {quality === '2K' ? '(✦20)' : '(✦15)'}
+                  </span>
                 </>
               )}
             </button>
@@ -356,17 +373,23 @@ export const MagicPhoto = () => {
           <button
             type="button"
             onClick={() => setPublish((v) => !v)}
-            className={`relative inline-flex items-center h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${publish ? 'bg-lime-600' : 'bg-white/20'
-              }`}
+            className={`relative inline-flex items-center h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+              publish ? 'bg-lime-600' : 'bg-white/20'
+            }`}
           >
             <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ${publish ? 'translate-x-4' : 'translate-x-0'
-                }`}
+              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
+                publish ? 'translate-x-4' : 'translate-x-0'
+              }`}
             />
           </button>
           <div>
-            <p className="text-sm font-medium leading-none">{t('publishLabel')}</p>
-            <p className="text-xs text-muted-foreground mt-1">{t('publishDesc')}</p>
+            <p className="text-sm font-medium leading-none">
+              {t('publishLabel')}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {t('publishDesc')}
+            </p>
           </div>
         </div>
       </div>

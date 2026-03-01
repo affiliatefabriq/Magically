@@ -20,7 +20,6 @@ export function JobImage({
   onClick,
   className,
 }: Props) {
-
   if (status === 'completed' && imageUrl) {
     return (
       <PublicationImage
