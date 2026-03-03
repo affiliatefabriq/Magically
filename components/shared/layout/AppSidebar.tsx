@@ -7,19 +7,15 @@ import { usePathname } from 'next/navigation';
 import {
   Brush,
   CircleUserRound,
-  Compass,
   Folder,
   Globe,
-  Loader,
   TriangleAlert,
-  UserRound,
-  Video,
   Wand,
   Coins,
   ImageIcon,
   Sparkle,
 } from 'lucide-react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import {
   Sidebar,
@@ -34,18 +30,16 @@ import {
 } from '@/components/ui/sidebar';
 import { useUser } from '@/hooks/useAuth';
 import { LanguageSwitcher } from '@/components/functions/LanguageSwitcher';
-import { ThemeSwitcher } from '@/components/functions/ThemeSwitcher';
 import { AuroraText } from '@/components/ui/magic/aurora-text';
 import { NavUser } from '@/components/shared/user/NavUser';
 
 export const AppSidebar = () => {
   const t = useTranslations('Components.Sidebar');
-  const locale = useLocale();
   const pathname = usePathname();
   const summaryRef = useRef<HTMLElement | null>(null);
   const profileRef = useRef<HTMLElement | null>(null);
 
-  const { data: user, isLoading, isError } = useUser();
+  const { data: user } = useUser();
 
   const items = [
     // {
@@ -71,6 +65,12 @@ export const AppSidebar = () => {
       title: t('Library'),
       url: '/library',
       icon: ImageIcon,
+    },
+    {
+      id: 6,
+      title: t('Tariffs'),
+      url: '/tariffs',
+      icon: Coins,
     },
     // {
     //   id: 5,
@@ -226,6 +226,8 @@ export const AppSidebar = () => {
                           className={`p-4.5 mb-2 rounded-full text-md magic-transition
                           ${pathname === item.url ? 'magic-hover' : 'secondary-hover'}`}
                           onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             profileRef.current?.click();
                           }}
                         >
@@ -245,12 +247,12 @@ export const AppSidebar = () => {
                           className="p-3 rounded-full text-md magic-transition"
                         >
                           <Link
-                            href="/pay"
+                            href="/tariffs"
                             className="btn-magic-secondary flex items-center justify-start"
                           >
                             <Coins className="size-5" />
                             <span className="font-semibold z-20">
-                              {t('BalanceTopUp')}
+                              {t('Tariffs')}
                             </span>
                           </Link>
                         </SidebarMenuButton>

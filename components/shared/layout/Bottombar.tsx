@@ -10,15 +10,14 @@ import {
   Compass,
   Folder,
   ImageIcon,
-  Loader,
   Sparkle,
   TriangleAlert,
   UserRound,
-  Video,
   Wand,
+  Coins,
 } from 'lucide-react';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 import {
   DropdownMenu,
@@ -27,10 +26,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 
 export const Bottombar = () => {
-  const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations('Components.Sidebar');
@@ -45,7 +42,8 @@ export const Bottombar = () => {
     // { id: 2, title: t('Models'), url: '/models', icon: ImageIcon },
     { id: 2, title: t('Create'), url: '/create', icon: Sparkle },
     { id: 3, title: t('Library'), url: '/library', icon: ImageIcon },
-    { id: 4, title: t('Profile'), url: '/profile', icon: UserRound },
+    { id: 4, title: t('Tariffs'), url: '/tariffs', icon: Coins },
+    { id: 5, title: t('Profile'), url: '/profile', icon: UserRound },
   ];
 
   useEffect(() => {
@@ -67,7 +65,12 @@ export const Bottombar = () => {
   }, [prevScrollPos]);
 
   useEffect(() => {
-    setOpen(false);
+    const timeout = setTimeout(() => {
+      setOpen(false);
+    }, 0);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [pathname]);
 
   const go = (url: string) => {

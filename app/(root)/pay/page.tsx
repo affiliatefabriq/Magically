@@ -1,7 +1,7 @@
-import { Pay } from '@/components/pages/sections/Pay';
+import { redirect } from 'next/navigation';
 
 const Page = () => {
-  return <Pay />;
+  redirect('/tariffs');
 };
 
 export default Page;
