@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useTrendsPreview } from '@/hooks/useTrends';
 import { PublicationImage } from '@/components/shared/publication/PublicationImage';
+import { useTranslations } from 'next-intl';
 
 export const TrendCard = ({ trend, index }: { trend: any; index: number }) => {
   const router = useRouter();
@@ -14,12 +15,11 @@ export const TrendCard = ({ trend, index }: { trend: any; index: number }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
       onClick={() => router.push(`/trends/${trend.id}`)}
-      className="relative shrink-0 w-36 sm:w-44 cursor-pointer group"
+      className="relative cursor-pointer group"
     >
-      {/* Image */}
-      <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden bg-muted shadow-md">
+      <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-muted shadow-md">
         <PublicationImage
           src={trend.trendingCover}
           alt={trend.coverText || 'trend'}
@@ -27,7 +27,7 @@ export const TrendCard = ({ trend, index }: { trend: any; index: number }) => {
         />
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/10 to-transparent" />
 
         {/* Cover text */}
         <div className="absolute bottom-0 left-0 right-0 p-2.5">
@@ -37,23 +37,18 @@ export const TrendCard = ({ trend, index }: { trend: any; index: number }) => {
         </div>
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-violet-500/0 group-hover:bg-violet-500/10 transition-colors duration-200 rounded-2xl" />
+        <div className="absolute inset-0 bg-violet-500/0 group-hover:bg-black/20 transition-colors duration-200 rounded-2xl" />
       </div>
     </motion.div>
   );
 };
 
-export const TrendCardSkeleton = () => {
-  return (
-    <div className="shrink-0 w-36 sm:w-44">
-      <div className="w-full aspect-3/4 rounded-2xl bg-muted animate-pulse" />
-      <div className="mt-1.5 h-3 bg-muted animate-pulse rounded w-12" />
-    </div>
-  );
-};
+export const TrendCardSkeleton = () => (
+  <div className="w-full aspect-3/4 rounded-2xl bg-muted/50 animate-pulse" />
+);
 
 export const TrendsList = () => {
-  const { data: trends, isLoading } = useTrendsPreview(8);
+  const { data: trends, isLoading } = useTrendsPreview(9);
 
   if (!isLoading && (!trends || trends.length === 0)) return null;
 
@@ -61,9 +56,7 @@ export const TrendsList = () => {
     <section className="w-full space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
-          <h2 className="font-semibold text-sm tracking-wide">Тренды</h2>
-        </div>
+        <h2 className="font-semibold text-sm tracking-wide">Тренды</h2>
         <Link
           href="/trends"
           className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
@@ -73,17 +66,17 @@ export const TrendsList = () => {
         </Link>
       </div>
 
-      {/* Horizontal scroll */}
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+      {/* Tile grid: 2 cols mobile, 3 cols tablet+ */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => (
               <TrendCardSkeleton key={i} />
             ))
-          : trends?.map((trend, i) => (
-              <div key={trend.id} className="snap-start">
-                <TrendCard trend={trend} index={i} />
-              </div>
-            ))}
+          : trends
+              ?.slice(0, 6)
+              .map((trend, i) => (
+                <TrendCard key={trend.id} trend={trend} index={i} />
+              ))}
       </div>
     </section>
   );

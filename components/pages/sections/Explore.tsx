@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutGrid, List } from 'lucide-react';
 
 import { PublicationCard } from '@/components/shared/publication/PublicationCard';
 import { RecommendedUsersCarousel } from '@/components/shared/user/RecommendedUsersCarousel';
 import { TrendsList } from '@/components/shared/publication/TrendsList';
+import { WelcomeHero } from '@/components/shared/layout/WelcomeHero';
 
 import { ExploreEmpty } from '@/components/states/empty/Empty';
 import { ExploreError } from '@/components/states/error/Error';
@@ -22,25 +24,31 @@ import { useRecommendedUsers } from '@/hooks/useSearch';
 
 const CAROUSEL_INTERVAL = 50;
 
-function getColumnCount(): number {
-  if (typeof window === 'undefined') return 4;
+export type DisplayMode = 'default' | 'grid';
+
+function getColumnCount(mode: DisplayMode): number {
+  if (typeof window === 'undefined') return mode === 'grid' ? 2 : 4;
   const w = window.innerWidth;
+  if (mode === 'grid') {
+    if (w >= 1024) return 4;
+    if (w >= 640) return 3;
+    return 2;
+  }
+  // default masonry
   if (w >= 1280) return 4;
   if (w >= 1024) return 3;
   if (w >= 640) return 2;
   return 1;
 }
 
-function useColumnCount() {
-  const [cols, setCols] = useState(getColumnCount);
-
+function useColumnCount(mode: DisplayMode) {
+  const [cols, setCols] = useState(() => getColumnCount(mode));
   useEffect(() => {
-    const handler = () => setCols(getColumnCount());
+    const handler = () => setCols(getColumnCount(mode));
     const ro = new ResizeObserver(handler);
     ro.observe(document.documentElement);
     return () => ro.disconnect();
-  }, []);
-
+  }, [mode]);
   return cols;
 }
 
@@ -53,11 +61,13 @@ function distributeToColumns<T>(items: T[], colCount: number): T[][] {
 const MasonryGrid = ({
   items,
   renderItem,
+  mode = 'default',
 }: {
   items: any[];
   renderItem: (item: any) => React.ReactNode;
+  mode?: DisplayMode;
 }) => {
-  const cols = useColumnCount();
+  const cols = useColumnCount(mode);
   const columns = useMemo(
     () => distributeToColumns(items, cols),
     [items, cols],
@@ -66,7 +76,7 @@ const MasonryGrid = ({
   return (
     <div className="flex gap-2 w-full items-start">
       {columns.map((col, ci) => (
-        <div key={ci} className="flex flex-col flex-1 min-w-0">
+        <div key={ci} className="flex flex-col flex-1 min-w-0 gap-2">
           {col.map((item) => renderItem(item))}
         </div>
       ))}
@@ -80,24 +90,21 @@ function buildChunks(publications: any[]) {
   > = [];
   let i = 0;
   let chunkIndex = 0;
-
   while (i < publications.length) {
     const slice = publications.slice(i, i + CAROUSEL_INTERVAL);
     chunks.push({ type: 'posts', items: slice });
     i += CAROUSEL_INTERVAL;
-
     if (i < publications.length || slice.length === CAROUSEL_INTERVAL) {
       chunks.push({ type: 'carousel', key: `carousel-${chunkIndex}` });
     }
     chunkIndex++;
   }
-
   return chunks;
 }
 
 const SkeletonCard = ({ height }: { height: number }) => (
   <div
-    className="w-full rounded-xl bg-muted/40 animate-pulse mb-4 break-inside-avoid"
+    className="w-full rounded-xl bg-muted/40 animate-pulse"
     style={{ height }}
   />
 );
@@ -110,6 +117,7 @@ export const Explore = () => {
   const t = useTranslations('Pages.Explore');
   const { theme } = useTheme();
   const [filters] = useState({ sortBy: 'newest', hashtag: '' });
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('grid');
 
   const { data: user } = useUser();
 
@@ -129,14 +137,12 @@ export const Explore = () => {
 
   useEffect(() => {
     if (!hasNextPage || isFetchingNextPage) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) fetchNextPage();
       },
       { threshold: 0.5 },
     );
-
     const currentRef = observerRef.current;
     if (currentRef) observer.observe(currentRef);
     return () => {
@@ -148,9 +154,7 @@ export const Explore = () => {
     () => data?.pages.flatMap((page) => page.publications) ?? [],
     [data],
   );
-
   const chunks = useMemo(() => buildChunks(allPublications), [allPublications]);
-
   const carouselUsers = useMemo(
     () => recommendedUsers?.slice(0, 15) ?? [],
     [recommendedUsers],
@@ -162,17 +166,10 @@ export const Explore = () => {
   if (isLoading) {
     return (
       <div className="section-padding space-y-6">
-        {/* Trends skeleton */}
-        <div className="flex gap-3 overflow-hidden">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="shrink-0 w-36 sm:w-44 aspect-3/4 rounded-2xl bg-muted/40 animate-pulse"
-            />
-          ))}
-        </div>
+        <div className="h-52 rounded-2xl bg-muted/20 animate-pulse" />
         <MasonryGrid
-          items={SKELETON_HEIGHTS.map((h, i) => ({ id: i, h }))}
+          mode="grid"
+          items={SKELETON_HEIGHTS.slice(0, 8).map((h, i) => ({ id: i, h }))}
           renderItem={(item) => <SkeletonCard key={item.id} height={item.h} />}
         />
       </div>
@@ -189,7 +186,6 @@ export const Explore = () => {
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
-      {/* Background */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
         <StarsBackground className="h-full w-full opacity-100" />
         <ShootingStars
@@ -200,12 +196,44 @@ export const Explore = () => {
       </div>
 
       <div className="relative z-10 w-full h-full section-padding">
-        {/* ── Тренды вверху ── */}
-        <div className="mt-4 mb-6">
+        {/* Welcome */}
+        <WelcomeHero />
+
+        {/* Тренды */}
+        <div className="mt-2 mb-6">
           <TrendsList />
         </div>
 
-        {/* ── Публикации ── */}
+        {/* Лента сообщества */}
+        <div className="flex items-center justify-between mb-4 px-1">
+          <h2 className="font-semibold text-sm tracking-wide">
+            Лента сообщества
+          </h2>
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
+            <button
+              onClick={() => setDisplayMode('grid')}
+              className={`flex items-center justify-center size-7 rounded-lg transition-colors ${
+                displayMode === 'grid'
+                  ? 'bg-white/15 text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <LayoutGrid className="size-3.5" />
+            </button>
+            <button
+              onClick={() => setDisplayMode('default')}
+              className={`flex items-center justify-center size-7 rounded-lg transition-colors ${
+                displayMode === 'default'
+                  ? 'bg-white/15 text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <List className="size-3.5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Публикации */}
         <div className="relative space-y-4">
           {allPublications.length === 0 ? (
             <div className="h-screen state-center w-full">
@@ -216,7 +244,6 @@ export const Explore = () => {
               if (chunk.type === 'carousel') {
                 if (isLoadingRecommended || carouselUsers.length === 0)
                   return null;
-
                 return (
                   <motion.div
                     key={chunk.key}
@@ -233,14 +260,19 @@ export const Explore = () => {
                 <MasonryGrid
                   key={`posts-chunk-${idx}`}
                   items={chunk.items}
+                  mode={displayMode}
                   renderItem={(pub) => (
                     <motion.div
                       key={pub.id}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, ease: 'easeOut' }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
                     >
-                      <PublicationCard publication={pub} userId={user?.id} />
+                      <PublicationCard
+                        publication={pub}
+                        userId={user?.id}
+                        displayMode={displayMode}
+                      />
                     </motion.div>
                   )}
                 />
@@ -249,7 +281,7 @@ export const Explore = () => {
           )}
         </div>
 
-        {/* Infinite scroll trigger */}
+        {/* Infinite scroll */}
         <div
           ref={observerRef}
           className="h-20 flex items-center justify-center mt-8"

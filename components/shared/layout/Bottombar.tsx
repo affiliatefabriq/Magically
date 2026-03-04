@@ -49,31 +49,66 @@ export const Bottombar = () => {
   ];
 
   useEffect(() => {
+    let idleTimer: NodeJS.Timeout;
+    let lastScrollY = window.scrollY;
+
+    const hide = () => {
+      setIsBottomBarVisible(false);
+      setOpen(false);
+    };
+
+    const show = () => {
+      setIsBottomBarVisible(true);
+    };
+
+    const resetTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(hide, 3000);
+    };
+
+    const handleUserActivity = () => {
+      show();
+      resetTimer();
+    };
+
     const handleScroll = () => {
       const current = window.scrollY;
 
-      if (current > prevScrollPos && current > 80) {
-        setIsBottomBarVisible(false);
-        setOpen(false);
+      // если скролл вниз — скрываем сразу
+      if (current > lastScrollY && current > 80) {
+        hide();
       } else {
-        setIsBottomBarVisible(true);
+        show();
       }
 
-      setPrevScrollPos(current);
+      lastScrollY = current;
+
+      resetTimer(); // любой скролл = активность
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScrollPos]);
+    const activityEvents: (keyof WindowEventMap)[] = [
+      'mousemove',
+      'mousedown',
+      'touchstart',
+      'keydown',
+    ];
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    activityEvents.forEach((event) =>
+      window.addEventListener(event, handleUserActivity, { passive: true }),
+    );
 
-  const go = (url: string) => {
-    setOpen(false);
-    router.push(url);
-  };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    resetTimer(); // старт
+
+    return () => {
+      clearTimeout(idleTimer);
+      activityEvents.forEach((event) =>
+        window.removeEventListener(event, handleUserActivity),
+      );
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const bottomBarStyle = {
     transform: isBottomBarVisible ? 'translateY(0)' : 'translateY(120%)',
@@ -83,9 +118,9 @@ export const Bottombar = () => {
   return (
     <nav
       style={bottomBarStyle}
-      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-0 z-10 w-full max-w-96 mx-auto px-4 pb-2"
+      className="fixed md:hidden flex items-center justify-center left-0 right-0 bottom-0 z-10 w-full max-w-80 mx-auto px-4 pb-2"
     >
-      <div className="flex items-center justify-evenly w-full rounded-full border border-border/50 py-2.5 backdrop-blur-xl bg-white/80 dark:bg-black/80">
+      <div className="flex items-center justify-evenly w-full rounded-full border border-border/50 py-2.5 backdrop-blur-xl bg-white/80 dark:bg-neutral-950/80">
         {items.map((item) =>
           item.id === 2 ? (
             <DropdownMenu
@@ -112,7 +147,7 @@ export const Bottombar = () => {
                 </DropdownMenuLabel>
                 {/* MODELS */}
                 <DropdownMenuItem
-                  onClick={() => go('/models')}
+                  onClick={() => router.push('/models')}
                   className="mt-2 py-3 rounded-xl cursor-pointer"
                 >
                   <div className="flex items-center gap-3 font-semibold">
@@ -122,7 +157,7 @@ export const Bottombar = () => {
                 </DropdownMenuItem>
                 {/* MAGIC PHOTO */}
                 <DropdownMenuItem
-                  onClick={() => go('/create/magic-photo')}
+                  onClick={() => router.push('/create/magic-photo')}
                   className="mt-2 py-3 rounded-xl cursor-pointer"
                 >
                   <div className="flex items-center gap-3 font-semibold">
