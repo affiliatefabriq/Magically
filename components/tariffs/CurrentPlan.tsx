@@ -5,30 +5,10 @@ import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { useUser } from '@/hooks/useAuth';
 import { useTranslations } from 'next-intl';
-
-export type UserPlanStatus =
-  | 'trial'
-  | 'active'
-  | 'overdue'
-  | 'cancelled'
-  | 'expired'
-  | 'noplan';
-
-export interface CurrentPlanResponse {
-  hasActivePlan: boolean;
-  balance: number;
-  tokensFromPlan: number;
-  tokensFromTopup: number;
-  status: UserPlanStatus;
-  startDate: string | null;
-  endDate: string | null;
-  planName: string | null;
-  planType: 'package' | 'subscription' | 'topup' | null;
-  isTrial: boolean;
-  autoRenew: boolean;
-  gracePeriodEnd: string | null;
-  cancelledAt: string | null;
-}
+import type {
+  CurrentPlanResponse,
+  UserPlanStatus,
+} from '@/components/tariffs/types';
 
 const statusLabel: Record<UserPlanStatus, string> = {
   trial: 'trial',
