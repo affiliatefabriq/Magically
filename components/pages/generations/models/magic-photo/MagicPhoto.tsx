@@ -133,23 +133,20 @@ export const MagicPhoto = () => {
 
   return (
     <section
-      className="max-w-3xl mx-auto min-h-screen section-padding flex flex-col"
+      className="max-w-3xl mx-auto min-h-[90vh] section-padding flex flex-col"
       onClick={closeAllDropdowns}
     >
       {/* Back button */}
       <BackButton />
 
-      {/* Header */}
-      <div className="mt-12 md:mt-4 mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 title-text">
-          {t('title')}
+      <div className="flex flex-1 flex-col items-center gap-2 -mt-12 justify-center">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+          Привет, {user.username} 👋
         </h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1">
+        <p className="text-sm text-muted-foreground mb-12">
           {t('description')}
         </p>
-      </div>
 
-      <div className="flex flex-col mt-24 items-center gap-2 justify-center">
         {/* Model photo grid — updates when model changes */}
         {selectedModel && selectedModel.imagePaths?.length > 0 && (
           <div className="w-full">
@@ -367,29 +364,26 @@ export const MagicPhoto = () => {
                 </>
               )}
             </button>
-          </div>
-        </div>
-        <div className="mt-6 mb-2 flex items-start gap-3">
-          <button
-            type="button"
-            onClick={() => setPublish((v) => !v)}
-            className={`relative inline-flex items-center h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
-              publish ? 'bg-lime-600' : 'bg-white/20'
-            }`}
-          >
-            <span
-              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
-                publish ? 'translate-x-4' : 'translate-x-0'
-              }`}
-            />
-          </button>
-          <div>
-            <p className="text-sm font-medium leading-none">
-              {t('publishLabel')}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {t('publishDesc')}
-            </p>
+            <div className="flex items-center gap-2 py-1 rounded-xl text-sm font-semibold transition-all duration-200">
+              <button
+                type="button"
+                onClick={() => setPublish((v) => !v)}
+                className={`relative inline-flex items-center h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+                  publish ? 'bg-lime-600' : 'bg-white/20'
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
+                    publish ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+              <div>
+                <p className="text-xs text-muted-foreground">
+                  {t('publishLabel')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

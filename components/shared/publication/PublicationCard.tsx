@@ -36,6 +36,87 @@ type PublicationCardProps = {
   id?: any;
   isFirst?: boolean;
   isLast?: boolean;
+  displayMode?: 'default' | 'grid';
+};
+
+export const PublicationGridCard = ({
+  publication,
+  userId,
+}: {
+  publication: Publication;
+  userId?: string;
+}) => {
+  const router = useRouter();
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
+      className="group relative flex flex-col transition-colors"
+      key={publication.id}
+    >
+      {/* Image */}
+      <div
+        className="relative w-full cursor-pointer"
+        onClick={() => {
+          if (publication.imageUrl) setFullscreenImage(publication.imageUrl);
+          else router.push(`/publications/${publication.id}`);
+        }}
+      >
+        {publication.videoUrl ? (
+          <VideoRender
+            src={`${API_URL}${publication.videoUrl}`}
+            className="object-cover w-full"
+          />
+        ) : publication.imageUrl ? (
+          <PublicationImage
+            src={publication.imageUrl}
+            alt="publication"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : null}
+      </div>
+
+      {/* Footer: avatar + like */}
+      <div className="flex items-center justify-between px-2 py-2">
+        <Link
+          href={`/profile/${publication.author.id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="flex items-center gap-1.5 min-w-0"
+        >
+          <UserAvatar
+            avatar={publication.author.avatar}
+            username={publication.author.username}
+            fullname={publication.author.fullname}
+            className="size-5 shrink-0"
+          />
+          <span className="text-xs text-muted-foreground truncate max-w-16">
+            {publication.author.username}
+          </span>
+        </Link>
+
+        {/* Like */}
+        <div className="shrink-0">
+          {userId ? (
+            <LikeButton {...publication} />
+          ) : (
+            <AuthRequiredPopover>
+              <button className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-rose-400 transition-colors">
+                <Heart className="size-3.5 stroke-1" />
+                <span>{publication.likeCount}</span>
+              </button>
+            </AuthRequiredPopover>
+          )}
+        </div>
+      </div>
+      <FullscreenImageViewer
+        src={fullscreenImage}
+        onClose={() => setFullscreenImage(null)}
+      />
+    </motion.div>
+  );
 };
 
 export const PublicationCard = ({
@@ -43,6 +124,7 @@ export const PublicationCard = ({
   userId,
   isFirst,
   isLast,
+  displayMode,
 }: PublicationCardProps) => {
   const t = useTranslations('Components.Publication');
   const router = useRouter();
@@ -105,143 +187,151 @@ export const PublicationCard = ({
     );
   };
 
-  return (
-    <div className="w-full break-inside-avoid mb-4">
-      <div className="relative w-full group">
-        <div className="flex flex-col justify-center md:hidden">
-          <div
-            className="flex items-start md:hidden flex-col gap-2"
-            key={publication.id}
-          >
-            <div className="flex items-center justify-between w-full gap-2">
-              <UserProfile {...publication.author} />
-              {userId === publication.author.id && (
-                <PublicationActions
-                  publicationId={publication.id}
-                  initialContent={publication.content}
+  if (displayMode !== 'grid')
+    return (
+      <div className="w-full break-inside-avoid mb-4">
+        <div className="relative w-full group">
+          <div className="flex flex-col justify-center md:hidden">
+            <div
+              className="flex items-start md:hidden flex-col gap-2"
+              key={publication.id}
+            >
+              <div className="flex items-center justify-between w-full gap-2">
+                <UserProfile {...publication.author} />
+                {userId === publication.author.id && (
+                  <PublicationActions
+                    publicationId={publication.id}
+                    initialContent={publication.content}
+                  />
+                )}
+              </div>
+              {publication.videoUrl && (
+                <VideoRender
+                  src={`${API_URL}${publication.videoUrl}`}
+                  className="rounded-xl object-cover aspect-square w-full"
                 />
               )}
+              {publication.imageUrl && (
+                <>
+                  <PublicationImage
+                    src={publication.imageUrl}
+                    alt="publication"
+                    onClick={() => setFullscreenImage(publication.imageUrl!)}
+                    className="cursor-pointer object-cover duration-500"
+                  />
+
+                  <FullscreenImageViewer
+                    src={fullscreenImage}
+                    onClose={() => setFullscreenImage(null)}
+                  />
+                </>
+              )}
+              <div className="flex flex-wrap items-center justify-start gap-4 mt-2 px-1">
+                {userId ? (
+                  <LikeButton {...publication} />
+                ) : (
+                  <AuthRequiredPopover>
+                    <button className="flex items-center justify-center bg-none p-0 magic-transition gap-1">
+                      <Heart className="size-5 stroke-1" />
+                      <span>{publication.likeCount}</span>
+                    </button>
+                  </AuthRequiredPopover>
+                )}
+                <motion.div whileTap={{ scale: 0.9 }}>
+                  <Link
+                    href={`/publications/${publication.id}`}
+                    key={publication.id}
+                    className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors"
+                  >
+                    <MessageCircle className="size-5 stroke-1" />
+                    <span>{publication.commentCount}</span>
+                  </Link>
+                </motion.div>
+                <button
+                  onClick={handleShare}
+                  className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
+                >
+                  {isShared ? (
+                    <Check className="size-5 stroke-1" />
+                  ) : (
+                    <Share2 className="size-5 stroke-1" />
+                  )}
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="flex items-center justify-center p-0 gap-1 hover:text-green-500 transition-colors"
+                >
+                  {isDownloaded ? (
+                    <Check className="size-5 stroke-1" />
+                  ) : (
+                    <Download className="size-5 stroke-1" />
+                  )}
+                </button>
+                <Button
+                  onClick={handleRemix}
+                  size="sm"
+                  variant="ghost"
+                  className="p-0 text-lime-500"
+                >
+                  ✦ {t('alsoWant')}
+                </Button>
+              </div>
+              <article className="mb-2 px-1">
+                {publication.content.length > 128 ? (
+                  <>
+                    <span className="prompt-text text-tertiary-text">
+                      {expandedCommentsMap[publication.id]
+                        ? publication.content
+                        : `${publication.content.slice(0, 128)}...`}
+                    </span>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="px-0 h-auto cursor-pointer text-muted-foreground font-normal"
+                      onClick={() => {
+                        setExpandedCommentsMap((prev) => ({
+                          ...prev,
+                          [publication.id]: !prev[publication.id],
+                        }));
+                      }}
+                    >
+                      {expandedCommentsMap[publication.id]
+                        ? null
+                        : t('readMore')}
+                    </Button>
+                  </>
+                ) : (
+                  <span className="prompt-text text-tertiary-text">
+                    {publication.content}
+                  </span>
+                )}
+                <div className="text-sm secondary-text">
+                  {formatDate(publication.createdAt)}
+                </div>
+              </article>
             </div>
-            {publication.videoUrl && (
-              <VideoRender
-                src={`${API_URL}${publication.videoUrl}`}
-                className="rounded-xl object-cover aspect-square w-full"
-              />
-            )}
-            {publication.imageUrl && (
-              <>
+          </div>
+          <PublicationDialog publication={publication}>
+            <div key={publication.id} className="hidden md:flex">
+              {publication.videoUrl && (
+                <VideoRender
+                  src={`${API_URL}${publication.videoUrl}`}
+                  className="rounded-xl object-cover aspect-square w-full"
+                />
+              )}
+              {publication.imageUrl && (
                 <PublicationImage
                   src={publication.imageUrl}
                   alt="publication"
-                  onClick={() => setFullscreenImage(publication.imageUrl!)}
-                  className="cursor-pointer object-cover"
                 />
-
-                <FullscreenImageViewer
-                  src={fullscreenImage}
-                  onClose={() => setFullscreenImage(null)}
-                />
-              </>
-            )}
-            <div className="flex flex-wrap items-center justify-start gap-4 mt-2 px-1">
-              {userId ? (
-                <LikeButton {...publication} />
-              ) : (
-                <AuthRequiredPopover>
-                  <button className="flex items-center justify-center bg-none p-0 magic-transition gap-1">
-                    <Heart className="size-5 stroke-1" />
-                    <span>{publication.likeCount}</span>
-                  </button>
-                </AuthRequiredPopover>
               )}
-              <motion.div whileTap={{ scale: 0.9 }}>
-                <Link
-                  href={`/publications/${publication.id}`}
-                  key={publication.id}
-                  className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors"
-                >
-                  <MessageCircle className="size-5 stroke-1" />
-                  <span>{publication.commentCount}</span>
-                </Link>
-              </motion.div>
-              <button
-                onClick={handleShare}
-                className="flex items-center justify-center p-0 gap-1 hover:text-blue-500 transition-colors"
-              >
-                {isShared ? (
-                  <Check className="size-5 stroke-1" />
-                ) : (
-                  <Share2 className="size-5 stroke-1" />
-                )}
-              </button>
-              <button
-                onClick={handleDownload}
-                className="flex items-center justify-center p-0 gap-1 hover:text-green-500 transition-colors"
-              >
-                {isDownloaded ? (
-                  <Check className="size-5 stroke-1" />
-                ) : (
-                  <Download className="size-5 stroke-1" />
-                )}
-              </button>
-              <Button
-                onClick={handleRemix}
-                size="sm"
-                variant="ghost"
-                className="p-0 text-lime-500"
-              >
-                ✦ {t('alsoWant')}
-              </Button>
             </div>
-            <article className="mb-2 px-1">
-              {publication.content.length > 128 ? (
-                <>
-                  <span className="prompt-text text-tertiary-text">
-                    {expandedCommentsMap[publication.id]
-                      ? publication.content
-                      : `${publication.content.slice(0, 128)}...`}
-                  </span>
-                  <Button
-                    variant="link"
-                    size="sm"
-                    className="px-0 h-auto cursor-pointer text-muted-foreground font-normal"
-                    onClick={() => {
-                      setExpandedCommentsMap((prev) => ({
-                        ...prev,
-                        [publication.id]: !prev[publication.id],
-                      }));
-                    }}
-                  >
-                    {expandedCommentsMap[publication.id] ? null : t('readMore')}
-                  </Button>
-                </>
-              ) : (
-                <span className="prompt-text text-tertiary-text">
-                  {publication.content}
-                </span>
-              )}
-              <div className="text-sm secondary-text">
-                {formatDate(publication.createdAt)}
-              </div>
-            </article>
-          </div>
+          </PublicationDialog>
         </div>
-        <PublicationDialog publication={publication}>
-          <div key={publication.id} className="hidden md:flex">
-            {publication.videoUrl && (
-              <VideoRender
-                src={`${API_URL}${publication.videoUrl}`}
-                className="rounded-xl object-cover aspect-square w-full"
-              />
-            )}
-            {publication.imageUrl && (
-              <PublicationImage src={publication.imageUrl} alt="publication" />
-            )}
-          </div>
-        </PublicationDialog>
       </div>
-    </div>
-  );
+    );
+
+  return <PublicationGridCard publication={publication} userId={userId} />;
 };
 
 export const PublicationCardSimplified = ({
