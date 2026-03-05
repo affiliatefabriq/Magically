@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronsUpDown, Cog, LogOut } from 'lucide-react';
+import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import {
@@ -70,7 +70,7 @@ export function NavUser(user: UserAttributes) {
                   </Link>
                   <span className={`flex flex-row gap-1`}>
                     <span className="truncate text-xs">✦{user.tokens}</span>
-                    <Link href={'/pay'} className={`link-text text-xs`}>
+                    <Link href="/tariffs" className="link-text text-xs">
                       {t('BalanceTopUp')}
                     </Link>
                   </span>
