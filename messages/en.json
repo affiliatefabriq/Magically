@@ -104,7 +104,8 @@
       "Profile": "Profile",
       "Register": "Register",
       "Search": "Search",
-      "SocialProfile": "Social Profile"
+      "SocialProfile": "Social Profile",
+      "Tariffs": "Tariffs"
     },
     "Theme": {
       "dark": "Dark theme",
@@ -368,6 +369,45 @@
       "Logout": "Logout from account",
       "Theme": "Change the theme",
       "Title": "Settings"
+    },
+    "Tariffs": {
+      "Title": "Tariffs",
+      "Subtitle": "Choose the right token package and pay in a few clicks.",
+      "AvailablePackages": "Available packages",
+      "CurrentPlan": {
+        "Title": "My current plan",
+        "NoName": "Unnamed plan",
+        "Tokens": "Remaining tokens",
+        "TokensBreakdown": "(from plan: {fromPlan}, top-up: {fromTopup})",
+        "EndDate": "Period end date",
+        "Status": {
+          "trial": "Trial",
+          "active": "Active",
+          "overdue": "Overdue",
+          "cancelled": "Cancelled",
+          "expired": "Expired",
+          "noplan": "No active plan"
+        },
+        "Badge": "Current"
+      },
+      "NoPlan": {
+        "Title": "No active plan",
+        "Description": "Choose a tariff package to start using the full power of the platform."
+      },
+      "Plan": {
+        "TokensAndPeriod": "{tokens, number} tokens{period, select, 0 {} other { · period {period, number} days}}",
+        "ButtonSelect": "Select",
+        "ButtonProcessing": "Processing...",
+        "ButtonCurrent": "Current plan"
+      },
+      "Errors": {
+        "LoadCurrentPlan": "Failed to load current plan. Please refresh the page.",
+        "LoadPlans": "Failed to load tariff packages. Please refresh the page.",
+        "WidgetLoad": "Failed to load payment widget. Please refresh the page."
+      },
+      "Empty": {
+        "Plans": "Tariff packages are temporarily unavailable. Please try again later."
+      }
     }
   },
   "States": {

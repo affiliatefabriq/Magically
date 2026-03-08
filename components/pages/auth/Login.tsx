@@ -11,7 +11,7 @@ import { ChevronLeft } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -68,7 +68,8 @@ export const Login = () => {
       queryClient.setQueryData(['auth', 'me'], data.data.user);
       toast.success('Logged in with Telegram!');
       router.push('/');
-    } catch (e) {
+    } catch (e: any) {
+      console.error('Telegram login failed:', e);
       toast.error('Telegram login failed');
     }
   };

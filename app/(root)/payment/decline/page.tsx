@@ -12,7 +12,7 @@ const PaymentDeclinePage = () => {
   const router = useRouter();
   const t = useTranslations('Pages.Payment');
   const paymentId = searchParams.get('payment_id');
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [payment, setPayment] = useState<any>(null);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const PaymentDeclinePage = () => {
           )}
         </div>
         <div className="flex flex-col gap-4 w-full max-w-md">
-          <Button onClick={() => router.push('/pay')} className="w-full">
+          <Button onClick={() => router.push('/tariffs')} className="w-full">
             {t('Decline.TryAgain') || 'Попробовать еще раз'}
           </Button>
           <Button
