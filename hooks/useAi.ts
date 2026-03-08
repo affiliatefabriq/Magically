@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 import api from '@/lib/api';
 import axios from 'axios';
 
+export type AIProvider = 'unifically' | 'ttapi' | 'bfl-official';
+
 export interface AIModel {
   id: string;
   userId: string;
@@ -10,7 +12,7 @@ export interface AIModel {
   description?: string;
   instruction?: string;
   imagePaths: string[];
-  provider: 'unifically' | 'ttapi';
+  provider: AIProvider;
   createdAt: string;
 }
 
@@ -136,13 +138,11 @@ export const useGenerateAI = () => {
     },
     onError: (error: any) => {
       if (axios.isAxiosError(error)) {
-        // Получаем ошибку из response.data.errors или response.data.message
         const errorMsg =
           error.response?.data?.errors ||
           error.response?.data?.message ||
           'Generation error';
 
-        // Проверяем на insufficient tokens
         if (errorMsg.toLowerCase().includes('insufficient')) {
           toast.error('Недостаточно токенов', {
             description: 'Для генерации нужно 15 токенов',
