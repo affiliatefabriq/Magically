@@ -1,10 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
+
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, UserPlus, Plus, ChevronDown, Loader2 } from 'lucide-react';
+import { UserPlus, Plus, ChevronDown, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { useUser } from '@/hooks/useAuth';
@@ -12,6 +13,9 @@ import { useAIModels, useGenerateAI } from '@/hooks/useAi';
 import { Button } from '@/components/ui/button';
 import { PublicationImage } from '@/components/shared/publication/PublicationImage';
 import { CreateModelDialog } from '@/components/shared/create/CreateModelDialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTranslations } from 'next-intl';
+import { useTypewriter } from '@/hooks/useTypewritter';
 
 const ASPECT_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4'];
 const QUALITIES = [
@@ -19,7 +23,6 @@ const QUALITIES = [
   { value: '2K', label: '2K (2048px)' },
 ];
 
-// ─── Inline MagicPhoto form ───────────────────────────────────────────────────
 const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
   const router = useRouter();
   const generateImage = useGenerateAI();
@@ -86,6 +89,28 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
         className="w-full rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Model photo grid — updates when model changes */}
+        {selectedModel && selectedModel.imagePaths?.length > 0 && (
+          <div className="w-full p-2">
+            <div className="grid grid-cols-4 gap-1">
+              {selectedModel.imagePaths
+                .slice(0, 4)
+                .map((path: string, i: number) => (
+                  <div
+                    key={i}
+                    className="relative overflow-hidden"
+                  >
+                    <PublicationImage
+                      src={path}
+                      alt={`${selectedModel.name} preview ${i + 1}`}
+                      className="rounded-lg! object-cover aspect-square w-full h-full"
+                    />
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
         {/* Textarea */}
         <div className="px-4 pt-4 pb-2">
           <textarea
@@ -136,34 +161,35 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
               <ChevronDown className="size-3 opacity-60" />
             </button>
             {modelOpen && (
-              <div className="absolute bottom-full mb-2 left-0 z-50 min-w-44 rounded-xl border border-white/10 bg-[#1a1a1a] shadow-2xl overflow-hidden">
-                {models.map((model) => (
-                  <button
-                    key={model.id}
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedModelId(model.id);
-                      setModelOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${
-                      model.id === selectedModelId
+              <div className="absolute bottom-full mb-2 left-0 z-50 min-w-45 rounded-xl border border-white/10 bg-[#1a1a1a] shadow-2xl overflow-hidden">
+                <ScrollArea className="h-32">
+                  {models.map((model) => (
+                    <button
+                      key={model.id}
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedModelId(model.id);
+                        setModelOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${model.id === selectedModelId
                         ? 'bg-white/5 text-[#AAFF00]'
                         : 'text-foreground'
-                    }`}
-                  >
-                    {model.imagePaths?.[0] && (
-                      <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0">
-                        <PublicationImage
-                          src={model.imagePaths[0]}
-                          alt={model.name}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    )}
-                    <span className="truncate">{model.name}</span>
-                  </button>
-                ))}
+                        }`}
+                    >
+                      {model.imagePaths?.[0] && (
+                        <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0">
+                          <PublicationImage
+                            src={model.imagePaths[0]}
+                            alt={model.name}
+                            className="object-cover aspect-square w-full h-full"
+                          />
+                        </div>
+                      )}
+                      <span className="truncate">{model.name}</span>
+                    </button>
+                  ))}
+                </ScrollArea>
               </div>
             )}
           </div>
@@ -194,9 +220,8 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                       setAspectRatio(r);
                       setAspectOpen(false);
                     }}
-                    className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${
-                      r === aspectRatio ? 'text-[#AAFF00]' : 'text-foreground'
-                    }`}
+                    className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${r === aspectRatio ? 'text-[#AAFF00]' : 'text-foreground'
+                      }`}
                   >
                     {r}
                   </button>
@@ -231,9 +256,8 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                       setQuality(q.value as '1K' | '2K');
                       setQualityOpen(false);
                     }}
-                    className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${
-                      q.value === quality ? 'text-[#AAFF00]' : 'text-foreground'
-                    }`}
+                    className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${q.value === quality ? 'text-[#AAFF00]' : 'text-foreground'
+                      }`}
                   >
                     {q.label}
                   </button>
@@ -242,7 +266,6 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
             )}
           </div>
 
-          {/* Generate button */}
           <button
             type="button"
             onClick={handleSubmit}
@@ -278,6 +301,7 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
 };
 
 export const WelcomeHero = () => {
+  const t = useTranslations('Components.WelcomeHero');
   const { data: user, isLoading: isUserLoading } = useUser();
   const { data: models, isLoading: isModelsLoading } = useAIModels();
   const [createModelOpen, setCreateModelOpen] = useState(false);
@@ -285,19 +309,22 @@ export const WelcomeHero = () => {
   const isLoading = isUserLoading || (!!user && isModelsLoading);
   const hasModels = !!models && models.length > 0;
 
-  // Determine greeting / subtitle
-  let title = 'Добро пожаловать';
-  let subtitle =
-    'Создавай AI-фото, делись с сообществом и открывай новые тренды.';
+  const state = !user
+    ? 'guest'
+    : !hasModels
+      ? 'noModel'
+      : 'hasModel';
 
-  if (user && !hasModels) {
-    title = `Привет, ${user.username} 👋`;
-    subtitle =
-      'Создай свою AI-модель — и генерируй уникальные фото за секунды.';
-  } else if (user && hasModels) {
-    title = `Привет, ${user.username} 👋`;
-    subtitle = 'Что создадим сегодня?';
-  }
+  const titles = t.raw(`${state}.title`) as string[];
+  const subtitle = t(`${state}.subtitle`, {
+    username: user?.username!
+  });
+
+  const parsedTitles = titles.map((text) =>
+    text.replace('{username}', user?.username ?? '')
+  );
+
+  const titleText = useTypewriter(parsedTitles, 40, 1800);
 
   return (
     <>
@@ -307,7 +334,6 @@ export const WelcomeHero = () => {
         transition={{ duration: 0.45, ease: 'easeOut' }}
         className="flex flex-col items-center gap-5 py-10 px-4 text-center"
       >
-        {/* Logo */}
         <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -322,8 +348,6 @@ export const WelcomeHero = () => {
             priority
           />
         </motion.div>
-
-        {/* Text */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -331,7 +355,7 @@ export const WelcomeHero = () => {
           className="space-y-1.5"
         >
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-            {title}
+            {titleText}&nbsp;
           </h1>
           <p className="text-sm text-muted-foreground max-w-xs mx-auto leading-relaxed">
             {subtitle}
@@ -349,7 +373,6 @@ export const WelcomeHero = () => {
               className="h-12 w-full max-w-sm rounded-2xl bg-muted/40 animate-pulse"
             />
           ) : !user ? (
-            // ── Not logged in ──
             <motion.div
               key="not-authed"
               initial={{ opacity: 0, y: 6 }}
@@ -364,17 +387,16 @@ export const WelcomeHero = () => {
                   style={{ background: '#AAFF00', color: '#000' }}
                 >
                   <UserPlus className="size-4" />
-                  Зарегистрироваться
+                  {t("register")}
                 </Button>
               </Link>
               <Link href="/login">
                 <Button variant="outline" className="gap-2 rounded-2xl">
-                  Войти
+                  {t("login")}
                 </Button>
               </Link>
             </motion.div>
           ) : !hasModels ? (
-            // ── No model ──
             <motion.div
               key="no-model"
               initial={{ opacity: 0, y: 6 }}
@@ -388,11 +410,10 @@ export const WelcomeHero = () => {
                 style={{ background: '#AAFF00', color: '#000' }}
               >
                 <Plus className="size-4" />
-                Создать модель
+                {t("create")}
               </Button>
             </motion.div>
           ) : (
-            // ── Has model — inline form, no redirect button ──
             <motion.div
               key="has-model"
               initial={{ opacity: 0, y: 6 }}
@@ -406,8 +427,6 @@ export const WelcomeHero = () => {
           )}
         </AnimatePresence>
       </motion.div>
-
-      {/* CreateModel dialog — triggered from "no model" state */}
       <CreateModelDialog
         open={createModelOpen}
         onOpenChange={setCreateModelOpen}

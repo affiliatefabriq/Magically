@@ -75,7 +75,7 @@ export const CurrentPlan = () => {
 
   if (isUserLoading) {
     return (
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-6 min-h-[140px] animate-pulse" />
+      <div className="rounded-2xl border border-border/60 bg-background/60 p-6 min-h-35 animate-pulse" />
     );
   }
 
@@ -85,7 +85,7 @@ export const CurrentPlan = () => {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-6 min-h-[140px] animate-pulse" />
+      <div className="rounded-2xl border border-border/60 bg-background/60 p-6 min-h-35 animate-pulse" />
     );
   }
 

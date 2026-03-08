@@ -1,7 +1,7 @@
 import { Interested } from '@/components/shared/user/Interested';
 
-const Page = () => {
+const InterestedPage = () => {
   return <Interested />;
 };
 
-export default Page;
+export default InterestedPage;

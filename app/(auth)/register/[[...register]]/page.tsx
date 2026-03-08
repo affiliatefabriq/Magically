@@ -5,7 +5,7 @@ import Starfield from 'react-starfield';
 
 import { Register } from '@/components/pages/auth/Register';
 
-const Page = () => {
+const RegisterPage = () => {
   const { theme } = useTheme();
 
   return (
@@ -22,4 +22,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default RegisterPage;

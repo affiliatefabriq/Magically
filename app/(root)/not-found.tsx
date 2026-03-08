@@ -2,11 +2,11 @@
 
 import { useTheme } from 'next-themes';
 
-import { NotFoundPage } from '@/components/states/empty/Empty';
+import { NotFound } from '@/components/states/empty/Empty';
 import { ShootingStars } from '@/components/ui/magic/shooting-stars';
 import { StarsBackground } from '@/components/ui/magic/stars-background';
 
-export default function NotFound() {
+const NotFoundPage = () => {
   const { theme } = useTheme();
 
   const starColor = theme === 'dark' ? '#FFFFFF' : '#111111';
@@ -23,7 +23,9 @@ export default function NotFound() {
           className="h-full! w-full!"
         />
       </div>
-      <NotFoundPage />
+      <NotFound />
     </div>
   );
 }
+
+export default NotFoundPage;

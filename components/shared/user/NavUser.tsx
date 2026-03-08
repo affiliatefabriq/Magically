@@ -39,7 +39,7 @@ export function NavUser(user: UserAttributes) {
           <DropdownMenuTrigger asChild className="cursor-pointer">
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground rounded-full"
             >
               {user && <UserAvatar {...user} size="md" />}
               <div className="grid flex-1 text-left text-sm leading-tight">

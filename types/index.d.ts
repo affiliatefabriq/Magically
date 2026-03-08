@@ -123,3 +123,5 @@ export interface GptGenerationStatus {
   };
   error: any;
 }
+
+export type DisplayMode = 'default' | 'grid';

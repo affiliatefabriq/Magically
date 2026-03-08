@@ -42,3 +42,24 @@ export const LanguageSwitcher = ({
     </Button>
   );
 };
+
+export const useToggleLocale = () => {
+  const locale = useLocale();
+  const [currentLocale, setCurrentLocale] = useState<Locale>(locale as Locale);
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    setCurrentLocale(locale as Locale);
+  }, [locale]);
+
+  const toggleLocale = useCallback(() => {
+    const nextLocale = currentLocale === 'en' ? 'ru' : 'en';
+    startTransition(async () => {
+      localStorage.setItem('locale', nextLocale);
+      await setUserLocale(nextLocale);
+      setCurrentLocale(nextLocale as Locale);
+    });
+  }, [currentLocale]);
+
+  return { toggleLocale, isPending, currentLocale };
+};

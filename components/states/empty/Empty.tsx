@@ -144,7 +144,7 @@ export const JobEmpty = () => {
   );
 };
 
-export const NotFoundPage = () => {
+export const NotFound = () => {
   const t = useTranslations('States.Empty.NotFound');
 
   return (

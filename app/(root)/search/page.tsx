@@ -1,7 +1,7 @@
 import { Search } from '@/components/pages/sections/Search';
 
-const Page = () => {
+const SearchPage = () => {
   return <Search />;
 };
 
-export default Page;
+export default SearchPage;

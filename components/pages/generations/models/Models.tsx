@@ -120,7 +120,7 @@ export const Models = () => {
                     <PublicationImage
                       src={model.imagePaths[0]}
                       alt={model.name}
-                      className="rounded-none! object-cover w-full h-full group-hover:scale-102 magic-transition"
+                      className="rounded-b-none! object-cover aspect-square w-full h-full group-hover:scale-102 magic-transition"
                     />
 
                     {/* Image Count Badge */}

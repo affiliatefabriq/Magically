@@ -1,7 +1,7 @@
 import { Followers } from '@/components/pages/dynamic/Followers';
 
-const Page = () => {
+const FollowersPage = () => {
   return <Followers />;
 };
 
-export default Page;
+export default FollowersPage;

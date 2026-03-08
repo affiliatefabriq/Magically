@@ -7,11 +7,11 @@ export const Tariffs = () => {
   const t = useTranslations('Pages.Tariffs');
 
   return (
-    <div className="section-padding space-y-10">
-      <div className="max-w-4xl mx-auto space-y-3">
+    <div className="section-padding space-y-10 pb-24">
+      <div className="mx-auto max-w-6xl space-y-3">
         <div>
-          <h1 className="title-text">{t('Title')}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t('Subtitle')}</p>
+          <h1 className="title-text mt-4">{t('Title')}</h1>
+          <p className="mt-1 mb-6 text-sm text-muted-foreground">{t('Subtitle')}</p>
         </div>
         <CurrentPlan />
       </div>

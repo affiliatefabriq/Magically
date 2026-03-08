@@ -1,7 +1,7 @@
 import { VideoEffects } from '@/components/pages/generations/effects/video/VideoEffects';
 
-const Page = () => {
+const VideoEffectsPage = () => {
   return <VideoEffects />;
 };
 
-export default Page;
+export default VideoEffectsPage;

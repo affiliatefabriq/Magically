@@ -1,7 +1,7 @@
 import { Following } from '@/components/pages/dynamic/Following';
 
-const Page = () => {
+const FollowingPage = () => {
   return <Following />;
 };
 
-export default Page;
+export default FollowingPage;

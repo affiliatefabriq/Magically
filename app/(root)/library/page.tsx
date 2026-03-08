@@ -1,7 +1,7 @@
 import { Library } from '@/components/pages/sections/Library';
 
-const Page = () => {
+const LibraryPage = () => {
   return <Library />;
 };
 
-export default Page;
+export default LibraryPage;

@@ -1,7 +1,7 @@
 import { Transactions } from '@/components/pages/sections/Transactions';
 
-const Page = () => {
+const TransactionsPage = () => {
   return <Transactions />;
 };
 
-export default Page;
+export default TransactionsPage;

@@ -4,10 +4,10 @@ import { useParams } from 'next/navigation';
 
 import { Profile } from '@/components/pages/dynamic/Profile';
 
-const Page = () => {
+const ProfilePage = () => {
   const { username } = useParams();
 
   return <Profile username={username as string} />;
 };
 
-export default Page;
+export default ProfilePage;

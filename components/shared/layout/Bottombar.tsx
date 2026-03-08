@@ -42,7 +42,7 @@ export const Bottombar = () => {
     // { id: 2, title: t('Models'), url: '/models', icon: ImageIcon },
     { id: 2, title: t('Create'), url: '/create', icon: Sparkle },
     { id: 3, title: t('Library'), url: '/library', icon: ImageIcon },
-    { id: 4, title: t('Tariffs'), url: '/tariffs', icon: Coins },
+    // { id: 4, title: t('Tariffs'), url: '/tariffs', icon: Coins },
     { id: 5, title: t('Profile'), url: '/profile', icon: UserRound },
   ];
 

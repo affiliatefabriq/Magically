@@ -167,3 +167,7 @@ export const UserProfileLoader = () => {
     </section>
   );
 };
+
+export const TrendsCardLoader = () => (
+  <Skeleton className="w-full aspect-3/4" />
+);

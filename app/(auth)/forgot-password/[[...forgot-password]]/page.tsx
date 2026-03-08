@@ -5,7 +5,7 @@ import Starfield from 'react-starfield';
 
 import { ForgotPassword } from '@/components/pages/auth/ForgotPassword';
 
-const Page = () => {
+const ForgotPasswordPage = () => {
   const { theme } = useTheme();
 
   return (
@@ -21,4 +21,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ForgotPasswordPage;

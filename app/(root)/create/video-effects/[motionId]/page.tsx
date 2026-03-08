@@ -4,10 +4,10 @@ import { useParams } from 'next/navigation';
 
 import { GenerateVideo } from '@/components/pages/generations/effects/video/GenerateVideo';
 
-const Page = () => {
+const GenerateVideoPage = () => {
   const { motionId } = useParams();
 
   return <GenerateVideo motionId={motionId as string} />;
 };
 
-export default Page;
+export default GenerateVideoPage;

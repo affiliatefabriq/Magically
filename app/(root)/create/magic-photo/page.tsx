@@ -1,7 +1,7 @@
 import { MagicPhoto } from '@/components/pages/generations/models/magic-photo/MagicPhoto';
 
-const Page = () => {
+const MagicPhotoPage = () => {
   return <MagicPhoto />;
 };
 
-export default Page;
+export default MagicPhotoPage;

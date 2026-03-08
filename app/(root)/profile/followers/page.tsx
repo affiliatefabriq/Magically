@@ -1,7 +1,7 @@
 import { Followers } from '@/components/shared/user/Followers';
 
-const Page = () => {
+const FollowersPage = () => {
   return <Followers />;
 };
 
-export default Page;
+export default FollowersPage;

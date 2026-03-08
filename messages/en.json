@@ -120,11 +120,57 @@
     },
     "Upload": {
       "title": "Upload"
+    },
+    "WelcomeHero": {
+      "guest": {
+        "title": [
+          "Welcome",
+          "Create AI photos",
+          "Share with the community",
+          "Discover new trends"
+        ],
+        "subtitle": "Create AI photos, share them with the community and discover new trends."
+      },
+      "noModel": {
+        "title": [
+          "Hi, {username}",
+          "Create your AI model",
+          "Generate unique photos",
+          "In just seconds"
+        ],
+        "subtitle": "Create your AI model and generate unique photos in seconds."
+      },
+      "hasModel": {
+        "title": [
+          "Hi, {username}",
+          "What shall we create today?",
+          "Try a new style",
+          "Generate something crazy"
+        ],
+        "subtitle": "What shall we create today?"
+      },
+      "login": "Log in",
+      "register": "Register",
+      "create": "Create model"
     }
   },
   "Pages": {
     "Explore": {
-      "Suggested": "Suggested for you"
+      "Suggested": "Suggested for you",
+      "CommunityReel": "Community reel"
+    },
+    "Trends": {
+      "Title": "Trends",
+      "AllTrends": "All trends",
+      "NoTrends": "No trends yet",
+      "Details": {
+        "NotFound": "Trend not found",
+        "Back": "Back",
+        "DoTheSame": "Do the same",
+        "Example": "Example",
+        "Images": "images",
+        "Trending": "Trending"
+      }
     },
     "Effects": {
       "PhotoEditor": {
@@ -263,7 +309,7 @@
       "publishLabel": "Publish to feed",
       "selectModel": "Select a model",
       "selectPlaceholder": "Select a model...",
-      "title": "Magic Photo Generator",
+      "title": "Hi",
       "quality": "Magic photo quality"
     },
     "Models": {

@@ -5,7 +5,7 @@ import Starfield from 'react-starfield';
 
 import { Login } from '@/components/pages/auth/Login';
 
-const Page = () => {
+const LoginPage = () => {
   const { theme } = useTheme();
 
   return (
@@ -21,4 +21,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default LoginPage;

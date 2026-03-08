@@ -1,7 +1,7 @@
 import { Tariffs } from '@/components/pages/sections/Tariffs';
 
-const Page = () => {
+const TariffsPage = () => {
   return <Tariffs />;
 };
 
-export default Page;
+export default TariffsPage;

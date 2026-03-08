@@ -1,7 +1,7 @@
 import { Explore } from '@/components/pages/sections/Explore';
 
-const Page = () => {
+const ExplorePage = () => {
   return <Explore />;
 };
 
-export default Page;
+export default ExplorePage;

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useUser } from '@/hooks/useAuth';
 import { useTranslations } from 'next-intl';
 import { useGenerationHistory, usePublishJob } from '@/hooks/useGenerations';
 import { JobImage } from '@/components/shared/create/JobImage';
@@ -25,11 +26,25 @@ import {
 import { formatDate } from '@/lib/utils';
 import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
 import { getImageUrl } from '@/components/shared/publication/PublicationImage';
+import { NotAuthorized } from '@/components/states/error/Error';
 
 export const Library = () => {
   const t = useTranslations('Pages.Library');
-  const { data: jobs, isLoading } = useGenerationHistory();
   const publishJob = usePublishJob();
+
+  const { data: jobs, isLoading } = useGenerationHistory();
+  const { data: user } = useUser();
+
+
+  if (!user) {
+    return (
+      <section className="flex flex-col container mx-auto section-padding">
+        <div className="state-center">
+          <NotAuthorized />
+        </div>
+      </section>
+    );
+  };
 
   const [expandedPromptsMap, setExpandedPromptsMap] = useState<
     Record<string, boolean>

@@ -6,7 +6,7 @@ import Starfield from 'react-starfield';
 
 import { ResetPassword } from '@/components/pages/auth/ResetPassword';
 
-const Page = () => {
+const ResetPasswordPage = () => {
   const { theme } = useTheme();
   const params = useParams();
   const token =
@@ -41,4 +41,4 @@ const Page = () => {
   </section>;
 };
 
-export default Page;
+export default ResetPasswordPage;
