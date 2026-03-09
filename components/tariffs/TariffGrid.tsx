@@ -1,85 +1,33 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Script from 'next/script';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
-import api from '@/lib/api';
-import { useUser } from '@/hooks/useAuth';
 import { formatPrice } from '@/lib/currency';
 
-import { CurrentPlanResponse } from './CurrentPlan';
+import { useTariffs } from '@/hooks/useTariffs';
+import type { TariffPlan } from '@/components/tariffs/types';
 import { BeGatewayParams, BeGatewayStatus } from '@/types';
-
-interface TariffPlan {
-  id: string;
-  name: string;
-  tokenAmount: number;
-  periodDays: number | null;
-  price: number;
-  currency: string;
-  priceInUserCurrency?: number;
-  userCurrency?: string;
-}
 
 export const TariffGrid = () => {
   const t = useTranslations('Pages.Tariffs');
   const router = useRouter();
   const pathname = usePathname();
-  const { data: user } = useUser();
-  const [plans, setPlans] = useState<TariffPlan[]>([]);
-  const [currentPlan, setCurrentPlan] = useState<CurrentPlanResponse | null>(
-    null,
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const {
+    plans,
+    currentPlan,
+    isLoading,
+    isError,
+    error: loadError,
+    refetch,
+  } = useTariffs();
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [processingPlanId, setProcessingPlanId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const widgetInitialized = useRef(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setIsError(false);
-
-        const plansResponse = await api.get<{ data: { plans: TariffPlan[] } }>(
-          '/plans',
-          {
-            params: { type: 'package' },
-          },
-        );
-
-        setPlans(plansResponse.data.data.plans ?? []);
-
-        if (user) {
-          try {
-            const currentPlanResponse = await api.get<{
-              data: CurrentPlanResponse;
-            }>('/users/me/plan');
-            setCurrentPlan(currentPlanResponse.data.data);
-          } catch (planError: any) {
-            if (planError?.response?.status !== 401) {
-              console.error('Failed to fetch current plan:', planError);
-            }
-            setCurrentPlan(null);
-          }
-        } else {
-          setCurrentPlan(null);
-        }
-      } catch (e: any) {
-        console.error('Failed to fetch plans and current plan:', e);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [user]);
 
   const currentPlanName = currentPlan?.planName ?? null;
 
@@ -113,23 +61,7 @@ export const TariffGrid = () => {
 
         if (status === 'successful') {
           setError(null);
-          const refresh = async () => {
-            try {
-              const [plansResponse, currentPlanResponse] = await Promise.all([
-                api.get<{ data: { plans: TariffPlan[] } }>('/plans', {
-                  params: { type: 'package' },
-                }),
-                api.get<{ data: CurrentPlanResponse }>('/users/me/plan'),
-              ]);
-
-              setPlans(plansResponse.data.data.plans ?? []);
-              setCurrentPlan(currentPlanResponse.data.data);
-            } catch (err) {
-              console.error('Failed to refresh plans and current plan:', err);
-            }
-          };
-
-          refresh();
+          void refetch();
         } else if (status === 'failed' || status === 'error') {
           setError('Платеж не был выполнен. Попробуйте еще раз.');
         } else {
@@ -148,7 +80,7 @@ export const TariffGrid = () => {
   };
 
   const handleSelect = async (plan: TariffPlan) => {
-    if (!user) {
+    if (!currentPlan && !processingPlanId) {
       const from = encodeURIComponent(pathname || '/tariffs');
       router.push(`/login?from=${from}`);
       return;
@@ -168,12 +100,30 @@ export const TariffGrid = () => {
     setProcessingPlanId(plan.id);
 
     try {
-      const { data } = await api.post<{ data: { paymentToken: string } }>(
-        endpoint,
-        { planId: plan.id },
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1${endpoint}`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ planId: plan.id }),
+        },
       );
 
-      const token = data.data.paymentToken;
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        const message =
+          body?.message || body?.errors || 'Не удалось создать платеж.';
+        throw new Error(message);
+      }
+
+      const data = (await response.json()) as {
+        data?: { paymentToken?: string };
+      };
+
+      const token = data.data?.paymentToken;
 
       if (!token) {
         throw new Error('Токен платежа не получен');
@@ -228,7 +178,9 @@ export const TariffGrid = () => {
   if (isError) {
     return (
       <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-6">
-        <p className="text-sm text-destructive">{t('Errors.LoadPlans')}</p>
+        <p className="text-sm text-destructive">
+          {loadError ?? t('Errors.LoadPlans')}
+        </p>
       </div>
     );
   }
