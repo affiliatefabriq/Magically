@@ -1,19 +1,77 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { animate, motion, useMotionValue } from 'framer-motion';
 import {
     ArrowLeft,
+    ArrowRight,
     Sparkles,
     Loader2,
+    XIcon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTrend } from '@/hooks/useTrends';
 import { getImageUrl, PublicationImage } from '@/components/shared/publication/PublicationImage';
 import { useTranslations } from 'next-intl';
 
 const ImageGrid = ({ images }: { images: string[] }) => {
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+    const viewportRef = useRef<HTMLDivElement>(null);
+
+    const swipeThreshold = 80;
+    const gap = 48;
+    const x = useMotionValue(0);
+    const [slideWidth, setSlideWidth] = useState(0);
+
+    useEffect(() => {
+        const updateWidth = () => {
+            if (viewportRef.current) {
+                setSlideWidth(viewportRef.current.clientWidth);
+            }
+        };
+
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+
+        return () => window.removeEventListener('resize', updateWidth);
+    }, [selectedIdx]);
+
+    useEffect(() => {
+        if (slideWidth > 0) {
+            const step = slideWidth + gap;
+            x.set(-step);
+        }
+    }, [selectedIdx, slideWidth]);
+
+    const handleDragEnd = async (_: any, info: any) => {
+        if (slideWidth === 0) return;
+
+        const offset = info.offset.x;
+        const velocity = info.velocity.x;
+        const step = slideWidth + gap;
+
+        if ((offset < -swipeThreshold || velocity < -600) && selectedIdx! < images.length - 1) {
+            await animate(x, -step * 2, {
+                type: "spring",
+                stiffness: 260,
+                damping: 30
+            });
+            setSelectedIdx((i) => i! + 1);
+        } else if ((offset > swipeThreshold || velocity > 600) && selectedIdx! > 0) {
+            await animate(x, 0, {
+                type: "spring",
+                stiffness: 260,
+                damping: 30
+            });
+            setSelectedIdx((i) => i! - 1);
+        } else {
+            animate(x, -step, {
+                type: "spring",
+                stiffness: 260,
+                damping: 30
+            });
+        }
+    };
 
     return (
         <>
@@ -27,7 +85,6 @@ const ImageGrid = ({ images }: { images: string[] }) => {
                         onClick={() => setSelectedIdx(i)}
                         className="relative aspect-square rounded-xl overflow-hidden cursor-pointer bg-muted group"
                     >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={getImageUrl(img)}
                             alt={`image ${i + 1}`}
@@ -37,23 +94,64 @@ const ImageGrid = ({ images }: { images: string[] }) => {
                 ))}
             </div>
 
-            {/* Lightbox */}
             {selectedIdx !== null && (
                 <div
                     className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
                     onClick={() => setSelectedIdx(null)}
                 >
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="relative max-w-2xl w-full max-h-[85vh]"
+                        ref={viewportRef}
+                        className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <PublicationImage
-                            src={images[selectedIdx]}
-                            alt={`image ${selectedIdx + 1}`}
-                            className="w-full h-full object-contain rounded-2xl"
-                        />
+                        <motion.div
+                            className="flex gap-12"
+                            style={{ x }}
+                            drag="x"
+                            dragConstraints={{
+                                left: slideWidth > 0 ? -(slideWidth + gap) * 2 : 0,
+                                right: 0
+                            }}
+                            onDragEnd={handleDragEnd}
+                        >
+                            {/* Предыдущая */}
+                            <div className="w-full shrink-0 flex justify-center">
+                                {selectedIdx > 0 && (
+                                    <PublicationImage
+                                        src={images[selectedIdx - 1]}
+                                        className="object-contain max-h-[85vh]"
+                                        alt=""
+                                    />
+                                )}
+                            </div>
+
+                            {/* Текущая */}
+                            <div className="w-full shrink-0 flex justify-center">
+                                <PublicationImage
+                                    src={images[selectedIdx]}
+                                    className="object-contain max-h-[85vh]"
+                                    alt=""
+                                />
+                            </div>
+
+                            {/* Следующая */}
+                            <div className="w-full shrink-0 flex justify-center">
+                                {selectedIdx < images.length - 1 && (
+                                    <PublicationImage
+                                        src={images[selectedIdx + 1]}
+                                        className="object-contain max-h-[85vh]"
+                                        alt=""
+                                    />
+                                )}
+                            </div>
+                        </motion.div>
+
+                        <button
+                            onClick={() => setSelectedIdx(null)}
+                            className="absolute top-3 right-3 p-1 rounded-full bg-black/60 backdrop-blur-2xl hover:bg-black/80 text-white"
+                        >
+                            <XIcon className="size-4" />
+                        </button>
 
                         {/* Nav */}
                         <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-3 pointer-events-none">
@@ -91,7 +189,7 @@ const ImageGrid = ({ images }: { images: string[] }) => {
             )}
         </>
     );
-}
+};
 
 export const TrendDetails = ({ trendId }: { trendId: string }) => {
     const t = useTranslations("Pages.Trends.Details");

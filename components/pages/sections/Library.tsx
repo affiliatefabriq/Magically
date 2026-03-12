@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import { useUser } from '@/hooks/useAuth';
@@ -35,6 +35,15 @@ export const Library = () => {
   const { data: jobs, isLoading } = useGenerationHistory();
   const { data: user } = useUser();
 
+  const [expandedPromptsMap, setExpandedPromptsMap] = useState<
+    Record<string, boolean>
+  >({});
+
+  const [downloadedMap, setDownloadedMap] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [sharedMap, setSharedMap] = useState<Record<string, boolean>>({});
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   if (!user) {
     return (
@@ -45,16 +54,6 @@ export const Library = () => {
       </section>
     );
   };
-
-  const [expandedPromptsMap, setExpandedPromptsMap] = useState<
-    Record<string, boolean>
-  >({});
-
-  const [downloadedMap, setDownloadedMap] = useState<Record<string, boolean>>(
-    {},
-  );
-  const [sharedMap, setSharedMap] = useState<Record<string, boolean>>({});
-  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const handleShare = async (jobId: string, resultUrl: string) => {
     const shareUrl = getImageUrl(resultUrl);
@@ -118,6 +117,7 @@ export const Library = () => {
           >
             <div className="relative aspect-square">
               <JobImage
+                jobId={job.id}
                 status={job.status}
                 imageUrl={job.resultUrl}
                 alt={job.meta?.prompt}

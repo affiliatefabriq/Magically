@@ -240,6 +240,10 @@
     @apply bg-lime-300/50! border-lime-300/70! text-lime-950! dark:bg-lime-800/20! dark:text-lime-500! dark:border-lime-800/50! border! cursor-pointer;
   }
 
+  .btn-error {
+    @apply bg-red-300/50! border-red-300/70! text-red-950! dark:bg-red-800/20! dark:text-red-700! dark:border-red-800/50! border! cursor-pointer;
+  }
+
   .btn-solid {
     @apply bg-lime-300! border-lime-300! text-lime-950! dark:bg-lime-400! border! shadow-lime-800/10 shadow-xl! cursor-pointer;
   }

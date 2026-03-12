@@ -263,8 +263,10 @@
         "Save": "Save",
         "Share": "Share"
       },
+      "Retry": "Try again",
+      "Retrying": "Creating magic...",
       "Status": {
-        "Fail": "Generation failed",
+        "Fail": "Couldn't create the magic:(",
         "Finish": "Result Ready",
         "Pending": "Creating magic",
         "Processing": "Processing"

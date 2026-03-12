@@ -45,6 +45,11 @@ const createModel = async (formData: FormData) => {
   return data;
 };
 
+const retryAIJob = async (jobId: string) => {
+  const { data } = await api.post(`/ai/jobs/${jobId}/retry`);
+  return data;
+};
+
 const updateModel = async ({
   id,
   formData,
@@ -159,6 +164,33 @@ export const useGenerateAI = () => {
       }
 
       toast.error('Неизвестная ошибка');
+    },
+  });
+};
+
+export const useRetryAIJob = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: retryAIJob,
+    onSuccess: () => {
+      toast.success('Job restarted successfully!');
+      queryClient.invalidateQueries({ queryKey: ['generationHistory'] });
+      queryClient.invalidateQueries({ queryKey: ['activeGeneration'] });
+    },
+    onError: (error: any) => {
+      if (axios.isAxiosError(error)) {
+        const errorMsg =
+          error.response?.data?.errors ||
+          error.response?.data?.message ||
+          'Retry error';
+
+        toast.error('Ошибка повторной генерации', {
+          description: errorMsg,
+          duration: 4000,
+        });
+      } else {
+        toast.error('Неизвестная ошибка');
+      }
     },
   });
 };

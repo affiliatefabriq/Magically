@@ -27,8 +27,8 @@ export const TrendsCard = ({ trend, index }: { trend: any; index: number }) => {
                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/10 to-transparent" />
 
                 {/* Cover text */}
-                <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                    <p className="text-white text-xs font-semibold leading-tight line-clamp-3">
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white text-xs sm:text-lg lg:text-xl font-semibold leading-tight line-clamp-3 uppercase">
                         {trend.coverText || trend.content}
                     </p>
                 </div>

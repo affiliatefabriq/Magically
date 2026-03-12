@@ -46,8 +46,16 @@ export const PublicationGridCard = ({
   publication: Publication;
   userId?: string;
 }) => {
+  const t = useTranslations('Components.Publication');
   const router = useRouter();
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+
+  const handleRemix = () => {
+    if (!publication.content) return;
+    router.push(
+      `/create/magic-photo?prompt=${encodeURIComponent(publication.content)}`,
+    );
+  };
 
   return (
     <motion.div
@@ -80,9 +88,9 @@ export const PublicationGridCard = ({
       </div>
 
       {/* Footer: avatar + like */}
-      <div className="flex items-center justify-between px-2 py-2">
-        <Link
-          href={`/profile/${publication.author.id}`}
+      <div className="flex flex-row items-center justify-start p-1">
+        {/* <Link
+          href={`/profile/${publication.author.username}`}
           onClick={(e) => e.stopPropagation()}
           className="flex items-center gap-1.5 min-w-0"
         >
@@ -95,7 +103,7 @@ export const PublicationGridCard = ({
           <span className="text-xs text-muted-foreground truncate max-w-16">
             {publication.author.username}
           </span>
-        </Link>
+        </Link> */}
 
         {/* Like */}
         <div className="shrink-0">
@@ -104,12 +112,22 @@ export const PublicationGridCard = ({
           ) : (
             <AuthRequiredPopover>
               <button className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-rose-400 transition-colors">
-                <Heart className="size-3.5 stroke-1" />
+                <Heart className="size-5 stroke-1" />
                 <span>{publication.likeCount}</span>
               </button>
             </AuthRequiredPopover>
           )}
         </div>
+        <Button
+          onClick={handleRemix}
+          size="sm"
+          variant="ghost"
+          className="p-0 text-lime-500"
+        >
+          <Sparkle className='size-4.5 fill-lime-500' />
+          {t('alsoWant')}
+        </Button>
+
       </div>
       <FullscreenImageViewer
         src={fullscreenImage}
@@ -144,7 +162,7 @@ export const PublicationCard = ({
         await navigator.share({ url: shareUrl });
         setIsShared(true);
         setTimeout(() => setIsShared(false), 2000);
-      } catch (err) {}
+      } catch (err) { }
     } else {
       await navigator.clipboard.writeText(shareUrl);
       setIsShared(true);

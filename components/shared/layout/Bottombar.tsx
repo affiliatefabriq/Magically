@@ -59,14 +59,14 @@ export const Bottombar = () => {
       setIsBottomBarVisible(true);
     };
 
-    const resetTimer = () => {
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(hide, 3000);
-    };
+    // const resetTimer = () => {
+    //   clearTimeout(idleTimer);
+    //   idleTimer = setTimeout(hide, 3000);
+    // };
 
     const handleUserActivity = () => {
       show();
-      resetTimer();
+      // resetTimer();
     };
 
     const handleScroll = () => {
@@ -81,7 +81,7 @@ export const Bottombar = () => {
 
       lastScrollY = current;
 
-      resetTimer(); // любой скролл = активность
+      // resetTimer();
     };
 
     const activityEvents: (keyof WindowEventMap)[] = [
@@ -97,10 +97,10 @@ export const Bottombar = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    resetTimer(); // старт
+    // resetTimer();
 
     return () => {
-      clearTimeout(idleTimer);
+      // clearTimeout(idleTimer);
       activityEvents.forEach((event) =>
         window.removeEventListener(event, handleUserActivity),
       );
