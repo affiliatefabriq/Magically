@@ -26,7 +26,6 @@ import {
 import { formatDate } from '@/lib/utils';
 import { FullscreenImageViewer } from '@/components/ui/fullscreen-image';
 import { getImageUrl } from '@/components/shared/publication/PublicationImage';
-import { NotAuthorized } from '@/components/states/error/Error';
 
 export const Library = () => {
   const t = useTranslations('Pages.Library');
@@ -44,16 +43,6 @@ export const Library = () => {
   );
   const [sharedMap, setSharedMap] = useState<Record<string, boolean>>({});
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
-
-  if (!user) {
-    return (
-      <section className="flex flex-col container mx-auto section-padding">
-        <div className="state-center">
-          <NotAuthorized />
-        </div>
-      </section>
-    );
-  };
 
   const handleShare = async (jobId: string, resultUrl: string) => {
     const shareUrl = getImageUrl(resultUrl);
