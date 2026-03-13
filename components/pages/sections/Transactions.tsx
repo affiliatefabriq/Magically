@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 
-import { JobEmpty } from '@/components/states/empty/Empty';
-import { NotAuthorized } from '@/components/states/error/Error';
-import { SearchLoader } from '@/components/states/loaders/Loaders';
+import { JobEmpty } from '@/components/states/Empty';
+import { NotAuthorized } from '@/components/states/Error';
+import { SearchLoader } from '@/components/states/Loaders';
 import { useUser } from '@/hooks/useAuth';
 import { useTransactions } from '@/hooks/useTransaction';
 
@@ -45,7 +45,7 @@ export const Transactions = () => {
               </span>
             </div>
             <span
-              className={`font-bold ${tx.type === 'credit' ? 'text-lime-400 dark:text-lime-500' : 'text-red-500'}`}
+              className={`font-bold ${tx.type === 'credit' ? 'text-fuchsia-400 dark:text-fuchsia-500' : 'text-red-500'}`}
             >
               {tx.type === 'credit' ? '+' : '-'}
               {tx.amount} ✦

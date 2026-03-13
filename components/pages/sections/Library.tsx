@@ -15,8 +15,8 @@ import {
   MoreVertical,
   Check,
 } from 'lucide-react';
-import { JobEmpty } from '@/components/states/empty/Empty';
-import { LargeListLoader } from '@/components/states/loaders/Loaders';
+import { JobEmpty } from '@/components/states/Empty';
+import { LargeListLoader } from '@/components/states/Loaders';
 import {
   DropdownMenu,
   DropdownMenuContent,

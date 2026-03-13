@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { TrendsCard } from './TrendsCard';
 import { useTranslations } from 'next-intl';
 import { useTrendsPreview } from '@/hooks/useTrends';
-import { TrendsCardLoader } from '@/components/states/loaders/Loaders';
+import { TrendsCardLoader } from '@/components/states/Loaders';
 
 export const TrendsList = () => {
   const t = useTranslations("Pages.Trends");

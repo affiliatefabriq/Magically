@@ -7,8 +7,8 @@ import { useTranslations } from 'next-intl';
 import {
   HiggsfieldMotionError,
   NotAuthorized,
-} from '@/components/states/error/Error';
-import { ExploreLoader } from '@/components/states/loaders/Loaders';
+} from '@/components/states/Error';
+import { ExploreLoader } from '@/components/states/Loaders';
 import { useUser } from '@/hooks/useAuth';
 import { HiggsMotion, useHiggsfieldMotions } from '@/hooks/useHiggsfield';
 

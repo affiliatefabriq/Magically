@@ -6,22 +6,20 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Check,
-  Dot,
   Download,
   Heart,
   MessageCircle,
   Share2,
-  Sparkle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
 import { API_URL } from '@/lib/api';
-import { cn, formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import { Publication } from '@/types';
 import { UserAvatar } from '../user/UserAvatar';
 import { AuthRequiredPopover } from './AuthRequiredPopover';
-import { LikeButton } from './LikeButton';
+import { LikeButton, LikeButtonSm } from './LikeButton';
 import { PublicationActions } from './PublicationActions';
 import { getImageUrl, PublicationImage } from './PublicationImage';
 import { VideoRender } from './VideoRender';
@@ -36,7 +34,7 @@ type PublicationCardProps = {
   id?: any;
   isFirst?: boolean;
   isLast?: boolean;
-  displayMode?: 'default' | 'grid';
+  displayMode?: 'flex' | 'grid';
 };
 
 export const PublicationGridCard = ({
@@ -62,12 +60,12 @@ export const PublicationGridCard = ({
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      className="group relative flex flex-col transition-colors"
+      className="group relative flex gap-0 md:gap-3 flex-col transition-colors"
       key={publication.id}
     >
       {/* Image */}
       <div
-        className="relative w-full cursor-pointer"
+        className="flex md:hidden relative w-full cursor-pointer"
         onClick={() => {
           if (publication.imageUrl) setFullscreenImage(publication.imageUrl);
           else router.push(`/publications/${publication.id}`);
@@ -88,8 +86,8 @@ export const PublicationGridCard = ({
       </div>
 
       {/* Footer: avatar + like */}
-      <div className="flex flex-row items-center justify-start p-1">
-        {/* <Link
+      <div className="flex md:hidden items-center justify-between py-1">
+        <Link
           href={`/profile/${publication.author.username}`}
           onClick={(e) => e.stopPropagation()}
           className="flex items-center gap-1.5 min-w-0"
@@ -98,17 +96,24 @@ export const PublicationGridCard = ({
             avatar={publication.author.avatar}
             username={publication.author.username}
             fullname={publication.author.fullname}
-            className="size-5 shrink-0"
+            size='xs'
+            className="shrink-0"
           />
           <span className="text-xs text-muted-foreground truncate max-w-16">
             {publication.author.username}
           </span>
-        </Link> */}
+        </Link>
 
         {/* Like */}
-        <div className="shrink-0">
+        <div className="flex items-center justify-center gap-1.5 shrink-0">
+          <button
+            onClick={handleRemix}
+            className="pb-1 text-lime-500"
+          >
+            <span className='text-xl'>✦</span>
+          </button>
           {userId ? (
-            <LikeButton {...publication} />
+            <LikeButtonSm {...publication} />
           ) : (
             <AuthRequiredPopover>
               <button className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-rose-400 transition-colors">
@@ -118,21 +123,24 @@ export const PublicationGridCard = ({
             </AuthRequiredPopover>
           )}
         </div>
-        <Button
-          onClick={handleRemix}
-          size="sm"
-          variant="ghost"
-          className="p-0 text-lime-500"
-        >
-          <Sparkle className='size-4.5 fill-lime-500' />
-          {t('alsoWant')}
-        </Button>
-
       </div>
-      <FullscreenImageViewer
-        src={fullscreenImage}
-        onClose={() => setFullscreenImage(null)}
-      />
+      <PublicationDialog publication={publication}>
+        <div key={publication.id} className="hidden md:flex">
+          {publication.videoUrl && (
+            <VideoRender
+              src={`${API_URL}${publication.videoUrl}`}
+              className="rounded-xl object-cover aspect-square w-full"
+            />
+          )}
+          {publication.imageUrl && (
+            <PublicationImage
+              src={publication.imageUrl}
+              alt="publication"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          )}
+        </div>
+      </PublicationDialog>
     </motion.div>
   );
 };
@@ -207,11 +215,11 @@ export const PublicationCard = ({
 
   if (displayMode !== 'grid')
     return (
-      <div className="w-full break-inside-avoid mb-4">
+      <div className="w-full max-w-4xl mx-auto break-inside-avoid mb-4">
         <div className="relative w-full group">
-          <div className="flex flex-col justify-center md:hidden">
+          <div className="flex flex-col justify-center ">
             <div
-              className="flex items-start md:hidden flex-col gap-2"
+              className="flex items-start flex-col gap-2"
               key={publication.id}
             >
               <div className="flex items-center justify-between w-full gap-2">
@@ -259,7 +267,7 @@ export const PublicationCard = ({
                   <Link
                     href={`/publications/${publication.id}`}
                     key={publication.id}
-                    className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors"
+                    className="flex items-center justify-center p-0 gap-1 hover:text-fuchsia-500 transition-colors"
                   >
                     <MessageCircle className="size-5 stroke-1" />
                     <span>{publication.commentCount}</span>
@@ -285,14 +293,13 @@ export const PublicationCard = ({
                     <Download className="size-5 stroke-1" />
                   )}
                 </button>
-                <Button
+                <button
                   onClick={handleRemix}
-                  size="sm"
-                  variant="ghost"
-                  className="p-0 text-lime-500"
+                  className="flex items-center justify-between gap-1 p-0 text-sm text-lime-500"
                 >
-                  ✦ {t('alsoWant')}
-                </Button>
+                  <span className='text-xl'>✦</span>
+                  {t('alsoWant')}
+                </button>
               </div>
               <article className="mb-2 px-1">
                 {publication.content.length > 128 ? (
@@ -329,7 +336,7 @@ export const PublicationCard = ({
               </article>
             </div>
           </div>
-          <PublicationDialog publication={publication}>
+          {/* <PublicationDialog publication={publication}>
             <div key={publication.id} className="hidden md:flex">
               {publication.videoUrl && (
                 <VideoRender
@@ -344,7 +351,7 @@ export const PublicationCard = ({
                 />
               )}
             </div>
-          </PublicationDialog>
+          </PublicationDialog> */}
         </div>
       </div>
     );

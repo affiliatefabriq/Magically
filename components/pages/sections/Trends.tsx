@@ -7,7 +7,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { BackButton } from '@/components/shared/layout/BackButton';
 import { TrendsCard } from '@/components/shared/trends/TrendsCard';
-import { TrendsCardLoader } from '@/components/states/loaders/Loaders';
+import { TrendsCardLoader } from '@/components/states/Loaders';
 
 export const Trends = () => {
     const t = useTranslations("Pages.Trends");

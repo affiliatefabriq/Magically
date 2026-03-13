@@ -4,9 +4,9 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 import { UserProfile } from '@/components/shared/user/UserProfile';
-import { UserProfileEmpty } from '@/components/states/empty/Empty';
-import { NotAuthorized, ProfileError } from '@/components/states/error/Error';
-import { UserProfileLoader } from '@/components/states/loaders/Loaders';
+import { UserProfileEmpty } from '@/components/states/Empty';
+import { NotAuthorized, ProfileError } from '@/components/states/Error';
+import { UserProfileLoader } from '@/components/states/Loaders';
 import { Separator } from '@/components/ui/separator';
 import { useProfile } from '@/hooks/useProfile';
 import { API_URL } from '@/lib/api';
@@ -39,7 +39,7 @@ export const Profile = ({ username }: { username: string }) => {
   }
 
   return (
-    <section className="section-padding container max-w-7xl mx-auto border-0 border-muted md:border h-full rounded-t-3xl mt-0 sm:mt-4">
+    <section className="section-padding container max-w-7xl mx-auto border-0 border-muted md:border min-h-screen rounded-t-3xl mt-0 sm:mt-4">
       <BackButton />
       <div className="flex flex-col px-2 md:px-4 mt-12 md:mt-4">
         <div className="flex items-center justify-between">

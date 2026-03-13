@@ -15,7 +15,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import { CreateModelDialog } from '@/components/shared/create/CreateModelDialog';
 import { PublicationImage } from '@/components/shared/publication/PublicationImage';
-import { ListLoader } from '@/components/states/loaders/Loaders';
+import { ListLoader } from '@/components/states/Loaders';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -25,9 +25,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useDeleteAIModel, useAIModels } from '@/hooks/useAi';
-import { ModelsEmpty } from '@/components/states/empty/Empty';
+import { ModelsEmpty } from '@/components/states/Empty';
 import { useUser } from '@/hooks/useAuth';
-import { NotAuthorized } from '@/components/states/error/Error';
+import { NotAuthorized } from '@/components/states/Error';
 import { Badge } from '@/components/ui/badge';
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 

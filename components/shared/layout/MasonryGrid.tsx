@@ -40,12 +40,20 @@ export function distributeToColumns<T>(items: T[], colCount: number): T[][] {
 export const MasonryGrid = ({
     items,
     renderItem,
-    mode = 'default',
+    mode = 'flex',
 }: {
     items: any[];
     renderItem: (item: any) => React.ReactNode;
     mode?: DisplayMode;
 }) => {
+    if (mode === 'flex') {
+        return (
+            <div className="flex flex-col gap-2 w-full">
+                {items.map((item) => renderItem(item))}
+            </div>
+        );
+    }
+
     const cols = useColumnCount(mode);
     const columns = useMemo(
         () => distributeToColumns(items, cols),

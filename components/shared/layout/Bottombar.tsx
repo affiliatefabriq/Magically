@@ -128,7 +128,7 @@ export const Bottombar = () => {
               modal={false}
             >
               <DropdownMenuTrigger asChild>
-                <button className="flex flex-col gap-0.5 items-center justify-center text-lime-500">
+                <button className="flex flex-col gap-0.5 items-center justify-center text-fuchsia-500">
                   <item.icon strokeWidth={2} className="size-5" />
                   <span className="text-[10px] font-medium leading-tight">
                     {t('Create')}
@@ -144,7 +144,7 @@ export const Bottombar = () => {
                   {t('Create')}
                 </DropdownMenuLabel>
                 {/* MODELS */}
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                   onClick={() => router.push('/models')}
                   className="mt-2 py-3 rounded-xl cursor-pointer"
                 >
@@ -152,7 +152,7 @@ export const Bottombar = () => {
                     <Folder className="size-4" />
                     {t('Models')}
                   </div>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 {/* MAGIC PHOTO */}
                 <DropdownMenuItem
                   onClick={() => router.push('/create/magic-photo')}

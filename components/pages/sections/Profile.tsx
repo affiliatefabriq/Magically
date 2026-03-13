@@ -9,9 +9,9 @@ import { useTranslations } from 'next-intl';
 
 import { EditProfileDialog } from '@/components/shared/user/EditProfileDialog';
 import { UserAvatar } from '@/components/shared/user/UserAvatar';
-import { PersonalProfileEmpty } from '@/components/states/empty/Empty';
-import { NotAuthorized, ProfileError } from '@/components/states/error/Error';
-import { ProfileLoader } from '@/components/states/loaders/Loaders';
+import { PersonalProfileEmpty } from '@/components/states/Empty';
+import { NotAuthorized, ProfileError } from '@/components/states/Error';
+import { ProfileLoader } from '@/components/states/Loaders';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
@@ -61,7 +61,7 @@ export const Profile = () => {
   };
 
   return (
-    <section className="section-padding container max-w-7xl mx-auto border-0 md:border border-muted h-full rounded-t-4xl mt-0 sm:mt-4">
+    <section className="section-padding container max-w-7xl mx-auto border-0 md:border border-muted min-h-screen rounded-t-4xl mt-0 sm:mt-4">
       <div className="flex flex-col px-2 md:px-4 mt-4">
         <div className="flex md:hidden items-center justify-between">
           <span className="text-2xl font-bold">{user.username}</span>

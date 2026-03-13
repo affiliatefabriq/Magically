@@ -195,7 +195,7 @@
   }
 
   .link-text {
-    @apply text-lime-500 dark:text-lime-500 hover:underline font-semibold;
+    @apply text-fuchsia-400 dark:text-fuchsia-500 hover:underline font-semibold;
   }
 
   .title-text {
@@ -211,11 +211,11 @@
   }
 
   .magic-hover {
-    @apply hover:text-lime-500;
+    @apply hover:text-fuchsia-500;
   }
 
   .secondary-hover {
-    @apply hover:bg-muted-foreground/20;
+    @apply hover:bg-muted-foreground/10;
   }
 
   .state-center {
@@ -225,19 +225,19 @@
 
 @layer components {
   .sidebar-btn {
-    @apply text-lime-500 cursor-pointer;
+    @apply text-fuchsia-500 cursor-pointer;
   }
 
   .btn-magic {
-    @apply bg-lime-300 border-lime-300 text-lime-950 dark:bg-lime-400 dark:text-lime-950 cursor-pointer;
+    @apply bg-fuchsia-300 border-fuchsia-300 text-fuchsia-950 dark:bg-fuchsia-400 dark:text-fuchsia-950 cursor-pointer;
   }
 
   .btn-login {
-    @apply bg-lime-300! border-lime-300/50! text-lime-950! dark:bg-lime-400! dark:text-lime-950! cursor-pointer;
+    @apply bg-fuchsia-300! text-fuchsia-950! dark:bg-fuchsia-500! dark:text-white! shadow-fuchsia-800/10 shadow-xl! cursor-pointer;
   }
 
   .btn-outline {
-    @apply bg-lime-300/50! border-lime-300/70! text-lime-950! dark:bg-lime-800/20! dark:text-lime-500! dark:border-lime-800/50! border! cursor-pointer;
+    @apply bg-fuchsia-200/50! text-fuchsia-800! dark:bg-fuchsia-800/20! dark:text-fuchsia-400! hover:bg-fuchsia-400/50! dark:hover:bg-fuchsia-600/20! cursor-pointer;
   }
 
   .btn-error {
@@ -245,7 +245,7 @@
   }
 
   .btn-solid {
-    @apply bg-lime-300! border-lime-300! text-lime-950! dark:bg-lime-400! border! shadow-lime-800/10 shadow-xl! cursor-pointer;
+    @apply bg-fuchsia-300! text-fuchsia-950! dark:bg-fuchsia-500! dark:text-white! shadow-fuchsia-800/10 shadow-xl! cursor-pointer;
   }
 
   .btn-glass {

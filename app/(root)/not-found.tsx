@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 
-import { NotFound } from '@/components/states/empty/Empty';
+import { NotFound } from '@/components/states/Empty';
 import { ShootingStars } from '@/components/ui/magic/shooting-stars';
 import { StarsBackground } from '@/components/ui/magic/stars-background';
 

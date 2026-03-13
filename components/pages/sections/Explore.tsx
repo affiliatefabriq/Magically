@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useTheme } from 'next-themes';
+import { DisplayMode } from '@/types';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/hooks/useAuth';
 import { usePublications } from '@/hooks/usePublications';
@@ -14,16 +15,14 @@ import { WelcomeHero } from '@/components/shared/layout/WelcomeHero';
 import { LayoutGrid, List } from 'lucide-react';
 import { SkeletonCard } from '@/components/ui/skeleton';
 
-import { ExploreEmpty } from '@/components/states/empty/Empty';
-import { ExploreError } from '@/components/states/error/Error';
-import { ExploreLoader } from '@/components/states/loaders/Loaders';
+import { ExploreEmpty } from '@/components/states/Empty';
+import { ExploreError } from '@/components/states/Error';
+import { ExploreLoader } from '@/components/states/Loaders';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShootingStars } from '@/components/ui/magic/shooting-stars';
 import { StarsBackground } from '@/components/ui/magic/stars-background';
 import { buildChunks, MasonryGrid } from '@/components/shared/layout/MasonryGrid';
-
-export type DisplayMode = 'default' | 'grid';
 
 const SKELETON_HEIGHTS = [
   200, 280, 180, 320, 240, 200, 260, 300, 220, 180, 340, 200,
@@ -34,6 +33,13 @@ export const Explore = () => {
   const { theme } = useTheme();
   const [filters] = useState({ sortBy: 'newest', hashtag: '' });
   const [displayMode, setDisplayMode] = useState<DisplayMode>('grid');
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem('exploreDisplayMode') as DisplayMode;
+    if (savedMode && (savedMode === 'grid' || savedMode === 'flex')) {
+      setDisplayMode(savedMode);
+    }
+  }, []);
 
   const { data: user } = useUser();
 
@@ -121,24 +127,30 @@ export const Explore = () => {
         </div>
 
         {/* Лента сообщества */}
-        <div className="flex items-center justify-between mb-4 px-1">
+        <div className={`flex items-center justify-between mb-4 px-1 ${displayMode === 'flex' ? 'max-w-4xl mx-auto' : ''}`}>
           <h2 className="font-semibold text-sm tracking-wide">
             {t("CommunityReel")}
           </h2>
           <div className="flex items-center gap-1 p-1 rounded-xl theme border">
             <button
-              onClick={() => setDisplayMode('grid')}
+              onClick={() => {
+                setDisplayMode('grid');
+                localStorage.setItem('exploreDisplayMode', 'grid');
+              }}
               className={`flex items-center justify-center size-7 rounded-lg transition-colors ${displayMode === 'grid'
-                ? 'text-lime-500'
+                ? 'text-fuchsia-500'
                 : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
               <LayoutGrid className="size-3.5" />
             </button>
             <button
-              onClick={() => setDisplayMode('default')}
-              className={`flex items-center justify-center size-7 rounded-lg transition-colors ${displayMode === 'default'
-                ? 'text-lime-500'
+              onClick={() => {
+                setDisplayMode('flex');
+                localStorage.setItem('exploreDisplayMode', 'flex');
+              }}
+              className={`flex items-center justify-center size-7 rounded-lg transition-colors ${displayMode === 'flex'
+                ? 'text-fuchsia-500'
                 : 'text-muted-foreground hover:text-foreground'
                 }`}
             >

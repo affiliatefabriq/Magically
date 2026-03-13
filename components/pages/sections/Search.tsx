@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { PublicationCardSimplified } from '@/components/shared/publication/PublicationCard';
-import { SearchPublicationEmpty } from '@/components/states/empty/Empty';
-import { NotAuthorized, SearchError } from '@/components/states/error/Error';
+import { SearchPublicationEmpty } from '@/components/states/Empty';
+import { NotAuthorized, SearchError } from '@/components/states/Error';
 import {
   SearchLoader,
   SearchPublicationLoader,
-} from '@/components/states/loaders/Loaders';
+} from '@/components/states/Loaders';
 import { Input } from '@/components/ui/input';
 import { useUser } from '@/hooks/useAuth';
 import { useSearchPublications } from '@/hooks/useSearch';

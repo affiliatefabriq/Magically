@@ -61,7 +61,7 @@ export function JobImage({
 
   return (
     <div className="relative w-full aspect-square rounded-xl overflow-hidden">
-      <div className="absolute inset-0 bg-linear-to-br from-lime-800 via-green-700 to-teal-800 animate-gradient" />
+      <div className="absolute inset-0 bg-linear-to-br from-fuchsia-800 via-green-700 to-teal-800 animate-gradient" />
       <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
       <div className="absolute inset-0 flex items-center justify-center">
         <Sparkles className="text-white animate-pulse text-xl" size={40} />

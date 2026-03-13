@@ -143,7 +143,7 @@ export const AppSidebar = () => {
               >
                 <Link
                   href="/register"
-                  className="bg-lime-800/20 sidebar-btn flex items-center justify-between"
+                  className="bg-fuchsia-800/20 sidebar-btn flex items-center justify-between"
                 >
                   <Globe />
                   <span className="font-semibold">{t('Register')}</span>

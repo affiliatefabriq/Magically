@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Loader2, Sparkles, ChevronDown } from 'lucide-react';
+import { Loader2, ChevronDown, PlusCircle, Folder } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { useAIModels, useGenerateAI } from '@/hooks/useAi';
-import { ModelsEmpty } from '@/components/states/empty/Empty';
+import { ModelsEmpty } from '@/components/states/Empty';
 import { useUser } from '@/hooks/useAuth';
-import { NotAuthorized } from '@/components/states/error/Error';
+import { NotAuthorized } from '@/components/states/Error';
 import { BackButton } from '@/components/shared/layout/BackButton';
 import { PublicationImage } from '@/components/shared/publication/PublicationImage';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -131,7 +131,7 @@ export const MagicPhoto = () => {
       </div>
     );
   }
-  
+
   return (
     <section
       className="max-w-3xl mx-auto min-h-[90vh] section-padding flex flex-col"
@@ -221,7 +221,7 @@ export const MagicPhoto = () => {
 
               {modelDropdownOpen && (
                 <div className="absolute bottom-full mb-2 left-0 z-50 min-w-45 rounded-xl border border-white/10 bg-[#1a1a1a] shadow-2xl overflow-hidden">
-                  <ScrollArea className="h-64">
+                  <ScrollArea className="h-32">
                     {models.map((model) => (
                       <button
                         key={model.id}
@@ -231,8 +231,8 @@ export const MagicPhoto = () => {
                           setSelectedModelId(model.id);
                           setModelDropdownOpen(false);
                         }}
-                        className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${model.id === selectedModelId
-                          ? 'bg-white/5 text-[#AAFF00]'
+                        className={` cursor-pointer w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${model.id === selectedModelId
+                          ? 'bg-white/5 text-fuchsia-400'
                           : 'text-foreground'
                           }`}
                       >
@@ -248,6 +248,18 @@ export const MagicPhoto = () => {
                         <span className="truncate">{model.name}</span>
                       </button>
                     ))}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setModelDropdownOpen(false);
+                        router.push('/models');
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-left hover:bg-fuchsia-700/30 transition-colors text-fuchsia-400 font-semibold border-t border-white/10 cursor-pointer"
+                    >
+                      <Folder className='size-4' />
+                      <span>{t("toModels")}</span>
+                    </button>
                   </ScrollArea>
                 </div>
               )}
@@ -281,7 +293,7 @@ export const MagicPhoto = () => {
                         setAspectDropdownOpen(false);
                       }}
                       className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${r.value === aspectRatio
-                        ? 'text-[#AAFF00]'
+                        ? 'text-fuchsia-400'
                         : 'text-foreground'
                         }`}
                     >
@@ -320,7 +332,7 @@ export const MagicPhoto = () => {
                         setQualityDropdownOpen(false);
                       }}
                       className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${q.value === quality
-                        ? 'text-[#AAFF00]'
+                        ? 'text-fuchsia-400'
                         : 'text-foreground'
                         }`}
                     >
@@ -341,14 +353,10 @@ export const MagicPhoto = () => {
                 prompt.trim().length < 3 ||
                 !selectedModelId
               }
-              className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{
-                background:
-                  isGenerating || generateImage.isPending
-                    ? 'rgba(170,255,0,0.4)'
-                    : '#AAFF00',
-                color: '#000',
-              }}
+              className={`
+                flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-black
+              ${isGenerating || generateImage.isPending ? 'bg-lime-400' : 'bg-lime-500'}
+                `}
             >
               {isGenerating || generateImage.isPending ? (
                 <>
@@ -364,11 +372,11 @@ export const MagicPhoto = () => {
                 </>
               )}
             </button>
-            <div className="flex items-center gap-2 py-1 rounded-xl text-sm font-semibold transition-all duration-200">
+            {/* <div className="flex items-center gap-2 py-1 rounded-xl text-sm font-semibold transition-all duration-200">
               <button
                 type="button"
                 onClick={() => setPublish((v) => !v)}
-                className={`relative inline-flex items-center h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${publish ? 'bg-lime-600' : 'bg-white/20'
+                className={`relative inline-flex items-center h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${publish ? 'bg-fuchsia-600' : 'bg-white/20'
                   }`}
               >
                 <span
@@ -381,7 +389,7 @@ export const MagicPhoto = () => {
                   {t('publishLabel')}
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

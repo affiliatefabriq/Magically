@@ -64,7 +64,7 @@
       "noImage": "No image",
       "readLess": "Read less",
       "readMore": "Read more",
-      "alsoWant": "I also want"
+      "alsoWant": "Create"
     },
     "PublicationActions": {
       "back": "Back",
@@ -122,6 +122,7 @@
       "title": "Upload"
     },
     "WelcomeHero": {
+      "toModels": "To models",
       "guest": {
         "title": [
           "Welcome",
@@ -312,7 +313,8 @@
       "selectModel": "Select a model",
       "selectPlaceholder": "Select a model...",
       "title": "Hi",
-      "quality": "Magic photo quality"
+      "quality": "Magic photo quality",
+      "toModels": "To models"
     },
     "Models": {
       "Alerts": {

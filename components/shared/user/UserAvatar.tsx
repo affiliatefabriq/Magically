@@ -5,7 +5,7 @@ type UserAvatarProps = {
   username: string;
   fullname: string;
   avatar?: string | null;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 };
 
@@ -20,6 +20,7 @@ export const UserAvatar = ({
     <Avatar
       className={`
         flex items-center flex-wrap justify-center theme-2 rounded-full
+        ${size === 'xs' && 'size-6'}
         ${size === 'sm' && 'size-10'}
         ${size === 'md' && 'size-12'}
         ${size === 'lg' && 'size-16'}
@@ -33,7 +34,8 @@ export const UserAvatar = ({
         className="rounded-full h-full w-full object-cover"
       />
       <AvatarFallback
-        className={`rounded-full text-black dark:text-white         
+        className={`rounded-full text-black dark:text-white
+          ${size === 'xs' && 'text-xs'}     
           ${size === 'sm' && 'text-base'}
           ${size === 'md' && 'text-lg'}
           ${size === 'lg' && 'text-xl'}

@@ -197,7 +197,7 @@ export const PublicationDialog = ({
                   </button>
                 </AuthRequiredPopover>
               )}
-              <button className="flex items-center justify-center p-0 gap-1 hover:text-lime-500 transition-colors">
+              <button className="flex items-center justify-center p-0 gap-1 hover:text-fuchsia-500 transition-colors">
                 <MessageCircle className="size-5 stroke-1" />
                 <span>{publication.commentCount}</span>
               </button>
@@ -225,7 +225,7 @@ export const PublicationDialog = ({
                 onClick={handleRemix}
                 size="sm"
                 variant="ghost"
-                className="p-0 text-lime-500"
+                className="p-0 text-fuchsia-500"
               >
                 ✦ {t('alsoWant')}
               </Button>

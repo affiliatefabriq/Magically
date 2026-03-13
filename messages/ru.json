@@ -75,7 +75,7 @@
       "readMore": "Читать больше",
       "readLess": "Читать меньше",
       "noImage": "Нет изображения",
-      "alsoWant": "Хочу также"
+      "alsoWant": "Создать"
     },
     "CommentSection": {
       "title": "Комментарии",
@@ -121,6 +121,7 @@
       "title": "Прикрепить"
     },
     "WelcomeHero": {
+      "toModels": "К моделям",
       "guest": {
         "title": [
           "Добро пожаловать",
@@ -288,6 +289,7 @@
       "noModelsDesc": "Сначала создайте модель.",
       "createModelBtn": "Создать модель",
       "quality": "Качество волшебного фото",
+      "toModels": "К моделям",
       "Aspect": {
         "Square": "1:1 Квадрат",
         "Landscape": "16:9 Ландшафт",

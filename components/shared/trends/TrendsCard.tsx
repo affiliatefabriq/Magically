@@ -34,7 +34,7 @@ export const TrendsCard = ({ trend, index }: { trend: any; index: number }) => {
                 </div>
 
                 {/* Hover overlay */}
-                <div className="absolute inset-0 bg-violet-500/0 group-hover:bg-black/20 transition-colors duration-200 rounded-2xl" />
+                <div className="absolute inset-0 bg-fuchsia-500/0 group-hover:bg-black/20 transition-colors duration-200 rounded-2xl" />
             </div>
         </motion.div>
     );

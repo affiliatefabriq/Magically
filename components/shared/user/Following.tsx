@@ -3,8 +3,8 @@
 import { useTranslations } from 'next-intl';
 
 import { UserCard } from '@/components/shared/user/UserCard';
-import { FollowingError } from '@/components/states/error/Error';
-import { ListLoader } from '@/components/states/loaders/Loaders';
+import { FollowingError } from '@/components/states/Error';
+import { ListLoader } from '@/components/states/Loaders';
 import { Separator } from '@/components/ui/separator';
 import { useMyFollowing } from '@/hooks/useProfile';
 import { UserAttributes } from '@/types';

@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { NotAuthorized } from '@/components/states/error/Error';
+import { NotAuthorized } from '@/components/states/Error';
 import { useUser } from '@/hooks/useAuth';
 import {
   FormField,

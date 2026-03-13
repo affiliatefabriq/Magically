@@ -124,4 +124,4 @@ export interface GptGenerationStatus {
   error: any;
 }
 
-export type DisplayMode = 'default' | 'grid';
+export type DisplayMode = 'flex' | 'grid';

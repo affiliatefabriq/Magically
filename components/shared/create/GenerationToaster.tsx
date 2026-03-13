@@ -68,7 +68,7 @@ export const GenerationToaster = () => {
 
   /* ---------------- ICON STATE ---------------- */
   let Icon = Loader2;
-  let color = 'text-lime-500';
+  let color = 'text-fuchsia-500';
   let text = '';
 
   if (job?.status === 'pending') text = `${t('Pending')}...`;

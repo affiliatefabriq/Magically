@@ -153,7 +153,7 @@ export const CommentSection = ({
               </div>
               <p className="text-sm leading-relaxed wrap-break-word">
                 {parentAuthor && (
-                  <span className="text-lime-500 font-medium mr-1">
+                  <span className="text-fuchsia-500 font-medium mr-1">
                     @{parentAuthor}{' '}
                   </span>
                 )}
@@ -210,7 +210,7 @@ export const CommentSection = ({
                         name: comment.author?.fullname,
                       })
                     }
-                    className="flex items-center gap-1 text-muted-foreground hover:text-lime-500 transition-colors"
+                    className="flex items-center gap-1 text-muted-foreground hover:text-fuchsia-500 transition-colors"
                   >
                     <MessageCircle className="h-4 w-4" />
                     <span className="text-xs">
@@ -260,7 +260,7 @@ export const CommentSection = ({
             {!showReplies ? (
               <button
                 onClick={() => toggleReplies(comment.id)}
-                className="ml-12 flex items-center gap-2 text-sm text-lime-600 dark:text-lime-400 hover:underline font-medium py-1"
+                className="ml-12 flex items-center gap-2 text-sm text-fuchsia-600 dark:text-fuchsia-400 hover:underline font-medium py-1"
               >
                 <ChevronDown className="h-4 w-4" />
                 {t('showReplies')} ({allReplies.length})
@@ -269,7 +269,7 @@ export const CommentSection = ({
               <>
                 <button
                   onClick={() => toggleReplies(comment.id)}
-                  className="ml-12 flex items-center gap-2 text-sm text-lime-600 dark:text-lime-400 hover:underline font-medium mb-2 py-1"
+                  className="ml-12 flex items-center gap-2 text-sm text-fuchsia-600 dark:text-fuchsia-400 hover:underline font-medium mb-2 py-1"
                 >
                   <ChevronDown className="h-4 w-4 rotate-180" />
                   {t('hideReplies')}

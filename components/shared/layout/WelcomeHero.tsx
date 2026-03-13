@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserPlus, Plus, ChevronDown, Loader2 } from 'lucide-react';
+import { UserPlus, Plus, ChevronDown, Loader2, SendHorizonal, Folder } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { useUser } from '@/hooks/useAuth';
@@ -24,6 +24,7 @@ const QUALITIES = [
 ];
 
 const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
+  const t = useTranslations('Components.WelcomeHero');
   const router = useRouter();
   const generateImage = useGenerateAI();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -90,7 +91,7 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Model photo grid — updates when model changes */}
-        {selectedModel && selectedModel.imagePaths?.length > 0 && (
+        {/* {selectedModel && selectedModel.imagePaths?.length > 0 && (
           <div className="w-full p-2">
             <div className="grid grid-cols-4 gap-1">
               {selectedModel.imagePaths
@@ -109,10 +110,10 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                 ))}
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Textarea */}
-        <div className="px-4 pt-4 pb-2">
+        <div className="px-4 pt-4">
           <textarea
             ref={textareaRef}
             value={prompt}
@@ -126,7 +127,7 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                 handleSubmit();
               }
             }}
-            placeholder="Опишите желаемое фото…"
+            placeholder={`Опишите желаемое фото…${quality === '2K' ? '(✦20)' : '(✦15)'}`}
             className="w-full bg-transparent resize-none text-sm text-foreground placeholder:text-muted-foreground focus:outline-none min-h-10 max-h-40"
             rows={2}
           />
@@ -134,7 +135,6 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
 
         {/* Toolbar */}
         <div className="flex items-center gap-2 px-3 pb-3 flex-wrap">
-          {/* Model pill */}
           <div className="relative">
             <button
               type="button"
@@ -144,22 +144,23 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                 setAspectOpen(false);
                 setQualityOpen(false);
               }}
-              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 transition-colors font-medium"
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 transition-colors text-foreground font-medium"
             >
               {selectedModel?.imagePaths?.[0] && (
                 <div className="w-4 h-4 rounded-full overflow-hidden shrink-0">
                   <PublicationImage
                     src={selectedModel.imagePaths[0]}
                     alt={selectedModel.name}
-                    className="object-cover w-full h-full"
+                    className="object-cover aspect-square w-full h-full"
                   />
                 </div>
               )}
               <span className="max-w-20 truncate">
-                {selectedModel?.name ?? 'Модель'}
+                {selectedModel?.name ?? t('selectPlaceholder')}
               </span>
               <ChevronDown className="size-3 opacity-60" />
             </button>
+
             {modelOpen && (
               <div className="absolute bottom-full mb-2 left-0 z-50 min-w-45 rounded-xl border border-white/10 bg-[#1a1a1a] shadow-2xl overflow-hidden">
                 <ScrollArea className="h-32">
@@ -172,8 +173,8 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                         setSelectedModelId(model.id);
                         setModelOpen(false);
                       }}
-                      className={`w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${model.id === selectedModelId
-                        ? 'bg-white/5 text-[#AAFF00]'
+                      className={` cursor-pointer w-full flex items-center gap-2 px-3 py-2.5 text-sm hover:bg-white/10 transition-colors text-left ${model.id === selectedModelId
+                        ? 'bg-white/5 text-fuchsia-400'
                         : 'text-foreground'
                         }`}
                     >
@@ -189,12 +190,23 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                       <span className="truncate">{model.name}</span>
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModelOpen(false);
+                      router.push('/models');
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-left hover:bg-fuchsia-700/30 transition-colors text-fuchsia-400 font-semibold border-t border-white/10 cursor-pointer"
+                  >
+                    <Folder className='size-4' />
+                    <span>{t("toModels")}</span>
+                  </button>
                 </ScrollArea>
               </div>
             )}
           </div>
-
-          {/* Aspect ratio pill */}
+          {/* 
           <div className="relative">
             <button
               type="button"
@@ -229,8 +241,8 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
               </div>
             )}
           </div>
+         */}
 
-          {/* Quality pill */}
           <div className="relative">
             <button
               type="button"
@@ -256,7 +268,7 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
                       setQuality(q.value as '1K' | '2K');
                       setQualityOpen(false);
                     }}
-                    className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${q.value === quality ? 'text-[#AAFF00]' : 'text-foreground'
+                    className={`w-full px-3 py-2 text-sm text-left hover:bg-white/10 transition-colors ${q.value === quality ? 'text-fuchsia-500' : 'text-foreground'
                       }`}
                   >
                     {q.label}
@@ -266,6 +278,7 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
             )}
           </div>
 
+
           <button
             type="button"
             onClick={handleSubmit}
@@ -274,7 +287,7 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
               generateImage.isPending ||
               prompt.trim().length < 3
             }
-            className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               background:
                 isGenerating || generateImage.isPending
@@ -286,11 +299,13 @@ const InlineMagicPhotoForm = ({ models }: { models: any[] }) => {
             {isGenerating || generateImage.isPending ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                <span>Генерируется</span>
+                {/* <span>Генерируется</span> */}
               </>
             ) : (
               <>
-                <span>Создать {quality === '2K' ? '(✦20)' : '(✦15)'}</span>
+                <div className='flex items-center justify-center'>
+                  <SendHorizonal className='size-4' />
+                </div>
               </>
             )}
           </button>
@@ -414,17 +429,16 @@ export const WelcomeHero = () => {
               </Button>
             </motion.div>
           ) : (
-            null
-            // <motion.div
-            //   key="has-model"
-            //   initial={{ opacity: 0, y: 6 }}
-            //   animate={{ opacity: 1, y: 0 }}
-            //   exit={{ opacity: 0 }}
-            //   transition={{ duration: 0.3 }}
-            //   className="w-full"
-            // >
-            //   <InlineMagicPhotoForm models={models} />
-            // </motion.div>
+            <motion.div
+              key="has-model"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full"
+            >
+              <InlineMagicPhotoForm models={models} />
+            </motion.div>
           )}
         </AnimatePresence>
       </motion.div>

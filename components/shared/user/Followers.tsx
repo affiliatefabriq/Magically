@@ -5,8 +5,8 @@ import { ChevronLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { UserCard } from '@/components/shared/user/UserCard';
-import { FollowersError } from '@/components/states/error/Error';
-import { ListLoader } from '@/components/states/loaders/Loaders';
+import { FollowersError } from '@/components/states/Error';
+import { ListLoader } from '@/components/states/Loaders';
 import { Separator } from '@/components/ui/separator';
 import { useMyFollowers } from '@/hooks/useProfile';
 import { UserAttributes } from '@/types';

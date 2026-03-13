@@ -8,6 +8,8 @@ import {
     Sparkles,
     Loader2,
     XIcon,
+    ChevronLeft,
+    ChevronRight,
 } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useTrend } from '@/hooks/useTrends';
@@ -161,9 +163,9 @@ const ImageGrid = ({ images }: { images: string[] }) => {
                                         e.stopPropagation();
                                         setSelectedIdx(selectedIdx - 1);
                                     }}
-                                    className="pointer-events-auto p-2 rounded-full bg-black/60 backdrop-blur-2xl hover:bg-black/80 text-white"
+                                    className="flex items-center justify-center pointer-events-auto p-2 rounded-full bg-black/60 backdrop-blur-2xl hover:bg-black/80 text-white"
                                 >
-                                    ‹
+                                    <ChevronLeft className='size-4' />
                                 </button>
                             )}
                             <div className="flex-1" />
@@ -173,9 +175,10 @@ const ImageGrid = ({ images }: { images: string[] }) => {
                                         e.stopPropagation();
                                         setSelectedIdx(selectedIdx + 1);
                                     }}
-                                    className="pointer-events-auto p-2 rounded-full bg-black/60 backdrop-blur-2xl hover:bg-black/80 text-white"
+                                    className="flex items-center justify-center pointer-events-auto p-2 rounded-full bg-black/60 backdrop-blur-2xl hover:bg-black/80 text-white"
+
                                 >
-                                    ›
+                                    <ChevronRight className='size-4' />
                                 </button>
                             )}
                         </div>
@@ -255,8 +258,8 @@ export const TrendDetails = ({ trendId }: { trendId: string }) => {
                         {trend.coverText && (
                             <div className="absolute bottom-0 left-0 right-0 p-5">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Sparkles className="w-4 h-4 text-violet-300" />
-                                    <span className="text-violet-300 text-xs font-medium uppercase tracking-widest">
+                                    <Sparkles className="w-4 h-4 text-fuchsia-400" />
+                                    <span className="text-fuchsia-400 text-xs font-medium uppercase tracking-widest">
                                         {t("Trending")}
 
                                     </span>
@@ -275,7 +278,7 @@ export const TrendDetails = ({ trendId }: { trendId: string }) => {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-start gap-3"
                     >
-                        <Sparkles className="w-5 h-5 text-violet-400 mt-1 shrink-0" />
+                        <Sparkles className="w-5 h-5 text-fuchsia-400 mt-1 shrink-0" />
                         <h1 className="text-2xl font-bold">{trend.coverText}</h1>
                     </motion.div>
                 )}
@@ -284,7 +287,7 @@ export const TrendDetails = ({ trendId }: { trendId: string }) => {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="btn-solid rounded-lg p-1 w-full text-base font-semibold"
+                    className="bg-fuchsia-300! text-fuchsia-950! dark:bg-fuchsia-500! dark:text-white! shadow-fuchsia-800/10 shadow-xl! cursor-pointer dark:hover:text-black! dark:hover:bg-lime-500! ease-in-out duration-300 transition-colors rounded-lg p-1 w-full text-base font-semibold"
                     onClick={handleRemix}
                 >
                     ✦ {t("DoTheSame")}
