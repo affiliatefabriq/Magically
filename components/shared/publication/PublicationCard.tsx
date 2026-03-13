@@ -5,11 +5,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
+  Brush,
   Check,
   Download,
   Heart,
   MessageCircle,
+  Pen,
+  RotateCw,
   Share2,
+  WandSparkles,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -105,12 +109,12 @@ export const PublicationGridCard = ({
         </Link>
 
         {/* Like */}
-        <div className="flex items-center justify-center gap-1.5 shrink-0">
+        <div className="flex items-center justify-center gap-2 shrink-0">
           <button
             onClick={handleRemix}
-            className="pb-1 text-lime-500"
+            className="text-lime-500"
           >
-            <span className='text-xl'>✦</span>
+            <WandSparkles className='size-3.5' />
           </button>
           {userId ? (
             <LikeButtonSm {...publication} />

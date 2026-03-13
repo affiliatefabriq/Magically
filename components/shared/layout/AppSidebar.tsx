@@ -13,11 +13,11 @@ import {
   CircleUserRound,
   Folder,
   Globe,
-  Wand,
   Coins,
   ImageIcon,
   Compass,
   GlobeIcon,
+  WandSparkles,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -48,7 +48,7 @@ export const AppSidebar = () => {
       id: 2,
       title: t('MagicPhoto'),
       url: '/create/magic-photo',
-      icon: Wand,
+      icon: WandSparkles,
     },
     {
       id: 3,

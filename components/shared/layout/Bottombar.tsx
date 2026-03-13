@@ -8,13 +8,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   Brush,
   Compass,
-  Folder,
   ImageIcon,
-  Sparkle,
   TriangleAlert,
   UserRound,
   Wand,
-  Coins,
+  WandSparkles,
 } from 'lucide-react';
 
 import { useTranslations } from 'next-intl';
@@ -40,7 +38,7 @@ export const Bottombar = () => {
   const items = [
     { id: 1, title: t('Explore'), url: '/', icon: Compass },
     // { id: 2, title: t('Models'), url: '/models', icon: ImageIcon },
-    { id: 2, title: t('Create'), url: '/create', icon: Sparkle },
+    { id: 2, title: t('Create'), url: '/create', icon: WandSparkles },
     { id: 3, title: t('Library'), url: '/library', icon: ImageIcon },
     // { id: 4, title: t('Tariffs'), url: '/tariffs', icon: Coins },
     { id: 5, title: t('Profile'), url: '/profile', icon: UserRound },
@@ -159,7 +157,7 @@ export const Bottombar = () => {
                   className="mt-2 py-3 rounded-xl cursor-pointer"
                 >
                   <div className="flex items-center gap-3 font-semibold">
-                    <Wand className="size-4" />
+                    <WandSparkles className="size-4" />
                     {t('MagicPhoto')}
                   </div>
                 </DropdownMenuItem>

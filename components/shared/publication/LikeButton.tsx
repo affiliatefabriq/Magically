@@ -114,13 +114,13 @@ export const LikeButtonSm = (publication: Publication) => {
           ${isLiked ? 'text-red-500 fill-red-500' : ''}
           dark:${isLiked ? 'text-red-400 fill-red-400' : ''}`}
         />
-        <span
+        {/* <span
           className={`font-light
           ${isLiked ? 'text-red-500 fill-red-500' : ''}
           dark:${isLiked ? 'text-red-400 fill-red-400' : ''}`}
         >
           {likeCount}
-        </span>
+        </span> */}
       </button>
     </motion.div>
   );
