@@ -1,30 +1,33 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import api from '@/lib/api';
 import { useUser } from '@/hooks/useAuth';
+import { useTariffs } from '@/hooks/useTariffs';
 import { useTranslations } from 'next-intl';
-import type {
-  CurrentPlanResponse,
-  UserPlanStatus,
-} from '@/components/tariffs/types';
-
-const statusLabel: Record<UserPlanStatus, string> = {
-  trial: 'trial',
-  active: 'active',
-  overdue: 'overdue',
-  cancelled: 'cancelled',
-  expired: 'expired',
-  noplan: 'noplan',
-};
+import type { CurrentPlanResponse } from '@/components/tariffs/types';
+import {
+  getDisplayPlans,
+  getThemeForPlanIndex,
+} from '@/components/tariffs/themes';
+import { USER_PLAN_STATUS_LABELS } from '@/components/tariffs/status';
 
 export const CurrentPlan = () => {
   const t = useTranslations('Pages.Tariffs');
   const { data: user, isLoading: isUserLoading } = useUser();
+  const { plans, period } = useTariffs();
   const [data, setData] = useState<CurrentPlanResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const displayPlans = getDisplayPlans(plans, period);
+  const planIndex =
+    data?.planName != null
+      ? displayPlans.findIndex((p) => p.name === data.planName)
+      : -1;
+  const theme =
+    planIndex >= 0 ? getThemeForPlanIndex(planIndex) : getThemeForPlanIndex(0);
 
   useEffect(() => {
     if (!user) {
@@ -55,7 +58,10 @@ export const CurrentPlan = () => {
 
   if (isUserLoading) {
     return (
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-6 min-h-35 animate-pulse" />
+      <div
+        className="rounded-2xl border border-white/10 p-6 min-h-[120px] animate-pulse"
+        style={{ backgroundColor: '#0A0A0A' }}
+      />
     );
   }
 
@@ -65,13 +71,19 @@ export const CurrentPlan = () => {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-6 min-h-35 animate-pulse" />
+      <div
+        className="rounded-2xl border border-white/10 p-6 min-h-[120px] animate-pulse"
+        style={{ backgroundColor: '#0A0A0A' }}
+      />
     );
   }
 
   if (isError) {
     return (
-      <div className="rounded-2xl border border-destructive/40 bg-destructive/5 p-6">
+      <div
+        className="rounded-2xl border border-white/10 p-6"
+        style={{ backgroundColor: '#0A0A0A' }}
+      >
         <p className="text-sm text-destructive">
           {t('Errors.LoadCurrentPlan')}
         </p>
@@ -81,66 +93,84 @@ export const CurrentPlan = () => {
 
   if (!data || !data.hasActivePlan || data.status === 'noplan') {
     return (
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-6">
-        <h2 className="text-lg font-semibold tracking-tight mb-1">
+      <div
+        className="rounded-2xl border border-white/10 p-6"
+        style={{ backgroundColor: '#0A0A0A' }}
+      >
+        <h2 className="text-[18px] font-bold tracking-tight mb-1 text-white">
           {t('NoPlan.Title')}
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-[13px] text-muted-foreground">
           {t('NoPlan.Description')}
         </p>
       </div>
     );
   }
 
+  if (data.planName !== 'Trial') {
+    return null;
+  }
+
   const totalTokens = data.tokensFromPlan + data.tokensFromTopup;
 
   return (
-    <div className="rounded-3xl border border-primary/20 bg-linear-to-r from-primary/10 via-background to-background p-6 shadow-md backdrop-blur-sm space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1">
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
-            {t('CurrentPlan.Title')}
-          </p>
-          <h2 className="text-xl font-semibold tracking-tight">
-            {data.planName ?? t('CurrentPlan.NoName')}
-          </h2>
+    <div
+      className="rounded-2xl border border-white/10 p-6 transition-all duration-200"
+      style={{ backgroundColor: '#0A0A0A' }}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <h2
+              className={`text-[24px] font-bold tracking-tight ${theme.gradient} bg-clip-text text-transparent`}
+            >
+              {(data.planName ?? '').replace(' (год)', '').trim() ||
+                t('CurrentPlan.NoName')}
+            </h2>
+            <Image
+              src={theme.flask}
+              alt=""
+              width={28}
+              height={28}
+              className="shrink-0"
+            />
+          </div>
+          <span className="inline-flex items-center rounded-[10px] border border-white/25 bg-[#1A1A1A] px-3 py-1.5 text-[11px] font-medium text-white/90">
+            {t(`CurrentPlan.Status.${USER_PLAN_STATUS_LABELS[data.status]}`)}
+          </span>
         </div>
-        <span className="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">
-          {t(`CurrentPlan.Status.${statusLabel[data.status]}`)}
-        </span>
-      </div>
-
-      <div className="flex flex-wrap gap-6 text-sm">
-        <div className="space-y-1">
-          <p className="text-muted-foreground text-[11px] uppercase tracking-wide">
-            {t('CurrentPlan.Tokens')}
-          </p>
-          <p className="text-lg font-semibold">
-            {totalTokens}
-            <span className="ml-2 rounded-full bg-background/60 px-2 py-0.5 text-[11px] font-normal text-muted-foreground">
+        <div className="flex items-center gap-6 text-[13px]">
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground">
+              {t('CurrentPlan.Tokens')}
+            </span>
+            <span className="font-semibold text-white">{totalTokens}</span>
+            <span className="text-[11px] text-muted-foreground">
               {t('CurrentPlan.TokensBreakdown', {
                 fromPlan: data.tokensFromPlan,
                 fromTopup: data.tokensFromTopup,
               })}
             </span>
-          </p>
-        </div>
-
-        {data.endDate && (
-          <div className="space-y-1">
-            <p className="text-muted-foreground text-[11px] uppercase tracking-wide">
-              {t('CurrentPlan.EndDate')}
-            </p>
-            <p className="inline-flex items-center rounded-full bg-background/60 px-3 py-1 text-xs font-medium">
-              {new Date(data.endDate).toLocaleDateString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              })}
-            </p>
           </div>
-        )}
+          {data.endDate && (
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">
+                {t('CurrentPlan.EndDate')}
+              </span>
+              <span className="text-white/90">
+                {new Date(data.endDate).toLocaleDateString('ru-RU', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                })}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        {t('CurrentPlan.Title')}
+      </p>
     </div>
   );
 };
