@@ -1,16 +1,19 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/button';
-import { formatPrice } from '@/lib/currency';
-
 import { useTariffs } from '@/hooks/useTariffs';
 import type { TariffPlan } from '@/components/tariffs/types';
 import { BeGatewayParams, BeGatewayStatus } from '@/types';
+import {
+  getDisplayPlans,
+  getThemeForPlanIndex,
+} from '@/components/tariffs/themes';
+import { PeriodToggle } from '@/components/tariffs/PeriodToggle';
+import { TariffCard } from '@/components/tariffs/TariffCard';
 
 export const TariffGrid = () => {
   const t = useTranslations('Pages.Tariffs');
@@ -19,6 +22,7 @@ export const TariffGrid = () => {
   const {
     plans,
     currentPlan,
+    period,
     isLoading,
     isError,
     error: loadError,
@@ -27,9 +31,18 @@ export const TariffGrid = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [processingPlanId, setProcessingPlanId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'year'>(() =>
+    period === 'year' ? 'year' : 'month',
+  );
   const widgetInitialized = useRef(false);
 
+  const displayPlans = getDisplayPlans(plans, selectedPeriod);
+
   const currentPlanName = currentPlan?.planName ?? null;
+
+  useEffect(() => {
+    setSelectedPeriod(period);
+  }, [period]);
 
   const initBePaidWidget = (token: string) => {
     if (!window.BeGateway || widgetInitialized.current) {
@@ -167,10 +180,13 @@ export const TariffGrid = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <div className="rounded-2xl border border-border/60 bg-background/60 p-4 h-48 animate-pulse" />
-        <div className="rounded-2xl border border-border/60 bg-background/60 p-4 h-48 animate-pulse" />
-        <div className="rounded-2xl border border-border/60 bg-background/60 p-4 h-48 animate-pulse" />
+      <div className="grid grid-cols-1 gap-6 min-[1360px]:grid-cols-3">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="rounded-2xl border border-white/10 bg-white/5 p-6 h-80 animate-pulse"
+          />
+        ))}
       </div>
     );
   }
@@ -187,7 +203,7 @@ export const TariffGrid = () => {
 
   if (!plans.length) {
     return (
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-6">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
         <p className="text-sm text-muted-foreground">{t('Empty.Plans')}</p>
       </div>
     );
@@ -204,65 +220,27 @@ export const TariffGrid = () => {
         }}
       />
 
-      {error && <div className="mb-3 text-sm text-destructive">{error}</div>}
+      {error && (
+        <div className="mb-4 rounded-lg bg-destructive/10 px-4 py-2 text-sm text-destructive">
+          {error}
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {plans.map((plan) => {
-          const isCurrent = !!currentPlanName && plan.name === currentPlanName;
+      <PeriodToggle value={selectedPeriod} onChange={setSelectedPeriod} />
 
-          const isProcessing = processingPlanId === plan.id;
-
-          return (
-            <div
-              key={plan.id}
-              className={`group rounded-2xl border p-4 h-48 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${
-                isCurrent
-                  ? 'border-primary bg-primary/5'
-                  : 'border-border/60 bg-background/40 hover:border-primary/40'
-              }`}
-            >
-              <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-base font-semibold tracking-tight">
-                    {plan.name}
-                  </h3>
-                  {isCurrent && (
-                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-                      {t('CurrentPlan.Badge')}
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-sm text-muted-foreground">
-                  {t('Plan.TokensAndPeriod', {
-                    tokens: plan.tokenAmount,
-                    period: plan.periodDays ?? 0,
-                  })}
-                </p>
-
-                <p className="text-base font-semibold">
-                  {formatPrice(
-                    plan.priceInUserCurrency ?? plan.price,
-                    plan.userCurrency ?? plan.currency,
-                  )}
-                </p>
-              </div>
-
-              <Button
-                type="button"
-                className="w-full"
-                disabled={isProcessing || isCurrent}
-                onClick={() => !isCurrent && handleSelect(plan)}
-              >
-                {isCurrent
-                  ? t('Plan.ButtonCurrent')
-                  : isProcessing
-                    ? t('Plan.ButtonProcessing')
-                    : t('Plan.ButtonSelect')}
-              </Button>
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-1 gap-6 min-[1360px]:grid-cols-3 justify-items-center">
+        {displayPlans.slice(0, 9).map((plan, index) => (
+          <TariffCard
+            key={plan.id}
+            plan={plan}
+            index={index}
+            theme={getThemeForPlanIndex(index)}
+            selectedPeriod={selectedPeriod}
+            isCurrent={!!currentPlanName && plan.name === currentPlanName}
+            isProcessing={processingPlanId === plan.id}
+            onSelect={handleSelect}
+          />
+        ))}
       </div>
     </>
   );

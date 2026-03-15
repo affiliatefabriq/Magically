@@ -33,9 +33,12 @@ export type TariffPlan = {
   userCurrency?: string;
 };
 
+export type TariffPeriod = 'month' | 'year';
+
 export type UseTariffsResult = {
   plans: TariffPlan[];
   currentPlan: CurrentPlanResponse | null;
+  period: TariffPeriod;
   isLoading: boolean;
   isError: boolean;
   error: string | null;

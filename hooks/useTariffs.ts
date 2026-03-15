@@ -10,6 +10,14 @@ import type {
   UseTariffsResult,
 } from '@/components/tariffs/types';
 
+const YEAR_DAYS_THRESHOLD = 300;
+
+function derivePeriod(plans: TariffPlan[]): 'month' | 'year' {
+  if (!plans.length) return 'month';
+  const days = plans[0].periodDays ?? 0;
+  return days >= YEAR_DAYS_THRESHOLD ? 'year' : 'month';
+}
+
 export const useTariffs = (): UseTariffsResult => {
   const { data: user } = useUser();
   const [plans, setPlans] = useState<TariffPlan[]>([]);
@@ -75,6 +83,7 @@ export const useTariffs = (): UseTariffsResult => {
   return {
     plans,
     currentPlan,
+    period: derivePeriod(plans),
     isLoading,
     isError,
     error,
